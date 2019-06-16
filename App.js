@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
 import {
-  AppRegistry,
   StyleSheet,
   Text,
   View,
-  ScrollView,
-  Dimensions,
-  Image
 } from 'react-native';
-import { MainPage } from './src/pages/Home';
-
 import Swiper from 'react-native-swiper';
 import Home from './src/pages/Home';
+import { Font } from 'expo';
 
 
 const styles = StyleSheet.create({
