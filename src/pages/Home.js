@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { IconOutline, IconFill } from '@ant-design/icons-react-native';
 import { Font } from 'expo';
 import { ScrollView, View, Text, Dimensions, StyleSheet, TouchableHighlight, Alert } from 'react-native';
+import { KeyBoard } from '../components/keyboard/Keyboard'
 
 const vh = Dimensions.get('window').height;
 export default class Home extends Component {
@@ -107,99 +108,5 @@ const styles = StyleSheet.create({
     transaction: {
         fontSize: 45,
         fontWeight: '200'
-    },
-    addTransactionButton: {
-        fontSize: 45,
-    },
-    keyBoard: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    row: {
-        width: '90%',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-    keyButton: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: 70,
-        width: 70,
-        marginBottom: 10,
-        borderRadius: 100,
-        borderColor: 'rgb(0, 122, 255)'
-    },
-    keyButtonText: {
-        fontSize: 40
-    },
-    removeKey: {
-        fontSize: 40,
-        color: 'rgb(230, 69, 58)'
     }
 });
-
-class KeyBoard extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-        };
-    }
-
-    async componentDidMount() {
-        await Font.loadAsync({
-            'antfill': require('../../node_modules/@ant-design/icons-react-native/fonts/antfill.ttf')
-        });
-        this.setState({ fontLoaded: true })
-    }
-
-    render() {
-        return <View style={styles.keyBoard}>
-            <View style={styles.row}>
-                <KeyButton text={1} color='rgb(90, 200, 250)' onPress={() => this.props.onKeyPressed(1)} />
-                <KeyButton text={2} color='rgb(90, 200, 250)' onPress={() => this.props.onKeyPressed(2)} />
-                <KeyButton text={3} color='rgb(90, 200, 250)' onPress={() => this.props.onKeyPressed(3)} />
-            </View>
-            <View style={styles.row}>
-                <KeyButton text={4} color='rgb(90, 200, 250)' onPress={() => this.props.onKeyPressed(4)} />
-                <KeyButton text={5} color='rgb(90, 200, 250)' onPress={() => this.props.onKeyPressed(5)} />
-                <KeyButton text={6} color='rgb(90, 200, 250)' onPress={() => this.props.onKeyPressed(6)} />
-            </View>
-            <View style={styles.row}>
-                <KeyButton text={7} color='rgb(90, 200, 250)' onPress={() => this.props.onKeyPressed(7)} />
-                <KeyButton text={8} color='rgb(90, 200, 250)' onPress={() => this.props.onKeyPressed(8)} />
-                <KeyButton text={9} color='rgb(90, 200, 250)' onPress={() => this.props.onKeyPressed(9)} />
-            </View>
-            <View style={styles.row}>
-                <KeyButton text={'.'} color='rgb(90, 200, 250)' onPress={() => this.props.onKeyPressed('.')} />
-                <KeyButton text={0} color='rgb(90, 200, 250)' onPress={() => this.props.onKeyPressed(0)} />
-                <KeyButton text={this.state.fontLoaded && <IconFill style={styles.removeKey} name='close-circle' />} color='rgb(230, 59, 48)' onPress={this.props.onRemoveKeyPressed} />
-            </View>
-        </View>
-    }
-}
-
-class KeyButton extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            isPressed: false
-        }
-    }
-
-    render() {
-        return <View style={[styles.keyButton, this.state.isPressed ? { backgroundColor: this.props.color } : {}]}
-            onStartShouldSetResponder={() => true}
-            onResponderGrant={() => this.setState({ isPressed: true })}
-            onResponderRelease={() => {
-                this.props.onPress();
-                this.setState({ isPressed: false });
-            }}
-            onResponderTerminate={() => this.setState({ isPressed: false })}
-        >
-            <Text style={[styles.keyButtonText, this.state.isPressed ? { color: 'white' } : { color: this.props.color }]}>{this.props.text}</Text>
-        </View>
-    }
-}

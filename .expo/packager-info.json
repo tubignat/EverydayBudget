@@ -1,9 +1,8 @@
 {
-  "devToolsPort": 19003,
-  "expoServerPort": null,
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 5164,
+  "expoServerNgrokUrl": "https://vr-4y5.anonymous.spendingstracker.exp.direct",
+  "packagerNgrokUrl": "https://packager.vr-4y5.anonymous.spendingstracker.exp.direct",
+  "ngrokPid": 1408
 }
