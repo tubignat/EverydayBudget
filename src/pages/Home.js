@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import { IconOutline, IconFill } from '@ant-design/icons-react-native';
-import { Font } from 'expo';
-import { ScrollView, View, Text, Dimensions, StyleSheet, TouchableHighlight, Alert } from 'react-native';
-import { KeyBoard } from '../components/keyboard/Keyboard'
+import { ScrollView, View, Text, Dimensions, StyleSheet, Alert } from 'react-native';
+import { KeyBoard } from '../components/keyboard/Keyboard';
+import { AddSpendingButton } from '../components/AddSpendingButton';
+import { observer } from 'mobx-react';
+import { getSaldo, getBudgetPerDay } from '../domain/budget';
 
 const vh = Dimensions.get('window').height;
+
+@observer
 export default class Home extends Component {
 
     constructor(props) {
@@ -12,20 +15,13 @@ export default class Home extends Component {
         this.state = {
             newTransactionRubles: 0,
             newTransactionKopecks: 0,
-            isKopeckMode: false,
-            todaysBudget: 1500
+            isKopeckMode: false
         };
     }
 
-    async componentDidMount() {
-        await Font.loadAsync({
-            'antoutline': require('../../node_modules/@ant-design/icons-react-native/fonts/antoutline.ttf')
-        });
-        this.setState({ fontLoaded: true })
-    }
-
     render() {
-        const { newTransactionRubles, todaysBudget, isKopeckMode, newTransactionKopecks } = this.state;
+        const { newTransactionRubles, isKopeckMode, newTransactionKopecks } = this.state;
+        const todaysBudget = this.props.storage.todaysBudget.toFixed(0);
 
         return <ScrollView
             bounces={false}
@@ -35,19 +31,15 @@ export default class Home extends Component {
         >
             <View style={styles.budgetContainer}>
                 <Text style={styles.budgetText}>Бюджет на сегодня</Text>
-                <Text style={styles.budget}>{todaysBudget}</Text>
+                <Text style={[styles.budget, { color: todaysBudget < 0 ? 'rgb(255, 69, 58)' : 'black' }]}>{todaysBudget} &#8381;</Text>
             </View>
             <View style={styles.addTransactionContainer}>
-                <Text style={styles.addTransactionText}>Добавить</Text>
+                <Text style={styles.addTransactionText}>Добавить трату</Text>
                 <View style={styles.addTransactionInput}>
                     <Text style={[styles.transaction, {}]}>
                         {newTransactionRubles}{isKopeckMode ? '.' : ''}{isKopeckMode ? newTransactionKopecks : ''} &#8381;
                     </Text>
-                    {
-                        this.state.fontLoaded &&
-                        <IconOutline style={[styles.addTransactionButton, { color: newTransactionRubles === 0 ? 'lightgray' : 'rgb(48, 209, 88)' }]} name='check-circle' />
-
-                    }
+                    <AddSpendingButton onPress={this.onAddButtonPressed} disabled={newTransactionRubles === 0 && newTransactionKopecks === 0} />
                 </View>
             </View>
             <KeyBoard onKeyPressed={this.handleKeyPressed} onRemoveKeyPressed={this.handleRemoveKeyPressed} />
@@ -64,7 +56,7 @@ export default class Home extends Component {
             this.setState({ newTransactionKopecks: amount });
         }
         else {
-            const amount = newTransactionRubles <= 99999 ? Number(newTransactionRubles.toString().concat(char)) : newTransactionRubles;
+            const amount = newTransactionRubles <= 999 ? Number(newTransactionRubles.toString().concat(char)) : newTransactionRubles;
             this.setState({ newTransactionRubles: amount });
         }
     }
@@ -72,6 +64,16 @@ export default class Home extends Component {
     handleRemoveKeyPressed = () => {
         this.setState({ newTransactionRubles: 0, isKopeckMode: false, newTransactionKopecks: 0 });
     }
+
+    onAddButtonPressed = () => {
+        if (this.state.newTransactionRubles !== 0 || this.state.newTransactionKopecks !== 0) {
+            const date = new Date();
+            const amount = this.state.newTransactionRubles + (this.state.newTransactionKopecks / 100);
+            this.props.storage.addSpending(date.getFullYear(), date.getMonth(), date.getDate(), amount)
+            this.setState({ newTransactionRubles: 0, isKopeckMode: false, newTransactionKopecks: 0 });
+        }
+    }
+
 }
 
 const styles = StyleSheet.create({
@@ -104,6 +106,9 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginRight: 30,
         height: 60
+    },
+    addTransactionButton: {
+        fontSize: 45,
     },
     transaction: {
         fontSize: 45,

@@ -6,7 +6,7 @@ class Expense {
     month;
 }
 
-const expenseIdSeq = 0;
+let expenseIdSeq = 0;
 const expenses = [];
 
 addExpense = (year, month, amount, description) => {

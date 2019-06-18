@@ -11,6 +11,8 @@
     "@ant-design/icons-react-native": "^1.0.2",
     "eslint": "^5.16.0",
     "expo": "^33.0.0",
+    "mobx": "^5.10.1",
+    "mobx-react": "^6.0.3",
     "react": "16.8.3",
     "react-dom": "^16.8.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",

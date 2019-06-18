@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ButtonWrapper } from '../common/ButtonWrapper';
-import { IconFill } from '@ant-design/icons-react-native';
+import { IconOutline } from '@ant-design/icons-react-native';
 import { Font } from 'expo';
 import { View, StyleSheet } from 'react-native';
 import { keyButtonStyle } from './commonStyles';
@@ -8,7 +8,7 @@ import { keyButtonStyle } from './commonStyles';
 const styles = StyleSheet.create({
     removeKey: {
         fontSize: 40,
-        color: 'rgb(230, 69, 58)'
+        color: 'rgb(90, 200, 250)'
     },
 })
 
@@ -21,7 +21,7 @@ export class KeyBoardRemoveButton extends Component {
 
     async componentDidMount() {
         await Font.loadAsync({
-            'antfill': require('../../../node_modules/@ant-design/icons-react-native/fonts/antfill.ttf')
+            'antoutline': require('../../../node_modules/@ant-design/icons-react-native/fonts/antoutline.ttf')
         });
         this.setState({ fontLoaded: true })
     }
@@ -33,14 +33,14 @@ export class KeyBoardRemoveButton extends Component {
     renderNormal = () => {
         return <View style={keyButtonStyle}>
             {
-                this.state.fontLoaded && <IconFill style={styles.removeKey} name='close-circle' />
+                this.state.fontLoaded && <IconOutline style={styles.removeKey} name='close-circle' />
             }
         </View>;
     }
     renderPressed = () => {
-        return <View style={keyButtonStyle}>
+        return <View style={[keyButtonStyle, { backgroundColor: 'rgb(90, 200, 250)' }]}>
             {
-                this.state.fontLoaded && <IconFill style={[styles.removeKey, { fontSize: 65 }]} name='close-circle' />
+                this.state.fontLoaded && <IconOutline style={[styles.removeKey, { color: 'white' }]} name='close-circle' />
             }
         </View>;
     }
