@@ -13,6 +13,7 @@ export class ButtonWrapper extends Component {
             onResponderGrant={this.onGrant}
             onResponderRelease={this.onRelease}
             onResponderTerminate={this.onTerminate}
+            style={{ width: this.props.size, height: this.props.size }}
         >
             {
                 this.state.isPressed ? this.props.renderPressed() : this.props.renderNormal()

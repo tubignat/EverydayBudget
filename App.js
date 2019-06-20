@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import Swiper from 'react-native-swiper';
 import Home from './src/pages/Home';
+import TodaySpendings from './src/pages/TodaySpendings';
 import { observer } from 'mobx-react';
 import { SpendingsStorage } from './src/domain/spending';
 
@@ -48,16 +49,12 @@ export default class App extends Component {
 
     render() {
         return (
-            <Swiper style={styles.wrapper} loop={false} index={1}>
+            <Swiper style={styles.wrapper} loop={false} index={2}>
                 <View style={styles.slide2}>
                     <Text style={styles.text}>Beautiful</Text>
                 </View>
                 <Home storage={this.spendingsStorage} />
-                <View style={styles.slide3}>
-                    {
-                        this.spendingsStorage.allSpendings.map(s => <Text>{s.id} {s.amount} {s.year} {s.month} {s.day}</Text>)
-                    }
-                </View>
+                <TodaySpendings storage={this.spendingsStorage} />
             </Swiper>
         );
     }

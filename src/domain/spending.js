@@ -12,16 +12,93 @@ class Spending {
 
 export class SpendingsStorage {
     @observable
-    spendings = [];
+    spendings = [{
+        year: 2019,
+        month: 5,
+        day: 20,
+        amount: 500
+    },
+    {
+        year: 2019,
+        month: 5,
+        day: 20,
+        amount: 2300
+    },
 
-    spendingIdSeq = 0;
+    {
+        year: 2019,
+        month: 5,
+        day: 20,
+        amount: 2450
+    },
+    {
+        year: 2019,
+        month: 5,
+        day: 20,
+        amount: 100
+    },
+
+    {
+        year: 2019,
+        month: 5,
+        day: 20,
+        amount: 345
+    },
+    {
+        year: 2019,
+        month: 5,
+        day: 20,
+        amount: 123
+    },
+
+    {
+        year: 2019,
+        month: 5,
+        day: 20,
+        amount: 500
+    },
+    {
+        year: 2019,
+        month: 5,
+        day: 20,
+        amount: 500
+    },
+    {
+        year: 2019,
+        month: 5,
+        day: 20,
+        amount: 500
+    },
+    {
+        year: 2019,
+        month: 5,
+        day: 20,
+        amount: 500
+    },
+
+    {
+        year: 2019,
+        month: 5,
+        day: 20,
+        amount: 500
+    },
+    {
+        year: 2019,
+        month: 5,
+        day: 20,
+        amount: 9999.99
+    }
+    ];
+
+    constructor() {
+        this.spendings.forEach((s, i) => s.id = i);
+    }
 
     @action
     addSpending = (year, month, day, amount, description) => {
-        this.spendingIdSeq++;
 
         const spending = new Spending();
-        spending.id = this.spendingIdSeq;
+        spending.id = this.spendings.length === 0 ? 0 : this.spendings[this.spendings.length - 1].id + 1;
         spending.amount = amount;
         spending.description = description;
         spending.year = year;

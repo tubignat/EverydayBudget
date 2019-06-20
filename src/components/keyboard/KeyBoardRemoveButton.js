@@ -27,7 +27,7 @@ export class KeyBoardRemoveButton extends Component {
     }
 
     render() {
-        return <ButtonWrapper renderNormal={this.renderNormal} renderPressed={this.renderPressed} onPress={this.props.onPress} />
+        return <ButtonWrapper size={70} renderNormal={this.renderNormal} renderPressed={this.renderPressed} onPress={this.props.onPress} />
     }
 
     renderNormal = () => {

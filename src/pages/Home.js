@@ -3,9 +3,6 @@ import { ScrollView, View, Text, Dimensions, StyleSheet, Alert } from 'react-nat
 import { KeyBoard } from '../components/keyboard/Keyboard';
 import { AddSpendingButton } from '../components/AddSpendingButton';
 import { observer } from 'mobx-react';
-import { getSaldo, getBudgetPerDay } from '../domain/budget';
-
-const vh = Dimensions.get('window').height;
 
 @observer
 export default class Home extends Component {
@@ -14,7 +11,7 @@ export default class Home extends Component {
         super(props);
         this.state = {
             newTransactionRubles: 0,
-            newTransactionKopecks: 0,
+            newTransactionKopecks: [],
             isKopeckMode: false
         };
     }
@@ -26,8 +23,6 @@ export default class Home extends Component {
         return <ScrollView
             bounces={false}
             style={{ marginTop: 25, padding: 20 }}
-            contentOffset={{ x: 0, y: 0 }}
-            onContentSizeChange={(w, h) => this.setState({ contentHeight: h - vh })}
         >
             <View style={styles.budgetContainer}>
                 <Text style={styles.budgetText}>Бюджет на сегодня</Text>
@@ -37,9 +32,9 @@ export default class Home extends Component {
                 <Text style={styles.addTransactionText}>Добавить трату</Text>
                 <View style={styles.addTransactionInput}>
                     <Text style={[styles.transaction, {}]}>
-                        {newTransactionRubles}{isKopeckMode ? '.' : ''}{isKopeckMode ? newTransactionKopecks : ''} &#8381;
+                        {newTransactionRubles}{isKopeckMode ? '.' : ''}{isKopeckMode ? newTransactionKopecks.join('') : ''} &#8381;
                     </Text>
-                    <AddSpendingButton onPress={this.onAddButtonPressed} disabled={newTransactionRubles === 0 && newTransactionKopecks === 0} />
+                    <AddSpendingButton onPress={this.onAddButtonPressed} disabled={newTransactionRubles === 0 && newTransactionKopecks.length !== 2} />
                 </View>
             </View>
             <KeyBoard onKeyPressed={this.handleKeyPressed} onRemoveKeyPressed={this.handleRemoveKeyPressed} />
@@ -52,8 +47,14 @@ export default class Home extends Component {
         if (char === '.') {
             this.setState({ isKopeckMode: true })
         } else if (isKopeckMode) {
-            const amount = newTransactionKopecks <= 10 ? Number(newTransactionKopecks.toString().concat(char)) : newTransactionKopecks;
-            this.setState({ newTransactionKopecks: amount });
+            if (newTransactionKopecks.length < 2) {
+                const kopecks = newTransactionKopecks;
+                if (kopecks.length === 1 && kopecks[0] === 0 && char === 0) {
+                    return;
+                }
+                kopecks[kopecks.length] = char;
+                this.setState({ newTransactionKopecks: kopecks });
+            }
         }
         else {
             const amount = newTransactionRubles <= 999 ? Number(newTransactionRubles.toString().concat(char)) : newTransactionRubles;
@@ -62,15 +63,16 @@ export default class Home extends Component {
     }
 
     handleRemoveKeyPressed = () => {
-        this.setState({ newTransactionRubles: 0, isKopeckMode: false, newTransactionKopecks: 0 });
+        this.setState({ newTransactionRubles: 0, isKopeckMode: false, newTransactionKopecks: [] });
     }
 
     onAddButtonPressed = () => {
-        if (this.state.newTransactionRubles !== 0 || this.state.newTransactionKopecks !== 0) {
+        if (this.state.newTransactionRubles !== 0 || this.state.newTransactionKopecks.length === 2) {
             const date = new Date();
-            const amount = this.state.newTransactionRubles + (this.state.newTransactionKopecks / 100);
+            const kopecks = Number(this.state.newTransactionKopecks.join(''));
+            const amount = this.state.newTransactionRubles + (kopecks / 100);
             this.props.storage.addSpending(date.getFullYear(), date.getMonth(), date.getDate(), amount)
-            this.setState({ newTransactionRubles: 0, isKopeckMode: false, newTransactionKopecks: 0 });
+            this.setState({ newTransactionRubles: 0, isKopeckMode: false, newTransactionKopecks: [] });
         }
     }
 
