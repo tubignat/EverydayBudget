@@ -33,7 +33,7 @@ export class AddSpendingButton extends Component {
     }
 
     render() {
-        return <ButtonWrapper size={60} renderNormal={this.renderNormal} renderPressed={this.renderPressed} onPress={this.props.onPress} disabled={this.props.disabled} />
+        return <ButtonWrapper width={60} height={60} renderNormal={this.renderNormal} renderPressed={this.renderPressed} onPress={this.props.onPress} disabled={this.props.disabled} />
     }
 
     renderNormal = () => {

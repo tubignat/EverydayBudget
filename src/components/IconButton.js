@@ -28,7 +28,7 @@ export class IconButton extends Component {
 
     render() {
         return <ButtonWrapper
-            size={this.props.size}
+            style={{ width: this.props.size, height: this.props.size }}
             renderNormal={this.renderNormal}
             renderPressed={this.renderPressed}
             onPress={this.props.onPress}

@@ -1,3 +1,4 @@
+import { computed, action, observable } from "mobx";
 class Expense {
     id;
     amount;
@@ -6,25 +7,45 @@ class Expense {
     month;
 }
 
-let expenseIdSeq = 0;
-const expenses = [];
+export class ExpensesStorage {
+    @observable
+    expenses = [];
+    expenseIdSeq = 0;
 
-addExpense = (year, month, amount, description) => {
-    expenseIdSeq++;
+    constructor() {
+    }
 
-    const expense = new Expense();
-    expense.id = expenseIdSeq;
-    expense.amount = amount;
-    expense.description = description;
-    expense.year = year;
-    expense.month = month;
+    @action
+    addExpense = (year, month, amount, description) => {
+        this.expenseIdSeq++;
 
-    expenses.push(expense);
+        const expense = new Expense();
+        expense.id = this.expenseIdSeq;
+        expense.amount = amount;
+        expense.description = description;
+        expense.year = year;
+        expense.month = month;
+
+        this.expenses.push(expense);
+    }
+
+    @action
+    removeExpense = (id) => {
+        const index = this.expenses.findIndex(i => i.id === id);
+        this.expenses.splice(index, 1);
+    }
+
+    @action
+    editExpense = (id, amount, description) => {
+        const index = this.expenses.findIndex(i => i.id === id);
+        const expense = this.expenses[index];
+        if (amount !== null) {
+            expense.amount = amount;
+        }
+        if (description !== null) {
+            expense.description = description;
+        }
+        this.expenses.splice(index, 1, expense);
+    }
+    getExpenses = (year, month) => this.expenses.filter(i => i.year === year && i.month === month);
 }
-
-removeExpense = (id) => {
-    const index = expenses.findIndex(i => i.id === id);
-    expenses.splice(index, 1);
-}
-
-getExpenses = (year, month) => expenses.filter(i => i.year === year && i.month === month);

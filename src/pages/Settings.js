@@ -1,9 +1,11 @@
 
 import React, { Component } from 'react';
 import { IconButton } from '../components/IconButton';
-import { ScrollView, View, Text, TextInput, Dimensions, StyleSheet, Alert } from 'react-native';
+import { ScrollView, View, Text, TextInput, Dimensions, StyleSheet, Alert, KeyboardAvoidingView } from 'react-native';
 import { observer } from 'mobx-react';
 import TextInputWithTemporaryInvalidValue from '../components/TextInputWithTemporaryInvalidValue';
+import { TextButton } from '../components/TextButton';
+
 
 @observer
 export default class Settings extends Component {
@@ -15,24 +17,42 @@ export default class Settings extends Component {
     }
 
     render() {
-        const { incomesStorage } = this.props;
+        const { incomesStorage, expensesStorage } = this.props;
         const date = new Date();
         const year = date.getFullYear();
         const month = date.getMonth();
         const incomes = incomesStorage.getIncomes(year, month);
+        const expenses = expensesStorage.getExpenses(year, month);
 
-        return <ScrollView style={{ marginTop: 25, padding: 20 }}>
-            <Text style={styles.header}>Настройки</Text>
-            <Text style={styles.subheader}>Доходы</Text>
+        return <KeyboardAvoidingView behavior='padding'>
+            <ScrollView style={{ marginTop: 25, padding: 20 }}>
+                <Text style={styles.header}>Настройки</Text>
+                <Text style={styles.subheader}>Доходы</Text>
 
-            <IncomesList
-                incomes={incomes}
-                onRemove={(id) => incomesStorage.removeIncome(id)}
-                onAmountChanged={(id, amount) => incomesStorage.editIncome(id, amount, null)}
-                onDescriptionChanged={(id, description) => incomesStorage.editIncome(id, null, description)}
-            />
-            <Text style={styles.subheader}>Регулярные расходы</Text>
-        </ScrollView>
+                <IncomesList
+                    incomes={incomes}
+                    thereAreNoValuesYetText={'Пока доходов нет. '}
+                    onRemove={(id) => incomesStorage.removeIncome(id)}
+                    onAmountChanged={(id, amount) => incomesStorage.editIncome(id, amount, null)}
+                    onDescriptionChanged={(id, description) => incomesStorage.editIncome(id, null, description)}
+                    onAdd={() => incomesStorage.addIncome(year, month, 0, 'Новый доход')}
+                />
+
+                <Text style={styles.subheader}>Регулярные расходы</Text>
+
+                <IncomesList
+                    incomes={expenses}
+                    thereAreNoValuesYetText={'Пока расходов нет. '}
+                    onRemove={(id) => expensesStorage.removeExpense(id)}
+                    onAmountChanged={(id, amount) => expensesStorage.editExpense(id, amount, null)}
+                    onDescriptionChanged={(id, description) => expensesStorage.editExpense(id, null, description)}
+                    onAdd={() => expensesStorage.addExpense(year, month, 0, 'Новый расход')}
+                />
+
+                <View style={{ height: 60 }}></View>
+
+            </ScrollView>
+        </KeyboardAvoidingView>
     }
 }
 
@@ -46,6 +66,13 @@ class IncomesList extends Component {
     render() {
         return <View style={styles.incomesList}>
             {
+                this.props.incomes.length === 0 &&
+                <View style={styles.emptyListTextContainer}>
+                    <Text style={styles.emptyListText}>{this.props.thereAreNoValuesYetText}</Text>
+                    <TextButton text='Добавить' height={50} fontSize={15} onPress={this.props.onAdd} />
+                </View>
+            }
+            {
                 this.props.incomes.map((i) =>
                     <IncomeView
                         key={i.id}
@@ -55,6 +82,11 @@ class IncomesList extends Component {
                         onDescriptionChanged={(description) => this.props.onDescriptionChanged(i.id, description)}
                     />
                 )
+            }
+            {
+                this.props.incomes.length !== 0 && <View style={styles.addButton}>
+                    <TextButton text='Добавить' height={50} fontSize={18} onPress={this.props.onAdd} />
+                </View>
             }
         </View>
     }
@@ -86,6 +118,7 @@ class IncomeView extends Component {
                     style={styles.incomeViewText}
                     onChangeText={this.props.onDescriptionChanged}
                     value={this.props.income.description}
+                    selectTextOnFocus
                 />
             </View>
             <View style={styles.removeButtonContainer}>
@@ -119,20 +152,33 @@ const styles = StyleSheet.create({
         color: 'gray',
         fontSize: 20,
         marginLeft: 15,
-        marginBottom: 10
     },
     incomesList: {
         margin: 20,
         marginRight: 0,
+        marginBottom: 40,
         flex: 1,
-        alignItems: 'center',
         justifyContent: 'center'
+    },
+    addButton: {
+        flex: 1,
+        flexDirection: 'row'
     },
     incomeView: {
         flex: 1,
         paddingBottom: 10,
         flexBasis: 'auto',
         flexDirection: 'row',
+    },
+    emptyListTextContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    emptyListText: {
+        color: 'gray',
+        fontSize: 15
     },
     wrapper: {
         flex: 1,

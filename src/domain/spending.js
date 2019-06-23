@@ -1,5 +1,4 @@
 import { computed, action, observable } from "mobx";
-import { getBudgetPerDay, getSaldo } from "./budget";
 
 class Spending {
     id;
@@ -119,11 +118,4 @@ export class SpendingsStorage {
     };
 
     getSpendings = (year, month, day) => this.spendings.filter(i => i.year === year && i.month === month && i.day === day);
-
-    @computed
-    get todaysBudget() {
-        const date = new Date();
-        const budgetPerDay = getBudgetPerDay([80000], [10000], date.getFullYear(), date.getMonth());
-        return getSaldo(budgetPerDay, this.getSpendings.bind(this), date.getFullYear(), date.getMonth(), date.getDate());
-    }
 }

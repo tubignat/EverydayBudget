@@ -3,6 +3,7 @@ import { ScrollView, View, Text, Dimensions, StyleSheet, Alert } from 'react-nat
 import { KeyBoard } from '../components/keyboard/Keyboard';
 import { AddSpendingButton } from '../components/AddSpendingButton';
 import { observer } from 'mobx-react';
+import { getBudgetPerDay, getSaldo } from "../domain/budget";
 
 @observer
 export default class Home extends Component {
@@ -16,9 +17,19 @@ export default class Home extends Component {
         };
     }
 
+    getTodaysBudget(incomesStorage, expensesStorage, spendingsStorage) {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const day = date.getDate();
+
+        const budgetPerDay = getBudgetPerDay(incomesStorage.getIncomes(year, month).map(i => i.amount), expensesStorage.getExpenses(year, month).map(e => e.amount), year, month);
+        return getSaldo(budgetPerDay, spendingsStorage.getSpendings, year, month, day);
+    }
+
     render() {
         const { newTransactionRubles, isKopeckMode, newTransactionKopecks } = this.state;
-        const todaysBudget = this.props.storage.todaysBudget.toFixed(0);
+        const todaysBudget = this.getTodaysBudget(this.props.incomesStorage, this.props.expensesStorage, this.props.spendingsStorage).toFixed(0);
 
         return <ScrollView
             bounces={false}
@@ -71,7 +82,7 @@ export default class Home extends Component {
             const date = new Date();
             const kopecks = Number(this.state.newTransactionKopecks.join(''));
             const amount = this.state.newTransactionRubles + (kopecks / 100);
-            this.props.storage.addSpending(date.getFullYear(), date.getMonth(), date.getDate(), amount)
+            this.props.spendingsStorage.addSpending(date.getFullYear(), date.getMonth(), date.getDate(), amount)
             this.setState({ newTransactionRubles: 0, isKopeckMode: false, newTransactionKopecks: [] });
         }
     }

@@ -1,7 +1,7 @@
 export const getBudgetPerDay = (monthIncomes, monthExpenses, year, month) => {
     const daysInMonth = _daysInMonth(month, year);
-    const totalIncome = monthIncomes.reduce((sum, currentValue) => sum + currentValue);
-    const totalExpense = monthExpenses.reduce((sum, currentValue) => sum + currentValue);
+    const totalIncome = monthIncomes.reduce((sum, currentValue) => sum + currentValue, 0);
+    const totalExpense = monthExpenses.reduce((sum, currentValue) => sum + currentValue, 0);
     return (totalIncome - totalExpense) / daysInMonth;
 }
 
