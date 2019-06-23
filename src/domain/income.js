@@ -1,3 +1,4 @@
+import { computed, action, observable } from "mobx";
 class Income {
     id;
     amount;
@@ -6,25 +7,50 @@ class Income {
     month;
 }
 
-let incomeIdSeq = 0;
-const incomes = [];
+export class IncomesStorage {
+    @observable
+    incomes = [];
+    incomeIdSeq = 0;
 
-addIncome = (year, month, amount, description) => {
-    incomeIdSeq++;
+    constructor() {
+        this.addIncome(2019, 5, 200, "Зарплата");
+        this.addIncome(2019, 5, 15000, "Pension");
+        this.addIncome(2019, 5, 160000, "Bonus");
+        this.addIncome(2019, 5, 15000, "Outside income");
+        this.addIncome(2019, 5, 15000, "Very long named income, what is going to happen with layout?");
+    }
 
-    const income = new Income();
-    income.id = incomeIdSeq;
-    income.amount = amount;
-    income.description = description;
-    income.year = year;
-    income.month = month;
+    @action
+    addIncome = (year, month, amount, description) => {
+        this.incomeIdSeq++;
 
-    incomes.push(income);
+        const income = new Income();
+        income.id = this.incomeIdSeq;
+        income.amount = amount;
+        income.description = description;
+        income.year = year;
+        income.month = month;
+
+        this.incomes.push(income);
+    }
+
+    @action
+    removeIncome = (id) => {
+        const index = this.incomes.findIndex(i => i.id === id);
+        this.incomes.splice(index, 1);
+    }
+
+    @action
+    editIncome = (id, amount, description) => {
+        const index = this.incomes.findIndex(i => i.id === id);
+        const income = this.incomes[index];
+        if (amount !== null) {
+            income.amount = amount;
+        }
+        if (description !== null) {
+            income.description = description;
+        }
+        this.incomes.splice(index, 1, income);
+    }
+    getIncomes = (year, month) => this.incomes.filter(i => i.year === year && i.month === month);
 }
-
-removeIncome = (id) => {
-    const index = incomes.findIndex(i => i.id === id);
-    incomes.splice(index, 1);
-}
-
-getIncomes = (year, month) => incomes.filter(i => i.year === year && i.month === month);

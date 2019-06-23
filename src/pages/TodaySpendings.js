@@ -1,12 +1,8 @@
 
 import React, { Component } from 'react';
-import { ScrollView, View, Text, Dimensions, StyleSheet, Alert } from 'react-native';
-import { KeyBoard } from '../components/keyboard/Keyboard';
-import { AddSpendingButton } from '../components/AddSpendingButton';
+import { ScrollView, View, Text, Dimensions, StyleSheet } from 'react-native';
 import { observer } from 'mobx-react';
-import { IconOutline } from '@ant-design/icons-react-native';
-import { Font } from 'expo';
-import { RemoveSpendingButton } from '../components/RemoveSpendingButton';
+import { IconButton } from '../components/IconButton';
 
 @observer
 export default class TodaySpendings extends Component {
@@ -64,17 +60,10 @@ class SpendingView extends Component {
         this.state = {};
     }
 
-    async componentDidMount() {
-        await Font.loadAsync({
-            'antoutline': require('../../node_modules/@ant-design/icons-react-native/fonts/antoutline.ttf')
-        });
-        this.setState({ fontLoaded: true })
-    }
-
     render() {
         return <View style={styles.spendingView}>
             <Text style={styles.spendingViewText}>{this.props.amount % 1 === 0 ? this.props.amount : this.props.amount.toFixed(2)} &#8381;</Text>
-            <RemoveSpendingButton onPress={this.props.onRemoveButtonPressed} />
+            <IconButton size={40} innerSize={20} icon={'close-circle'} onPress={this.props.onRemoveButtonPressed} />
         </View>
     }
 }

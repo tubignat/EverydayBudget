@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import { ButtonWrapper } from './common/ButtonWrapper';
 import { IconOutline } from '@ant-design/icons-react-native';
@@ -6,20 +5,15 @@ import { Font } from 'expo';
 import { View, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    removeSpendingButton: {
+    button: {
         borderRadius: 50,
-        width: 40,
-        height: 40,
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-    },
-    removeSpendingIcon: {
-        fontSize: 20,
     }
 })
 
-export class RemoveSpendingButton extends Component {
+export class IconButton extends Component {
     constructor(props) {
         super(props);
         this.state = {};
@@ -33,20 +27,28 @@ export class RemoveSpendingButton extends Component {
     }
 
     render() {
-        return <ButtonWrapper size={40} renderNormal={this.renderNormal} renderPressed={this.renderPressed} onPress={this.props.onPress} disabled={this.props.disabled} />
+        return <ButtonWrapper
+            size={this.props.size}
+            renderNormal={this.renderNormal}
+            renderPressed={this.renderPressed}
+            onPress={this.props.onPress}
+            disabled={this.props.disabled}
+        />
     }
 
     renderNormal = () => {
-        return <View style={styles.removeSpendingButton}>
+        return <View style={styles.button}>
             {
-                this.state.fontLoaded && <IconOutline style={[styles.removeSpendingIcon, { color: 'rgb(255, 69, 58)' }]} name='close-circle' />
+                this.state.fontLoaded &&
+                <IconOutline style={{ fontSize: this.props.innerSize, color: 'rgb(255, 69, 58)' }} name={this.props.icon} />
             }
         </View>;
     }
     renderPressed = () => {
-        return <View style={[styles.removeSpendingButton, { backgroundColor: 'rgb(255, 69, 58)' }]}>
+        return <View style={[styles.button, { backgroundColor: 'rgb(255, 69, 58)' }]}>
             {
-                this.state.fontLoaded && <IconOutline style={[styles.removeSpendingIcon, { color: 'white' }]} name='close-circle' />
+                this.state.fontLoaded &&
+                <IconOutline style={{ fontSize: this.props.innerSize, color: 'white' }} name={this.props.icon} />
             }
         </View>;
     }
