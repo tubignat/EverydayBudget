@@ -1,14 +1,15 @@
-
 import React, { Component } from 'react';
 import { IconButton } from '../components/IconButton';
 import { ScrollView, View, Text, TextInput, Dimensions, StyleSheet, Alert, KeyboardAvoidingView } from 'react-native';
 import { observer } from 'mobx-react';
 import TextInputWithTemporaryInvalidValue from '../components/TextInputWithTemporaryInvalidValue';
 import { TextButton } from '../components/TextButton';
+import { _daysInMonth } from '../domain/budget';
+import { getBudgetPerDay, getBudget } from "../domain/budget";
 
 
 @observer
-export default class Settings extends Component {
+export default class MonthSpendings extends Component {
 
     constructor(props) {
         super(props);
@@ -16,18 +17,51 @@ export default class Settings extends Component {
         };
     }
 
+    getBudgetForTheDay = (day, month, year) => {
+        const { incomesStorage, expensesStorage, spendingsStorage } = this.props;
+        const budgetPerDay = getBudgetPerDay(
+            incomesStorage.getIncomes(year, month).map(i => i.amount),
+            expensesStorage.getExpenses(year, month).map(e => e.amount),
+            year,
+            month
+        );
+
+        return getBudget(budgetPerDay, spendingsStorage.getSpendings, year, month, day);
+    }
+
     render() {
-        const { incomesStorage, expensesStorage } = this.props;
+        const { incomesStorage, expensesStorage, spendingsStorage } = this.props;
         const date = new Date();
         const year = date.getFullYear();
         const month = date.getMonth();
+        const day = date.getDate();
+        const daysInMonth = _daysInMonth(month, year);
+
+
         const incomes = incomesStorage.getIncomes(year, month);
         const expenses = expensesStorage.getExpenses(year, month);
 
+        const days = Array.from({ length: daysInMonth }, (_, k) => k + 1);
+
         return <KeyboardAvoidingView behavior='padding'>
             <ScrollView style={{ marginTop: 25, padding: 20 }}>
-                <Text style={styles.header}>Настройки</Text>
-                <Text style={styles.subheader}>Доходы</Text>
+                <Text style={styles.header}>Траты за месяц</Text>
+
+
+                {
+                    days.map(d => <DayOfMonthView
+                        key={d}
+                        day={d}
+                        month={month}
+                        year={year}
+                        budget={this.getBudgetForTheDay(d, month, year).toFixed(0)}
+                    />)
+                }
+
+
+
+
+                {/* <Text style={styles.subheader}>Доходы</Text>
 
                 <IncomesList
                     incomes={incomes}
@@ -47,7 +81,7 @@ export default class Settings extends Component {
                     onAmountChanged={(id, amount) => expensesStorage.editExpense(id, amount, null)}
                     onDescriptionChanged={(id, description) => expensesStorage.editExpense(id, null, description)}
                     onAdd={() => expensesStorage.addExpense(year, month, 0, 'Новый расход')}
-                />
+                /> */}
 
                 <View style={{ height: 60 }}></View>
 
@@ -55,6 +89,131 @@ export default class Settings extends Component {
         </KeyboardAvoidingView>
     }
 }
+
+
+class DayOfMonthView extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+
+    render() {
+        const { day, month, year, budget } = this.props;
+        const style = this.isWeekend(day, month, year) ? [styles.dayOfMonth, styles.weekend] : styles.dayOfMonth;
+
+        return <View style={styles.calendarRow}>
+            <View>
+                <View style={styles.dayTextContainer}>
+                    <Text style={style}>
+                        {day}
+                    </Text>
+                </View>
+            </View>
+            <Text style={styles.daysBudget} >
+                {budget} &#8381;
+            </Text>
+        </View>
+    }
+
+    isWeekend = (day, month, year) => {
+        const dayOfWeek = new Date(year, month, day).getDay();
+        return dayOfWeek === 6 || dayOfWeek === 0;
+    }
+
+}
+
+const styles = StyleSheet.create({
+    dayTextContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 50,
+        height: 50,
+        borderRadius: 100,
+    },
+    dayOfMonth: {
+        fontSize: 20,
+    },
+    weekend: {
+        color: 'crimson'
+    },
+    daysBudget: {
+        fontSize: 20
+    },
+    calendarRow: {
+        marginLeft: 20,
+        marginRight: 20,
+        paddingTop: 10,
+        paddingBottom: 10,
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    header: {
+        fontSize: 40,
+        fontWeight: '300',
+        marginBottom: 40
+    },
+    subheader: {
+        color: 'gray',
+        fontSize: 20,
+        marginLeft: 15,
+    },
+    incomesList: {
+        margin: 20,
+        marginRight: 0,
+        marginBottom: 40,
+        flex: 1,
+        justifyContent: 'center'
+    },
+    addButton: {
+        flex: 1,
+        flexDirection: 'row'
+    },
+    incomeView: {
+        flex: 1,
+        paddingBottom: 10,
+        flexBasis: 'auto',
+        flexDirection: 'row',
+    },
+    emptyListTextContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    emptyListText: {
+        color: 'gray',
+        fontSize: 15
+    },
+    wrapper: {
+        flex: 1,
+        flexDirection: 'row'
+    },
+    incomeViewText: {
+        alignSelf: 'center',
+        flex: 1,
+        flexGrow: 1.5,
+        fontSize: 18,
+    },
+    incomeViewAmount: {
+        flex: 1,
+        flexDirection: 'row',
+        alignSelf: 'center',
+    },
+    incomeViewAmountText: {
+        fontSize: 18,
+    },
+    removeButtonContainer: {
+        alignSelf: 'center'
+    }
+});
+
+
+
+
+
 
 @observer
 class IncomesList extends Component {
@@ -122,7 +281,7 @@ class IncomeView extends Component {
                 />
             </View>
             <View style={styles.removeButtonContainer}>
-                <IconButton size={40} innerSize={18} icon='close-circle' color='rgb(255, 69, 58)' onPress={this.props.onRemoveButtonPressed} />
+                <IconButton size={40} innerSize={18} icon='close-circle' onPress={this.props.onRemoveButtonPressed} />
             </View>
         </View>
     }
@@ -141,64 +300,3 @@ class IncomeView extends Component {
     }
 }
 
-
-const styles = StyleSheet.create({
-    header: {
-        fontSize: 40,
-        fontWeight: '300',
-        marginBottom: 40
-    },
-    subheader: {
-        color: 'gray',
-        fontSize: 20,
-        marginLeft: 15,
-    },
-    incomesList: {
-        margin: 20,
-        marginRight: 0,
-        marginBottom: 40,
-        flex: 1,
-        justifyContent: 'center'
-    },
-    addButton: {
-        flex: 1,
-        flexDirection: 'row'
-    },
-    incomeView: {
-        flex: 1,
-        paddingBottom: 10,
-        flexBasis: 'auto',
-        flexDirection: 'row',
-    },
-    emptyListTextContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    emptyListText: {
-        color: 'gray',
-        fontSize: 15
-    },
-    wrapper: {
-        flex: 1,
-        flexDirection: 'row'
-    },
-    incomeViewText: {
-        alignSelf: 'center',
-        flex: 1,
-        flexGrow: 1.5,
-        fontSize: 18,
-    },
-    incomeViewAmount: {
-        flex: 1,
-        flexDirection: 'row',
-        alignSelf: 'center',
-    },
-    incomeViewAmountText: {
-        fontSize: 18,
-    },
-    removeButtonContainer: {
-        alignSelf: 'center'
-    }
-});

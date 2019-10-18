@@ -12,6 +12,7 @@ import { SpendingsStorage } from './src/domain/spending';
 import { IncomesStorage } from './src/domain/income';
 import { ExpensesStorage } from './src/domain/expense';
 import Settings from './src/pages/Settings.js';
+import MonthSpendings from './src/pages/MonthSpendings';
 
 
 const styles = StyleSheet.create({
@@ -42,10 +43,11 @@ export default class App extends Component {
 
     render() {
         return (
-            <Swiper style={styles.wrapper} loop={false} index={0} bounces={true}>
+            <Swiper style={styles.wrapper} loop={false} index={3} bounces={true}>
                 <Settings incomesStorage={this.incomesStorage} expensesStorage={this.expensesStorage} />
                 <Home spendingsStorage={this.spendingsStorage} incomesStorage={this.incomesStorage} expensesStorage={this.expensesStorage} />
                 <TodaySpendings storage={this.spendingsStorage} />
+                <MonthSpendings spendingsStorage={this.spendingsStorage} incomesStorage={this.incomesStorage} expensesStorage={this.expensesStorage} />
             </Swiper>
         );
     }

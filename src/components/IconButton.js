@@ -40,12 +40,12 @@ export class IconButton extends Component {
         return <View style={styles.button}>
             {
                 this.state.fontLoaded &&
-                <IconOutline style={{ fontSize: this.props.innerSize, color: 'rgb(255, 69, 58)' }} name={this.props.icon} />
+                <IconOutline style={{ fontSize: this.props.innerSize, color: this.props.color }} name={this.props.icon} />
             }
         </View>;
     }
     renderPressed = () => {
-        return <View style={[styles.button, { backgroundColor: 'rgb(255, 69, 58)' }]}>
+        return <View style={[styles.button, { backgroundColor: this.props.color }]}>
             {
                 this.state.fontLoaded &&
                 <IconOutline style={{ fontSize: this.props.innerSize, color: 'white' }} name={this.props.icon} />
