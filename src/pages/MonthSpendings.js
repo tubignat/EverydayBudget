@@ -6,7 +6,9 @@ import TextInputWithTemporaryInvalidValue from '../components/TextInputWithTempo
 import { TextButton } from '../components/TextButton';
 import { _daysInMonth } from '../domain/budget';
 import { getBudgetPerDay, getBudget } from "../domain/budget";
-
+import Picker from '../components/Picker'
+import SlidingUpPanel from '../components/SlidingUpPanel';
+const Window = Dimensions.get('window')
 
 @observer
 export default class MonthSpendings extends Component {
@@ -14,6 +16,8 @@ export default class MonthSpendings extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isForMonth: true,
+            isModalOpen: false
         };
     }
 
@@ -44,107 +48,107 @@ export default class MonthSpendings extends Component {
         const days = Array.from({ length: daysInMonth }, (_, k) => k + 1);
 
         return <KeyboardAvoidingView behavior='padding'>
+            {
+                this.state.isModalOpen && <SlidingUpPanel onClose={this.closeModal} offsetTop={Window.height / 2 - 50} />
+            }
             <ScrollView style={{ marginTop: 25, padding: 20 }}>
-                <Text style={styles.header}>Траты за месяц</Text>
+                <Text style={styles.header} onPress={this.openModal}>Статистика</Text>
+                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', width: 230 }}>
+                    <Picker text='Октябрь' disabled={!this.state.isForMonth} width={110} onPress={() => this.setState({ isForMonth: true })} />
+                    <Picker text='Весь год' disabled={this.state.isForMonth} width={110} onPress={() => this.setState({ isForMonth: false })} />
+                </View>
+                <View style={{ marginTop: 20 }}>
+                    <TableHeader />
 
-
-                {
-                    days.map(d => <DayOfMonthView
-                        key={d}
-                        day={d}
-                        month={month}
-                        year={year}
-                        budget={this.getBudgetForTheDay(d, month, year).toFixed(0)}
-                    />)
-                }
-
-
-
-
-                {/* <Text style={styles.subheader}>Доходы</Text>
-
-                <IncomesList
-                    incomes={incomes}
-                    thereAreNoValuesYetText={'Пока доходов нет. '}
-                    onRemove={(id) => incomesStorage.removeIncome(id)}
-                    onAmountChanged={(id, amount) => incomesStorage.editIncome(id, amount, null)}
-                    onDescriptionChanged={(id, description) => incomesStorage.editIncome(id, null, description)}
-                    onAdd={() => incomesStorage.addIncome(year, month, 0, 'Новый доход')}
-                />
-
-                <Text style={styles.subheader}>Регулярные расходы</Text>
-
-                <IncomesList
-                    incomes={expenses}
-                    thereAreNoValuesYetText={'Пока расходов нет. '}
-                    onRemove={(id) => expensesStorage.removeExpense(id)}
-                    onAmountChanged={(id, amount) => expensesStorage.editExpense(id, amount, null)}
-                    onDescriptionChanged={(id, description) => expensesStorage.editExpense(id, null, description)}
-                    onAdd={() => expensesStorage.addExpense(year, month, 0, 'Новый расход')}
-                /> */}
+                    {
+                        days.map(d => <TableRow
+                            key={d}
+                            day={d}
+                            month={month}
+                            year={year}
+                            budget={this.getBudgetForTheDay(d, month, year).toFixed(0)}
+                        />)
+                    }
+                </View>
 
                 <View style={{ height: 60 }}></View>
 
             </ScrollView>
         </KeyboardAvoidingView>
     }
+
+    openModal = () => {
+        this.setState({ isModalOpen: true });
+        this.props.onModalOpen();
+    }
+
+    closeModal = () => {
+        this.setState({ isModalOpen: false });
+        this.props.onModalClose();
+    }
+}
+
+function TableHeader() {
+    return <View style={styles.tableHeaderContainer}>
+        <Text style={[styles.tableHeaderCell, { width: 65 }]}>День</Text>
+        <Text style={[styles.tableHeaderCell, { textAlign: 'right' }]}>Бюджет</Text>
+    </View>
 }
 
 
-class DayOfMonthView extends Component {
+class TableRow extends Component {
     constructor(props) {
         super(props);
         this.state = {};
     }
 
     render() {
-        const { day, month, year, budget } = this.props;
-        const style = this.isWeekend(day, month, year) ? [styles.dayOfMonth, styles.weekend] : styles.dayOfMonth;
+        const { day, month, year, budget, saldo } = this.props;
+        const dayOfWeek = new Date(year, month, day).getDay();
+        const style = this.isWeekend(dayOfWeek) ? [styles.dayOfMonth, styles.weekend] : styles.dayOfMonth;
 
         return <View style={styles.calendarRow}>
-            <View>
-                <View style={styles.dayTextContainer}>
-                    <Text style={style}>
-                        {day}
-                    </Text>
-                </View>
-            </View>
-            <Text style={styles.daysBudget} >
+            <Text style={[styles.tableRowCell, style]}>
+                {day}, {this.getDayOfWeekAbbreviation(dayOfWeek)}
+            </Text>
+            <Text style={[styles.daysBudget, styles.tableRowCell]} >
                 {budget} &#8381;
             </Text>
         </View>
     }
 
-    isWeekend = (day, month, year) => {
-        const dayOfWeek = new Date(year, month, day).getDay();
-        return dayOfWeek === 6 || dayOfWeek === 0;
+    getDayOfWeekAbbreviation = (datOfWeek) => {
+        switch (datOfWeek) {
+            case 0: return 'вс';
+            case 1: return 'пн';
+            case 2: return 'вт';
+            case 3: return 'ср';
+            case 4: return 'чт';
+            case 5: return 'пт';
+            case 6: return 'сб';
+        }
     }
+
+    isWeekend = (dayOfWeek) => dayOfWeek === 6 || dayOfWeek === 0;
 
 }
 
 const styles = StyleSheet.create({
-    dayTextContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 50,
-        height: 50,
-        borderRadius: 100,
-    },
     dayOfMonth: {
-        fontSize: 20,
+        width: 65
+        // fontSize: 20,
     },
     weekend: {
         color: 'crimson'
     },
     daysBudget: {
-        fontSize: 20
+        textAlign: 'right'
     },
     calendarRow: {
         marginLeft: 20,
         marginRight: 20,
-        paddingTop: 10,
-        paddingBottom: 10,
+        padding: 15,
+        paddingLeft: 5,
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -207,96 +211,27 @@ const styles = StyleSheet.create({
     },
     removeButtonContainer: {
         alignSelf: 'center'
+    },
+    tableHeaderContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginLeft: 20,
+        marginRight: 20,
+        borderBottomWidth: 1,
+        borderColor: 'gray',
+        padding: 15,
+        paddingLeft: 5
+    },
+    tableHeaderCell: {
+        width: 100,
+        fontSize: 18,
+        color: 'gray'
+    },
+    tableRowCell: {
+        width: 100,
+        fontSize: 20,
+        paddingLeft: 5,
     }
 });
-
-
-
-
-
-
-@observer
-class IncomesList extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
-
-    render() {
-        return <View style={styles.incomesList}>
-            {
-                this.props.incomes.length === 0 &&
-                <View style={styles.emptyListTextContainer}>
-                    <Text style={styles.emptyListText}>{this.props.thereAreNoValuesYetText}</Text>
-                    <TextButton text='Добавить' height={50} fontSize={15} onPress={this.props.onAdd} />
-                </View>
-            }
-            {
-                this.props.incomes.map((i) =>
-                    <IncomeView
-                        key={i.id}
-                        income={i}
-                        onRemoveButtonPressed={() => this.props.onRemove(i.id)}
-                        onAmountChanged={(amount) => this.props.onAmountChanged(i.id, amount)}
-                        onDescriptionChanged={(description) => this.props.onDescriptionChanged(i.id, description)}
-                    />
-                )
-            }
-            {
-                this.props.incomes.length !== 0 && <View style={styles.addButton}>
-                    <TextButton text='Добавить' height={50} fontSize={18} onPress={this.props.onAdd} />
-                </View>
-            }
-        </View>
-    }
-}
-
-@observer
-class IncomeView extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
-
-    render() {
-        return <View style={styles.incomeView}>
-            <View style={styles.wrapper}>
-                <View style={styles.incomeViewAmount}>
-                    <TextInputWithTemporaryInvalidValue
-                        style={styles.incomeViewAmountText}
-                        value={this.props.income.amount.toString()}
-                        onChange={(text) => this.props.onAmountChanged(Number(text))}
-                        isValidValue={(text) => {
-                            const number = Number(text);
-                            return !isNaN(number) && number !== 0;
-                        }}
-                    />
-                    <Text style={styles.incomeViewAmountText}> &#8381;</Text>
-                </View>
-                <TextInput
-                    style={styles.incomeViewText}
-                    onChangeText={this.props.onDescriptionChanged}
-                    value={this.props.income.description}
-                    selectTextOnFocus
-                />
-            </View>
-            <View style={styles.removeButtonContainer}>
-                <IconButton size={40} innerSize={18} icon='close-circle' onPress={this.props.onRemoveButtonPressed} />
-            </View>
-        </View>
-    }
-
-    handleAmountChanged = (newAmountText) => {
-        console.log('amounttext: ' + newAmountText);
-        if (newAmountText === '') {
-            this.props.onAmountChanged(0);
-            console.log('amounttext: ' + newAmountText);
-        }
-        else {
-            const amount = Number(newAmountText);
-            if (!isNaN(amount))
-                this.props.onAmountChanged(amount);
-        }
-    }
-}
-

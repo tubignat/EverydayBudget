@@ -35,7 +35,9 @@ const styles = StyleSheet.create({
 export default class App extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            isScrollLocked: false
+        };
         this.spendingsStorage = new SpendingsStorage();
         this.incomesStorage = new IncomesStorage();
         this.expensesStorage = new ExpensesStorage();
@@ -43,11 +45,16 @@ export default class App extends Component {
 
     render() {
         return (
-            <Swiper style={styles.wrapper} loop={false} index={3} bounces={true}>
+            <Swiper style={styles.wrapper} loop={false} index={3} bounces={true} scrollEnabled={!this.state.isScrollLocked}
+                showsPagination={!this.state.isScrollLocked}>
                 <Settings incomesStorage={this.incomesStorage} expensesStorage={this.expensesStorage} />
                 <Home spendingsStorage={this.spendingsStorage} incomesStorage={this.incomesStorage} expensesStorage={this.expensesStorage} />
                 <TodaySpendings storage={this.spendingsStorage} />
-                <MonthSpendings spendingsStorage={this.spendingsStorage} incomesStorage={this.incomesStorage} expensesStorage={this.expensesStorage} />
+                <MonthSpendings spendingsStorage={this.spendingsStorage} incomesStorage={this.incomesStorage}
+                    expensesStorage={this.expensesStorage}
+                    onModalOpen={() => this.setState({ isScrollLocked: true })}
+                    onModalClose={() => this.setState({ isScrollLocked: false })}
+                />
             </Swiper>
         );
     }

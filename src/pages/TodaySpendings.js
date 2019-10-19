@@ -63,7 +63,7 @@ class SpendingView extends Component {
     render() {
         return <View style={styles.spendingView}>
             <Text style={styles.spendingViewText}>{this.props.amount % 1 === 0 ? this.props.amount : this.props.amount.toFixed(2)} &#8381;</Text>
-            <IconButton size={40} innerSize={20} icon={'close-circle'} onPress={this.props.onRemoveButtonPressed} />
+            <IconButton size={40} innerSize={20} icon={'close-circle'} color='rgb(255, 69, 58)' onPress={this.props.onRemoveButtonPressed} />
         </View>
     }
 }

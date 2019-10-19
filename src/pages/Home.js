@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
         fontSize: 45,
     },
     transaction: {
-        fontSize: 45,
+        fontSize: 40,
         fontWeight: '200'
     }
 });

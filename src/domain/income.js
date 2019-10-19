@@ -13,11 +13,11 @@ export class IncomesStorage {
     incomeIdSeq = 0;
 
     constructor() {
-        this.addIncome(2019, 6, 200, "Зарплата");
-        this.addIncome(2019, 6, 15000, "Pension");
-        this.addIncome(2019, 6, 160000, "Bonus");
-        this.addIncome(2019, 6, 15000, "Outside income");
-        this.addIncome(2019, 6, 15000, "Very long named income, what is going to happen with layout?");
+        this.addIncome(2019, 9, 200, "Зарплата");
+        this.addIncome(2019, 9, 15000, "Pension");
+        this.addIncome(2019, 9, 160000, "Bonus");
+        this.addIncome(2019, 9, 15000, "Outside income");
+        this.addIncome(2019, 9, 15000, "Very long named income, what is going to happen with layout?");
     }
 
     @action
