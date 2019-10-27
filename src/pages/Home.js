@@ -4,6 +4,7 @@ import { KeyBoard } from '../components/keyboard/Keyboard';
 import { AddSpendingButton } from '../components/AddSpendingButton';
 import { observer } from 'mobx-react';
 import { getBudgetPerDay, getSaldo } from "../domain/budget";
+import Page from '../components/Page'
 
 @observer
 export default class Home extends Component {
@@ -31,25 +32,27 @@ export default class Home extends Component {
         const { newTransactionRubles, isKopeckMode, newTransactionKopecks } = this.state;
         const todaysBudget = this.getTodaysBudget(this.props.incomesStorage, this.props.expensesStorage, this.props.spendingsStorage).toFixed(0);
 
-        return <ScrollView
-            bounces={false}
-            style={{ marginTop: 25, padding: 20 }}
-        >
-            <View style={styles.budgetContainer}>
-                <Text style={styles.budgetText}>Бюджет на сегодня</Text>
-                <Text style={[styles.budget, { color: todaysBudget < 0 ? 'rgb(255, 69, 58)' : 'black' }]}>{todaysBudget} &#8381;</Text>
-            </View>
-            <View style={styles.addTransactionContainer}>
-                <Text style={styles.addTransactionText}>Добавить трату</Text>
-                <View style={styles.addTransactionInput}>
-                    <Text style={[styles.transaction, {}]}>
-                        {newTransactionRubles}{isKopeckMode ? '.' : ''}{isKopeckMode ? newTransactionKopecks.join('') : ''} &#8381;
-                    </Text>
-                    <AddSpendingButton onPress={this.onAddButtonPressed} disabled={newTransactionRubles === 0 && newTransactionKopecks.length !== 2} />
+        return <Page>
+            <ScrollView
+                bounces={false}
+                style={{ paddingTop: 45, padding: 20 }}
+            >
+                <View style={styles.budgetContainer}>
+                    <Text style={styles.budgetText}>Бюджет на сегодня</Text>
+                    <Text style={[styles.budget, { color: todaysBudget < 0 ? 'rgb(255, 69, 58)' : 'black' }]}>{todaysBudget} &#8381;</Text>
                 </View>
-            </View>
-            <KeyBoard onKeyPressed={this.handleKeyPressed} onRemoveKeyPressed={this.handleRemoveKeyPressed} />
-        </ScrollView>
+                <View style={styles.addTransactionContainer}>
+                    <Text style={styles.addTransactionText}>Добавить трату</Text>
+                    <View style={styles.addTransactionInput}>
+                        <Text style={[styles.transaction, {}]}>
+                            {newTransactionRubles}{isKopeckMode ? '.' : ''}{isKopeckMode ? newTransactionKopecks.join('') : ''} &#8381;
+                    </Text>
+                        <AddSpendingButton onPress={this.onAddButtonPressed} disabled={newTransactionRubles === 0 && newTransactionKopecks.length !== 2} />
+                    </View>
+                </View>
+                <KeyBoard onKeyPressed={this.handleKeyPressed} onRemoveKeyPressed={this.handleRemoveKeyPressed} />
+            </ScrollView>
+        </Page>
     }
 
     handleKeyPressed = (char) => {
@@ -68,7 +71,7 @@ export default class Home extends Component {
             }
         }
         else {
-            const amount = newTransactionRubles <= 999 ? Number(newTransactionRubles.toString().concat(char)) : newTransactionRubles;
+            const amount = newTransactionRubles <= 9999 ? Number(newTransactionRubles.toString().concat(char)) : newTransactionRubles;
             this.setState({ newTransactionRubles: amount });
         }
     }

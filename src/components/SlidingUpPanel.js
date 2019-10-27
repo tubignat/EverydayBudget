@@ -19,6 +19,36 @@ class SlidingUpPanel extends React.Component {
                     Animated.spring(this.state.pan, { toValue: 0 }).start();
                 else
                     this.close();
+            },
+            onMoveShouldSetPanResponder: () => {
+                console.log('onMoveShouldSetPanResponder')
+            },
+            onMoveShouldSetPanResponderCapture: () => {
+                console.log('onMoveShouldSetPanResponderCapture')
+            },
+            onPanResponderEnd: () => {
+                console.log('onPanResponderEnd')
+            },
+            onPanResponderGrant: () => {
+                console.log('onPanResponderGrant')
+            },
+            onPanResponderReject: () => {
+                console.log('onPanResponderReject')
+            },
+            onPanResponderStart: () => {
+                console.log('onPanResponderStart')
+            },
+            onPanResponderTerminate: () => {
+                console.log('onPanResponderTerminate')
+            },
+            onPanResponderTerminationRequest: () => {
+                console.log('onPanResponderTerminationRequest')
+            },
+            onShouldBlockNativeResponder: () => {
+                console.log('onShouldBlockNativeResponder')
+            },
+            onStartShouldSetPanResponderCapture: () => {
+                console.log('onStartShouldSetPanResponderCapture')
             }
         });
 
@@ -50,6 +80,9 @@ class SlidingUpPanel extends React.Component {
                         <View style={styles.handleContainer} {...this.panResponder.panHandlers}>
                             <View style={styles.handle} />
                         </View>
+                        <View style={[styles.content, { height: Window.height - offsetTop - 7 }]}>
+                            {this.props.children}
+                        </View>
                     </Animated.View>
                 </View>
 
@@ -71,7 +104,7 @@ let styles = StyleSheet.create({
         position: 'absolute',
         top: 0,
         left: 0,
-        zIndex: 1
+        zIndex: 10,
     },
     backdropTouchable: {
         height: '100%',
@@ -89,7 +122,7 @@ let styles = StyleSheet.create({
         left: 0,
         width: '100%',
         height: '100%',
-        zIndex: 2
+        zIndex: 20
     },
     draggablePanel: {
         backgroundColor: 'white',
@@ -106,6 +139,9 @@ let styles = StyleSheet.create({
         height: 7,
         backgroundColor: 'lightgray',
         borderRadius: 50
+    },
+    content: {
+        padding: 20,
     }
 });
 

@@ -5,7 +5,7 @@ import { ScrollView, View, Text, TextInput, Dimensions, StyleSheet, Alert, Keybo
 import { observer } from 'mobx-react';
 import TextInputWithTemporaryInvalidValue from '../components/TextInputWithTemporaryInvalidValue';
 import { TextButton } from '../components/TextButton';
-
+import Page from '../components/Page'
 
 @observer
 export default class Settings extends Component {
@@ -24,35 +24,37 @@ export default class Settings extends Component {
         const incomes = incomesStorage.getIncomes(year, month);
         const expenses = expensesStorage.getExpenses(year, month);
 
-        return <KeyboardAvoidingView behavior='padding'>
-            <ScrollView style={{ marginTop: 25, padding: 20 }}>
-                <Text style={styles.header}>Настройки</Text>
-                <Text style={styles.subheader}>Доходы</Text>
+        return <Page>
+            <KeyboardAvoidingView behavior='padding'>
+                <ScrollView style={{ padding: 20, paddingTop: 45 }}>
+                    <Text style={styles.header}>Настройки</Text>
+                    <Text style={styles.subheader}>Доходы</Text>
 
-                <IncomesList
-                    incomes={incomes}
-                    thereAreNoValuesYetText={'Пока доходов нет. '}
-                    onRemove={(id) => incomesStorage.removeIncome(id)}
-                    onAmountChanged={(id, amount) => incomesStorage.editIncome(id, amount, null)}
-                    onDescriptionChanged={(id, description) => incomesStorage.editIncome(id, null, description)}
-                    onAdd={() => incomesStorage.addIncome(year, month, 0, 'Новый доход')}
-                />
+                    <IncomesList
+                        incomes={incomes}
+                        thereAreNoValuesYetText={'Пока доходов нет. '}
+                        onRemove={(id) => incomesStorage.removeIncome(id)}
+                        onAmountChanged={(id, amount) => incomesStorage.editIncome(id, amount, null)}
+                        onDescriptionChanged={(id, description) => incomesStorage.editIncome(id, null, description)}
+                        onAdd={() => incomesStorage.addIncome(year, month, 0, 'Новый доход')}
+                    />
 
-                <Text style={styles.subheader}>Регулярные расходы</Text>
+                    <Text style={styles.subheader}>Регулярные расходы</Text>
 
-                <IncomesList
-                    incomes={expenses}
-                    thereAreNoValuesYetText={'Пока расходов нет. '}
-                    onRemove={(id) => expensesStorage.removeExpense(id)}
-                    onAmountChanged={(id, amount) => expensesStorage.editExpense(id, amount, null)}
-                    onDescriptionChanged={(id, description) => expensesStorage.editExpense(id, null, description)}
-                    onAdd={() => expensesStorage.addExpense(year, month, 0, 'Новый расход')}
-                />
+                    <IncomesList
+                        incomes={expenses}
+                        thereAreNoValuesYetText={'Пока расходов нет. '}
+                        onRemove={(id) => expensesStorage.removeExpense(id)}
+                        onAmountChanged={(id, amount) => expensesStorage.editExpense(id, amount, null)}
+                        onDescriptionChanged={(id, description) => expensesStorage.editExpense(id, null, description)}
+                        onAdd={() => expensesStorage.addExpense(year, month, 0, 'Новый расход')}
+                    />
 
-                <View style={{ height: 60 }}></View>
+                    <View style={{ height: 60 }}></View>
 
-            </ScrollView>
-        </KeyboardAvoidingView>
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </Page>
     }
 }
 

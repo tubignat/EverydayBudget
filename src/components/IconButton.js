@@ -13,6 +13,15 @@ const styles = StyleSheet.create({
     }
 })
 
+let isFontLoaded = false;
+const promise = new Promise(async resolve => {
+    await Font.loadAsync({
+        'antoutline': require('../../node_modules/@ant-design/icons-react-native/fonts/antoutline.ttf')
+    });
+    isFontLoaded = true;
+    resolve();
+})
+
 export class IconButton extends Component {
     constructor(props) {
         super(props);
@@ -20,9 +29,9 @@ export class IconButton extends Component {
     }
 
     async componentDidMount() {
-        await Font.loadAsync({
-            'antoutline': require('../../node_modules/@ant-design/icons-react-native/fonts/antoutline.ttf')
-        });
+        if (!isFontLoaded) {
+            await promise;
+        }
         this.setState({ fontLoaded: true })
     }
 

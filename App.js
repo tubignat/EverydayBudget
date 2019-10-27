@@ -14,23 +14,6 @@ import { ExpensesStorage } from './src/domain/expense';
 import Settings from './src/pages/Settings.js';
 import MonthSpendings from './src/pages/MonthSpendings';
 
-
-const styles = StyleSheet.create({
-    wrapper: {
-    },
-    slide2: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#97CAE5',
-    },
-    text: {
-        color: '#fff',
-        fontSize: 30,
-        fontWeight: 'bold',
-    }
-})
-
 @observer
 export default class App extends Component {
     constructor(props) {
@@ -45,7 +28,7 @@ export default class App extends Component {
 
     render() {
         return (
-            <Swiper style={styles.wrapper} loop={false} index={3} bounces={true} scrollEnabled={!this.state.isScrollLocked}
+            <Swiper loop={false} index={3} bounces={true} scrollEnabled={!this.state.isScrollLocked}
                 showsPagination={!this.state.isScrollLocked}>
                 <Settings incomesStorage={this.incomesStorage} expensesStorage={this.expensesStorage} />
                 <Home spendingsStorage={this.spendingsStorage} incomesStorage={this.incomesStorage} expensesStorage={this.expensesStorage} />
