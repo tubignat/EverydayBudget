@@ -24,6 +24,8 @@ export default class App extends Component {
         this.spendingsStorage = new SpendingsStorage();
         this.incomesStorage = new IncomesStorage();
         this.expensesStorage = new ExpensesStorage();
+
+        setUpTestData(this.spendingsStorage, this.incomesStorage, this.expensesStorage)
     }
 
     render() {
@@ -42,3 +44,29 @@ export default class App extends Component {
         );
     }
 }
+
+function setUpTestData(spendingsStorage, incomesStorage, expensesStorage) {
+
+    const date = new Date();
+
+    incomesStorage.addIncome(date.getFullYear(), date.getMonth(), 200, "Зарплата");
+    incomesStorage.addIncome(date.getFullYear(), date.getMonth(), 15000, "Pension");
+    incomesStorage.addIncome(date.getFullYear(), date.getMonth(), 16000, "Bonus");
+    incomesStorage.addIncome(date.getFullYear(), date.getMonth(), 15000, "Outside income");
+    incomesStorage.addIncome(date.getFullYear(), date.getMonth(), 15000, "Very long named income, what is going to happen with layout?");
+
+    expensesStorage.addExpense(date.getFullYear(), date.getMonth(), 15400, 'Кредит')
+
+    const spendings = getTestSpendings(date.getFullYear(), date.getMonth(), date.getDate());
+
+    spendings.forEach(s => spendingsStorage.addSpending(s.year, s.month, s.day, s.amount, s.description))
+}
+
+function getTestSpendings(year, month, day) {
+    return [
+        { year: year, month: month, day: day, amount: 500 },
+        { year: year, month: month, day: day, amount: 2300 },
+        { year: year, month: month, day: day, amount: 2450 },
+        { year: year, month: month, day: day, amount: 100 },
+    ]
+};

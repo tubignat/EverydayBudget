@@ -109,6 +109,7 @@ class IncomeView extends Component {
                         style={styles.incomeViewAmountText}
                         value={this.props.income.amount.toString()}
                         onChange={(text) => this.props.onAmountChanged(Number(text))}
+                        placeholder=''
                         isValidValue={(text) => {
                             const number = Number(text);
                             return !isNaN(number) && number !== 0;
@@ -121,6 +122,7 @@ class IncomeView extends Component {
                     onChangeText={this.props.onDescriptionChanged}
                     value={this.props.income.description}
                     selectTextOnFocus
+                    placeholder='Описание...'
                 />
             </View>
             <View style={styles.removeButtonContainer}>

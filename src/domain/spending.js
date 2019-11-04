@@ -11,83 +11,7 @@ class Spending {
 
 export class SpendingsStorage {
     @observable
-    spendings = [{
-        year: 2019,
-        month: 9,
-        day: 20,
-        amount: 500
-    },
-    {
-        year: 2019,
-        month: 9,
-        day: 20,
-        amount: 2300
-    },
-
-    {
-        year: 2019,
-        month: 9,
-        day: 20,
-        amount: 2450
-    },
-    {
-        year: 2019,
-        month: 9,
-        day: 20,
-        amount: 100
-    },
-
-    {
-        year: 2019,
-        month: 9,
-        day: 20,
-        amount: 345
-    },
-    {
-        year: 2019,
-        month: 9,
-        day: 20,
-        amount: 123
-    },
-
-    {
-        year: 2019,
-        month: 9,
-        day: 20,
-        amount: 900
-    },
-    {
-        year: 2019,
-        month: 9,
-        day: 20,
-        amount: 500
-    },
-    {
-        year: 2019,
-        month: 9,
-        day: 20,
-        amount: 500
-    },
-    {
-        year: 2019,
-        month: 9,
-        day: 20,
-        amount: 500
-    },
-
-    {
-        year: 2019,
-        month: 9,
-        day: 20,
-        amount: 500
-    },
-    {
-        year: 2019,
-        month: 9,
-        day: 20,
-        amount: 9999.99
-    }
-    ];
+    spendings = [];
 
     constructor() {
         this.spendings.forEach((s, i) => s.id = i);
@@ -110,6 +34,18 @@ export class SpendingsStorage {
     removeSpending = (id) => {
         const index = this.spendings.findIndex(i => i.id === id);
         this.spendings.splice(index, 1);
+    }
+
+    editSpending = (id, amount, description) => {
+        const index = this.spendings.findIndex(i => i.id === id);
+        this.spendings[index] = {
+            id: id,
+            amount: amount,
+            description: description,
+            year: this.spendings[index].year,
+            month: this.spendings[index].month,
+            day: this.spendings[index].day
+        };
     }
 
     @computed

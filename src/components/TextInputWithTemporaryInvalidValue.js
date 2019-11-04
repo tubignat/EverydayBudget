@@ -13,7 +13,7 @@ export default class TextInputWithTemporaryInvalidValue extends Component {
 
     render() {
         return <TextInput
-            placeholder='Описание...'
+            placeholder={this.props.placeholder}
             selectTextOnFocus
             style={this.props.style}
             value={this.state.isTemporaryInvalidValue ? this.state.temporaryValue : this.props.value}

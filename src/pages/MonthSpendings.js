@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import { _daysInMonth, getSaldo } from '../domain/budget';
 import { getBudgetPerDay, getBudget } from "../domain/budget";
 import Picker from '../components/Picker'
+import { TextButton } from '../components/TextButton'
 import SlidingUpPanel from '../components/SlidingUpPanel';
 const Window = Dimensions.get('window')
 import Page from '../components/Page'
@@ -18,7 +19,7 @@ export default class MonthSpendings extends Component {
         this.state = {
             isForMonth: true,
             isModalOpen: true,
-            openedDay: 20
+            openedDay: 4
         };
     }
 
@@ -59,6 +60,7 @@ export default class MonthSpendings extends Component {
         const expenses = expensesStorage.getExpenses(year, month);
 
         const days = Array.from({ length: daysInMonth }, (_, k) => k + 1);
+        const monthName = this.getMonthName(month);
 
         return <View>
             {
@@ -70,6 +72,8 @@ export default class MonthSpendings extends Component {
                     saldo={this.getSaldoForTheDay(this.state.openedDay, month, year).toFixed(0)}
                     spendings={spendingsStorage.getSpendings(year, month, this.state.openedDay)}
                     remove={(id) => spendingsStorage.removeSpending(id)}
+                    edit={(id, amount) => spendingsStorage.editSpending(id, amount, null)}
+                    add={(day) => spendingsStorage.addSpending(year, month, day, 0, null)}
                 />
             }
             <Page>
@@ -77,7 +81,7 @@ export default class MonthSpendings extends Component {
                     <ScrollView style={{ padding: 20, paddingTop: 45 }}>
                         <Text style={styles.header}>Статистика</Text>
                         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', width: 230 }}>
-                            <Picker text='Октябрь' disabled={!this.state.isForMonth} width={110} onPress={() => this.setState({ isForMonth: true })} />
+                            <Picker text={monthName} disabled={!this.state.isForMonth} width={110} onPress={() => this.setState({ isForMonth: true })} />
                             <Picker text='Весь год' disabled={this.state.isForMonth} width={110} onPress={() => this.setState({ isForMonth: false })} />
                         </View>
                         <View style={{ marginTop: 20 }}>
@@ -88,7 +92,7 @@ export default class MonthSpendings extends Component {
                                     day={d}
                                     month={month}
                                     year={year}
-                                    budget={this.getBudgetForTheDay(d, month, year).toFixed(0)}
+                                    saldo={this.getSaldoForTheDay(d, month, year).toFixed(0)}
                                     onClick={() => this.openModal(d)}
                                 />)
                             }
@@ -111,32 +115,51 @@ export default class MonthSpendings extends Component {
         this.setState({ isModalOpen: false });
         this.props.onModalClose();
     }
+
+    getMonthName = (month) => {
+        switch (month) {
+            case 0: return 'Январь';
+            case 1: return 'Февраль';
+            case 2: return 'Март';
+            case 3: return 'Апрель';
+            case 4: return 'Май';
+            case 5: return 'Июнь';
+            case 6: return 'Июль';
+            case 7: return 'Август';
+            case 8: return 'Сентябрь';
+            case 9: return 'Октябрь';
+            case 10: return 'Ноябрь';
+            case 11: return 'Декабрь';
+        }
+    }
 }
 
-function DaysSpendingsPanel({ closePanel, year, month, day, budget, saldo, spendings, remove }) {
+function DaysSpendingsPanel({ closePanel, year, month, day, budget, saldo, spendings, remove, edit, add }) {
     const dayOfWeek = new Date(year, month, day).getDay();
+    const monthName = getMonthName(month);
     const dayOfWeekName = getDayOfWeekName(dayOfWeek);
 
-    return <SlidingUpPanel onClose={closePanel} offsetTop={Window.height / 2 - 100}>
+    return <SlidingUpPanel onClose={closePanel} offsetTop={Window.height / 4}>
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.daySpendingHeader}>
-                <Text style={styles.daySpendingDateText}>{day} октября</Text>
+                <Text style={styles.daySpendingDateText}>{day} {monthName}</Text>
             </View>
             <View style={styles.daySpendingBudgetContainer}>
                 <Text style={styles.daySpendingBudgetLabel}>Бюджет</Text>
-                <Text style={styles.daySpendingBudgetText}>{budget} &#8381;</Text>
+                <Text style={{ ...styles.daySpendingBudgetText, color: budget > 0 ? 'black' : 'rgb(255, 69, 58)' }}>{budget} &#8381;</Text>
             </View>
             <View style={styles.daySpendingBudgetContainer}>
                 <Text style={styles.daySpendingBudgetLabel}>Сальдо</Text>
-                <Text style={styles.daySpendingBudgetText}>{saldo} &#8381;</Text>
+                <Text style={{ ...styles.daySpendingBudgetText, color: saldo > 0 ? 'black' : 'rgb(255, 69, 58)' }}>{saldo} &#8381;</Text>
             </View>
             {
-                spendings.length > 0 && <DayOfMonthSpendingsList spendings={spendings} remove={remove} />
+                spendings.length > 0 && <DayOfMonthSpendingsList spendings={spendings} remove={remove} edit={edit} add={() => add(day)} />
             }
             {
                 spendings.length === 0 &&
                 <View style={styles.emptyListTextContainer}>
-                    <Text style={styles.emptyListText}>За этот день трат нет</Text>
+                    <Text style={styles.emptyListText}>За этот день трат нет. </Text>
+                    <TextButton text='Добавить' height={50} fontSize={15} onPress={() => add(day)} />
                 </View>
             }
         </ScrollView>
@@ -153,12 +176,29 @@ function DaysSpendingsPanel({ closePanel, year, month, day, budget, saldo, spend
             case 6: return 'суббота';
         }
     }
+
+    function getMonthName(month) {
+        switch (month) {
+            case 0: return 'января';
+            case 1: return 'февраля';
+            case 2: return 'марта';
+            case 3: return 'апреля';
+            case 4: return 'мая';
+            case 5: return 'июня';
+            case 6: return 'июля';
+            case 7: return 'августа';
+            case 8: return 'сентября';
+            case 9: return 'октября';
+            case 10: return 'ноября';
+            case 11: return 'декабря';
+        }
+    }
 }
 
 function TableHeader() {
     return <View style={styles.tableHeaderContainer}>
         <Text style={[styles.tableHeaderCell, { width: 65 }]}>День</Text>
-        <Text style={[styles.tableHeaderCell, { textAlign: 'right' }]}>Бюджет</Text>
+        <Text style={[styles.tableHeaderCell, { textAlign: 'right' }]}>Сальдо</Text>
     </View>
 }
 
@@ -170,7 +210,7 @@ class TableRow extends Component {
     }
 
     render() {
-        const { day, month, year, budget, saldo } = this.props;
+        const { day, month, year, saldo } = this.props;
         const dayOfWeek = new Date(year, month, day).getDay();
         const style = this.isWeekend(dayOfWeek) ? [styles.dayOfMonth, styles.weekend] : styles.dayOfMonth;
 
@@ -184,8 +224,8 @@ class TableRow extends Component {
                 <Text style={[styles.tableRowCell, style]}>
                     {day}, {this.getDayOfWeekAbbreviation(dayOfWeek)}
                 </Text>
-                <Text style={[styles.daysBudget, styles.tableRowCell]} >
-                    {budget} &#8381;
+                <Text style={[styles.daysBudget, styles.tableRowCell, { color: saldo > 0 ? 'black' : 'rgb(255, 69, 58)' }]} >
+                    {saldo} &#8381;
                     </Text>
             </View>
         </TouchableWithoutFeedback>
