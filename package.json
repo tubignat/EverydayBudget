@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@ant-design/icons-react-native": "^1.0.2",
+    "@react-native-community/async-storage": "^1.6.3",
     "eslint": "^5.16.0",
     "expo": "^33.0.0",
     "mobx": "^5.10.1",

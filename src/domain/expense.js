@@ -1,4 +1,6 @@
 import { computed, action, observable } from "mobx";
+import AsyncStorage from '@react-native-community/async-storage';
+
 class Expense {
     id;
     amount;
@@ -12,7 +14,26 @@ export class ExpensesStorage {
     expenses = [];
     expenseIdSeq = 0;
 
+    init = async () => {
+        try {
+            await AsyncStorage.setItem('test_key', 'test_value');
+            const result = await AsyncStorage.getItem('test_key');
+            if (result !== null) {
+                console.log(`Result is ${result}`);
+            }
+
+            const notExistingResult = await AsyncStorage.getItem('test_key_2');
+            if (notExistingResult === null) {
+                console.log(`Result is ${result}`);
+            }
+        }
+        catch (e) {
+            console.log(e);
+        }
+
+    }
     constructor() {
+        init();
     }
 
     @action
