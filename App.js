@@ -25,12 +25,12 @@ export default class App extends Component {
         this.incomesStorage = new IncomesStorage();
         this.expensesStorage = new ExpensesStorage();
 
-        setUpTestData(this.spendingsStorage, this.incomesStorage, this.expensesStorage)
+        // setUpTestData(this.spendingsStorage, this.incomesStorage, this.expensesStorage)
     }
 
     render() {
         return (
-            <Swiper loop={false} index={3} bounces={true} scrollEnabled={!this.state.isScrollLocked}
+            <Swiper loop={false} index={1} bounces={true} scrollEnabled={!this.state.isScrollLocked}
                 showsPagination={!this.state.isScrollLocked}>
                 <Settings incomesStorage={this.incomesStorage} expensesStorage={this.expensesStorage} />
                 <Home spendingsStorage={this.spendingsStorage} incomesStorage={this.incomesStorage} expensesStorage={this.expensesStorage} />

@@ -1,5 +1,5 @@
 import { computed, action, observable } from "mobx";
-import AsyncStorage from '@react-native-community/async-storage';
+import { AsyncStorage } from 'react-native';
 
 class Expense {
     id;
@@ -16,24 +16,21 @@ export class ExpensesStorage {
 
     init = async () => {
         try {
-            await AsyncStorage.setItem('test_key', 'test_value');
-            const result = await AsyncStorage.getItem('test_key');
-            if (result !== null) {
-                console.log(`Result is ${result}`);
-            }
-
-            const notExistingResult = await AsyncStorage.getItem('test_key_2');
-            if (notExistingResult === null) {
-                console.log(`Result is ${result}`);
+            const expensesString = await AsyncStorage.getItem(this.getStorageKey());
+            if (expensesString !== null) {
+                this.expenses = JSON.parse(expensesString);
+                this.expenseIdSeq = this.getHighestId(this.expenses) + 1;
             }
         }
         catch (e) {
-            console.log(e);
+            console.error(e);
         }
-
     }
+
+    getHighestId = (expensesArray) => expensesArray.map(e => e.id).reduce((acc, current) => acc > current ? acc : current);
+
     constructor() {
-        init();
+        this.init();
     }
 
     @action
@@ -48,12 +45,20 @@ export class ExpensesStorage {
         expense.month = month;
 
         this.expenses.push(expense);
+
+        AsyncStorage
+            .setItem(this.getStorageKey(), JSON.stringify(this.expenses))
+            .catch(error => console.error(error));
     }
 
     @action
     removeExpense = (id) => {
         const index = this.expenses.findIndex(i => i.id === id);
         this.expenses.splice(index, 1);
+
+        AsyncStorage
+            .setItem(this.getStorageKey(), JSON.stringify(this.expenses))
+            .catch(error => console.error(error));
     }
 
     @action
@@ -67,6 +72,13 @@ export class ExpensesStorage {
             expense.description = description;
         }
         this.expenses.splice(index, 1, expense);
+
+        AsyncStorage
+            .setItem(this.getStorageKey(), JSON.stringify(this.expenses))
+            .catch(error => console.error(error));
     }
+
     getExpenses = (year, month) => this.expenses.filter(i => i.year === year && i.month === month);
+
+    getStorageKey = () => 'expenses_storage';
 }

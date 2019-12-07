@@ -1,6 +1,5 @@
-
-import React, { Component } from 'react';
-import { Animated, PanResponder, TouchableWithoutFeedback, ScrollView, View, Text, TextInput, Dimensions, StyleSheet, Alert, KeyboardAvoidingView } from 'react-native';
+import React from 'react';
+import { Animated, PanResponder, TouchableWithoutFeedback, View, Dimensions, StyleSheet} from 'react-native';
 
 let Window = Dimensions.get('window');
 class SlidingUpPanel extends React.Component {
@@ -8,7 +7,7 @@ class SlidingUpPanel extends React.Component {
         super(props);
         this.state = {
             pan: new Animated.Value(Window.height - 20)
-        }
+        };
         this.panResponder = PanResponder.create({
             onStartShouldSetPanResponder: () => true,
             onPanResponderMove: Animated.event([null, {
@@ -19,36 +18,6 @@ class SlidingUpPanel extends React.Component {
                     Animated.spring(this.state.pan, { toValue: 0 }).start();
                 else
                     this.close();
-            },
-            onMoveShouldSetPanResponder: () => {
-                console.log('onMoveShouldSetPanResponder')
-            },
-            onMoveShouldSetPanResponderCapture: () => {
-                console.log('onMoveShouldSetPanResponderCapture')
-            },
-            onPanResponderEnd: () => {
-                console.log('onPanResponderEnd')
-            },
-            onPanResponderGrant: () => {
-                console.log('onPanResponderGrant')
-            },
-            onPanResponderReject: () => {
-                console.log('onPanResponderReject')
-            },
-            onPanResponderStart: () => {
-                console.log('onPanResponderStart')
-            },
-            onPanResponderTerminate: () => {
-                console.log('onPanResponderTerminate')
-            },
-            onPanResponderTerminationRequest: () => {
-                console.log('onPanResponderTerminationRequest')
-            },
-            onShouldBlockNativeResponder: () => {
-                console.log('onShouldBlockNativeResponder')
-            },
-            onStartShouldSetPanResponderCapture: () => {
-                console.log('onStartShouldSetPanResponderCapture')
             }
         });
 
@@ -62,7 +31,7 @@ class SlidingUpPanel extends React.Component {
         const top = this.state.pan.interpolate({
             inputRange: [-200, -100, -50, 0, height / 2, height],
             outputRange: [-50, -40, -25, 0, height / 2, height]
-        })
+        });
         const opacity = top.interpolate({
             inputRange: [0, height / 2, height],
             outputRange: [0.5, 0.25, 0]

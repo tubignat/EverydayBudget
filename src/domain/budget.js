@@ -3,7 +3,7 @@ export const getBudgetPerDay = (monthIncomes, monthExpenses, year, month) => {
     const totalIncome = monthIncomes.reduce((sum, currentValue) => sum + currentValue, 0);
     const totalExpense = monthExpenses.reduce((sum, currentValue) => sum + currentValue, 0);
     return (totalIncome - totalExpense) / daysInMonth;
-}
+};
 
 export const getBudget = (budgetPerDay, getSpendings, year, month, day) => {
     const budgetWithoutSpendings = budgetPerDay * day;
@@ -18,7 +18,7 @@ export const getBudget = (budgetPerDay, getSpendings, year, month, day) => {
     const totalSpendings = spendings.length > 0 ? spendings.reduce((sum, currentValue) => sum + currentValue) : 0;
 
     return budgetWithoutSpendings - totalSpendings;
-}
+};
 
 export const getSaldo = (budgetPerDay, getSpendings, year, month, day) => {
     const budgetWithoutSpendings = budgetPerDay * day;
@@ -33,7 +33,7 @@ export const getSaldo = (budgetPerDay, getSpendings, year, month, day) => {
     const totalSpendings = spendings.length > 0 ? spendings.reduce((sum, currentValue) => sum + currentValue) : 0;
 
     return budgetWithoutSpendings - totalSpendings;
-}
+};
 
 
 export function _daysInMonth(month, year) {
