@@ -5,7 +5,6 @@ import { IconButton } from './IconButton';
 import TextInputWithTemporaryInvalidValue from '../components/TextInputWithTemporaryInvalidValue';
 import { TextButton } from './TextButton';
 
-const Window = Dimensions.get('window')
 function DayOfMonthSpendingsList({ spendings, remove, edit, add }) {
     return <View style={styles.dayOfMonthSpendingsList}>
         {

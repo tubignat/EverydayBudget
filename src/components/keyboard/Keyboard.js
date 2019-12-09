@@ -5,7 +5,6 @@ import { KeyBoardRemoveButton } from './KeyBoardRemoveButton';
 
 const styles = StyleSheet.create({
     keyBoard: {
-        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },

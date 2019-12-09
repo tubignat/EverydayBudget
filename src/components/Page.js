@@ -1,14 +1,11 @@
-import React, { Component } from 'react';
-import { IconButton } from '../components/IconButton';
-import { ScrollView, View, Text, TextInput, Dimensions, StyleSheet, Alert, KeyboardAvoidingView } from 'react-native';
-import { observer } from 'mobx-react';
-import TextInputWithTemporaryInvalidValue from '../components/TextInputWithTemporaryInvalidValue';
-import { TextButton } from '../components/TextButton';
+import React from 'react';
+import {View, StyleSheet, Dimensions} from 'react-native';
 
+const {height, width} = Dimensions.get('window');
 export default function Page({ children }) {
     return (
         <View>
-            <View style={styles.statusBar}></View>
+            <View style={styles.statusBar}/>
             <View style={styles.content}>
                 {
                     children
@@ -20,6 +17,8 @@ export default function Page({ children }) {
 
 const styles = StyleSheet.create({
     content: {
+        width: width,
+        height: height
     },
     statusBar: {
         position: 'absolute',
@@ -29,4 +28,4 @@ const styles = StyleSheet.create({
         opacity: .9,
         backgroundColor: 'white'
     }
-})
+});
