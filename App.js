@@ -13,6 +13,7 @@ import { IncomesStorage } from './src/domain/income';
 import { ExpensesStorage } from './src/domain/expense';
 import Settings from './src/pages/Settings.js';
 import MonthSpendings from './src/pages/MonthSpendings';
+import { MonthSetupStorage } from './src/domain/monthSetup';
 
 @observer
 export default class App extends Component {
@@ -24,6 +25,7 @@ export default class App extends Component {
         this.spendingsStorage = new SpendingsStorage();
         this.incomesStorage = new IncomesStorage();
         this.expensesStorage = new ExpensesStorage();
+        this.monthSetupStorage = new MonthSetupStorage();
 
         // setUpTestData(this.spendingsStorage, this.incomesStorage, this.expensesStorage)
     }
@@ -32,7 +34,7 @@ export default class App extends Component {
         return (
             <Swiper loop={false} index={1} bounces={true} scrollEnabled={!this.state.isScrollLocked}
                 showsPagination={!this.state.isScrollLocked}>
-                <Settings incomesStorage={this.incomesStorage} expensesStorage={this.expensesStorage} />
+                <Settings incomesStorage={this.incomesStorage} expensesStorage={this.expensesStorage} monthSetupStorage={this.monthSetupStorage} />
                 <Home spendingsStorage={this.spendingsStorage} incomesStorage={this.incomesStorage} expensesStorage={this.expensesStorage} />
                 <TodaySpendings storage={this.spendingsStorage} />
                 <MonthSpendings spendingsStorage={this.spendingsStorage} incomesStorage={this.incomesStorage}

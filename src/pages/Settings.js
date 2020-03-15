@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
-import {IconButton} from '../components/IconButton';
-import {ScrollView, View, Text, TextInput, StyleSheet, KeyboardAvoidingView} from 'react-native';
-import {observer} from 'mobx-react';
+import React, { Component } from 'react';
+import { IconButton } from '../components/IconButton';
+import { ScrollView, View, Text, TextInput, StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { observer } from 'mobx-react';
 import TextInputWithTemporaryInvalidValue from '../components/TextInputWithTemporaryInvalidValue';
-import {TextButton} from '../components/TextButton';
+import { TextButton } from '../components/TextButton';
 import Page from '../components/Page'
-import {getBudgetPerDay} from "../domain/budget";
+import { getBudgetPerDay } from "../domain/budget";
 
 @observer
 export default class Settings extends Component {
@@ -16,18 +16,25 @@ export default class Settings extends Component {
     }
 
     render() {
-        const {incomesStorage, expensesStorage} = this.props;
+        const { incomesStorage, expensesStorage, monthSetupStorage } = this.props;
+
+        if (!monthSetupStorage.isInitiated)
+            return <Page></Page>;
+
         const date = new Date();
         const year = date.getFullYear();
         const month = date.getMonth();
+
+        this.ensureMonthIsSetUp(incomesStorage, expensesStorage, monthSetupStorage, year, month);
+
         const incomes = incomesStorage.getIncomes(year, month);
         const expenses = expensesStorage.getExpenses(year, month);
         const budgetPerDay = getBudgetPerDay(incomes.map(i => i.amount), expenses.map(e => e.amount), year, month);
 
         return <Page>
             <KeyboardAvoidingView behavior='padding'>
-                <ScrollView style={{padding: 20, paddingTop: 45}}>
-                    <View style={{paddingBottom: 130}}>
+                <ScrollView style={{ padding: 20, paddingTop: 45 }}>
+                    <View style={{ paddingBottom: 130 }}>
                         <Text style={styles.header}>Настройки</Text>
                         <Text style={styles.subheader}>Доходы</Text>
 
@@ -60,6 +67,26 @@ export default class Settings extends Component {
             </KeyboardAvoidingView>
         </Page>
     }
+
+    ensureMonthIsSetUp = (incomesStorage, expensesStorage, monthSetupStorage, year, month) => {
+        // For migration
+        const currentIncomes = incomesStorage.getIncomes(year, month);
+        const currentExpenses = expensesStorage.getExpenses(year, month);
+
+        if (currentIncomes.length === 0 && currentExpenses.length === 0 && !monthSetupStorage.isMonthSetUp(year, month)) {
+            const previousMonth = this.getPreviousMonth(year, month);
+
+            const incomes = incomesStorage.getIncomes(previousMonth.year, previousMonth.month);
+            incomes.forEach(income => incomesStorage.addIncome(year, month, income.amount, income.description));
+
+            const expenses = expensesStorage.getExpenses(previousMonth.year, previousMonth.month);
+            expenses.forEach(expense => expensesStorage.addExpense(year, month, expense.amount, expense.description));
+
+            monthSetupStorage.addMonthSetup(year, month);
+        }
+    }
+
+    getPreviousMonth = (year, month) => month === 0 ? { year: year - 1, month: 11 } : { year: year, month: month - 1 }
 }
 
 @observer
@@ -75,7 +102,7 @@ class IncomesList extends Component {
                 this.props.incomes.length === 0 &&
                 <View style={styles.emptyListTextContainer}>
                     <Text style={styles.emptyListText}>{this.props.thereAreNoValuesYetText}</Text>
-                    <TextButton text='Добавить' height={50} fontSize={15} onPress={this.props.onAdd}/>
+                    <TextButton text='Добавить' height={50} fontSize={15} onPress={this.props.onAdd} />
                 </View>
             }
             {
@@ -91,7 +118,7 @@ class IncomesList extends Component {
             }
             {
                 this.props.incomes.length !== 0 && <View style={styles.addButton}>
-                    <TextButton text='Добавить' height={50} fontSize={18} onPress={this.props.onAdd}/>
+                    <TextButton text='Добавить' height={50} fontSize={18} onPress={this.props.onAdd} />
                 </View>
             }
         </View>
@@ -131,7 +158,7 @@ class IncomeView extends Component {
             </View>
             <View style={styles.removeButtonContainer}>
                 <IconButton size={40} innerSize={18} icon='close-circle' color='rgb(255, 69, 58)'
-                            onPress={this.props.onRemoveButtonPressed}/>
+                    onPress={this.props.onRemoveButtonPressed} />
             </View>
         </View>
     }
