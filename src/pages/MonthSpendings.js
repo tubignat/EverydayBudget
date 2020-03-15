@@ -9,7 +9,7 @@ import {
     TouchableWithoutFeedback
 } from 'react-native';
 import { observer } from 'mobx-react';
-import { _daysInMonth, getSaldo } from '../domain/budget';
+import { _daysInMonth, getSaldo, getSaldosForMonth } from '../domain/budget';
 import { getBudgetPerDay, getBudget } from "../domain/budget";
 import Picker from '../components/Picker'
 import { TextButton } from '../components/TextButton'
@@ -18,6 +18,7 @@ import SlidingUpPanel from '../components/SlidingUpPanel';
 const Window = Dimensions.get('window')
 import Page from '../components/Page'
 import DayOfMonthSpendingsList from '../components/DayOfMonthSpendingsList';
+import { resume } from '../../node_modules/expo/build/AR';
 
 @observer
 export default class MonthSpendings extends Component {
@@ -30,40 +31,25 @@ export default class MonthSpendings extends Component {
         };
     }
 
-    getBudgetForTheDay = (day, month, year) => {
-        const { incomesStorage, expensesStorage, spendingsStorage } = this.props;
-        const budgetPerDay = getBudgetPerDay(
-            incomesStorage.getIncomes(year, month).map(i => i.amount),
-            expensesStorage.getExpenses(year, month).map(e => e.amount),
-            year,
-            month
-        );
-
-        return getBudget(budgetPerDay, spendingsStorage.getSpendings, year, month, day);
-    }
-
-    getSaldoForTheDay = (day, month, year) => {
-        const { incomesStorage, expensesStorage, spendingsStorage } = this.props;
-        const budgetPerDay = getBudgetPerDay(
-            incomesStorage.getIncomes(year, month).map(i => i.amount),
-            expensesStorage.getExpenses(year, month).map(e => e.amount),
-            year,
-            month
-        );
-
-        return getSaldo(budgetPerDay, spendingsStorage.getSpendings, year, month, day);
-    }
-
     render() {
-        const { spendingsStorage } = this.props;
+        const { spendingsStorage, incomesStorage, expensesStorage } = this.props;
+
         const date = new Date();
         const year = date.getFullYear();
         const month = date.getMonth();
         const day = date.getDate();
         const daysInMonth = _daysInMonth(month, year);
+        const budgetPerDay = getBudgetPerDay(
+            incomesStorage.getIncomes(year, month).map(i => i.amount),
+            expensesStorage.getExpenses(year, month).map(e => e.amount),
+            year,
+            month
+        );
 
         const days = Array.from({ length: daysInMonth }, (_, k) => k + 1);
         const monthName = this.getMonthName(month);
+
+        const saldos = getSaldosForMonth(budgetPerDay, spendingsStorage.allSpendings, year, month, daysInMonth);
 
         return <View>
             {
@@ -72,8 +58,8 @@ export default class MonthSpendings extends Component {
                     day={this.state.openedDay}
                     month={month}
                     year={year}
-                    budget={this.getBudgetForTheDay(this.state.openedDay, month, year).toFixed(0)}
-                    saldo={this.getSaldoForTheDay(this.state.openedDay, month, year).toFixed(0)}
+                    budget={getBudget(budgetPerDay, spendingsStorage.getSpendings, year, month, day).toFixed(0)}
+                    saldo={saldos[this.state.openedDay - 1].toFixed(0)}
                     spendings={spendingsStorage.getSpendings(year, month, this.state.openedDay)}
                     remove={(id) => spendingsStorage.removeSpending(id)}
                     edit={(id, amount) => spendingsStorage.editSpending(id, amount, null)}
@@ -99,7 +85,7 @@ export default class MonthSpendings extends Component {
                                         day={d}
                                         month={month}
                                         year={year}
-                                        saldo={this.getSaldoForTheDay(d, month, year).toFixed(0)}
+                                        saldo={saldos[d - 1].toFixed(0)}
                                         onClick={() => this.openModal(d)}
                                         isToday={d === day}
                                     />)
