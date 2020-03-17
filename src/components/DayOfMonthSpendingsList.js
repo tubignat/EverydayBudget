@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Animated } from 'react-native';
 import { _daysInMonth } from '../domain/budget';
 import { IconButton } from './IconButton';
 import TextInputWithTemporaryInvalidValue from '../components/TextInputWithTemporaryInvalidValue';
@@ -19,7 +19,23 @@ function DayOfMonthSpendingsList({ spendings, remove, edit, add }) {
 }
 
 function DayOfMonthSpending({ spending, remove, edit }) {
-    return <View style={styles.dayOfMonthSpending}>
+
+    const [expandAnim] = useState(new Animated.Value(0));
+    const [fadeAnim] = useState(new Animated.Value(0));
+
+    useEffect(() => {
+        Animated.parallel([
+            Animated.timing(fadeAnim, { toValue: 1, duration: 150 }),
+            Animated.timing(expandAnim, { toValue: 50, duration: 150 })
+        ])
+            .start();
+    }, [])
+
+    return <Animated.View style={{
+        ...styles.dayOfMonthSpending,
+        height: expandAnim,
+        opacity: fadeAnim
+    }}>
         <View style={styles.incomeViewAmount}>
             <TextInputWithTemporaryInvalidValue
                 style={styles.incomeViewAmountText}
@@ -33,16 +49,27 @@ function DayOfMonthSpending({ spending, remove, edit }) {
             />
             <Text style={styles.incomeViewAmountText}> &#8381;</Text>
         </View>
-        <IconButton size={40} innerSize={18} icon='close-circle' color='rgb(255, 69, 58)' onPress={remove} />
-    </View>
+        <IconButton size={40} innerSize={18} icon='close-circle' color='rgb(255, 69, 58)' onPress={onRemove} />
+    </Animated.View>
+
+
+    function onRemove() {
+        Animated.parallel([
+            Animated.timing(expandAnim, { toValue: 0, duration: 200 }),
+            Animated.timing(fadeAnim, { toValue: 0, duration: 150 }),
+        ])
+            .start(remove)
+    }
 }
 
 const styles = StyleSheet.create({
+    addButton: {
+        width: 110
+    },
     dayOfMonthSpending: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: 10
+        justifyContent: 'space-between'
     },
     dayOfMonthSpendingText: {
         fontSize: 22
@@ -60,7 +87,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     incomeViewAmountText: {
-        fontSize: 22,
+        fontSize: 22
     },
 })
 

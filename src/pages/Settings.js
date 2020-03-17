@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { IconButton } from '../components/IconButton';
-import { ScrollView, View, Text, TextInput, StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { ScrollView, View, Text, TextInput, StyleSheet, KeyboardAvoidingView, Animated } from 'react-native';
 import { observer } from 'mobx-react';
 import TextInputWithTemporaryInvalidValue from '../components/TextInputWithTemporaryInvalidValue';
 import { TextButton } from '../components/TextButton';
@@ -129,11 +129,24 @@ class IncomesList extends Component {
 class IncomeView extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+
+        const height = 50;
+
+        this.state = {
+            fadeAnim: new Animated.Value(0),
+            expandAnim: new Animated.Value(0)
+        };
+
+        Animated.timing(this.state.fadeAnim, { toValue: 1, duration: 150 }).start();
+        Animated.timing(this.state.expandAnim, { toValue: height, duration: 150 }).start();
     }
 
     render() {
-        return <View style={styles.incomeView}>
+        return <Animated.View style={{
+            ...styles.incomeView,
+            height: this.state.expandAnim,
+            opacity: this.state.fadeAnim
+        }}>
             <View style={styles.wrapper}>
                 <View style={styles.incomeViewAmount}>
                     <TextInputWithTemporaryInvalidValue
@@ -156,11 +169,23 @@ class IncomeView extends Component {
                     placeholder='Описание...'
                 />
             </View>
-            <View style={styles.removeButtonContainer}>
+            <Animated.View style={{
+                ...styles.removeButtonContainer,
+                opacity: this.state.fadeAnim,
+                transform: [{ scaleX: this.state.fadeAnim }, { scaleY: this.state.fadeAnim }]
+            }}>
                 <IconButton size={40} innerSize={18} icon='close-circle' color='rgb(255, 69, 58)'
-                    onPress={this.props.onRemoveButtonPressed} />
-            </View>
-        </View>
+                    onPress={this.onRemove} />
+            </Animated.View>
+        </Animated.View>
+    }
+
+    onRemove = () => {
+        Animated.parallel([
+            Animated.timing(this.state.expandAnim, { toValue: 0, duration: 200 }),
+            Animated.timing(this.state.fadeAnim, { toValue: 0, duration: 150 }),
+        ])
+            .start(this.props.onRemoveButtonPressed)
     }
 }
 
@@ -189,7 +214,6 @@ const styles = StyleSheet.create({
     },
     incomeView: {
         flex: 1,
-        paddingBottom: 10,
         flexBasis: 'auto',
         flexDirection: 'row',
     },

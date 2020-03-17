@@ -58,7 +58,7 @@ export default class MonthSpendings extends Component {
                     day={this.state.openedDay}
                     month={month}
                     year={year}
-                    budget={getBudget(budgetPerDay, spendingsStorage.getSpendings, year, month, day).toFixed(0)}
+                    budget={getBudget(budgetPerDay, spendingsStorage.getSpendings, year, month, this.state.openedDay).toFixed(0)}
                     saldo={saldos[this.state.openedDay - 1].toFixed(0)}
                     spendings={spendingsStorage.getSpendings(year, month, this.state.openedDay)}
                     remove={(id) => spendingsStorage.removeSpending(id)}
@@ -153,7 +153,9 @@ function DaysSpendingsPanel({ closePanel, year, month, day, budget, saldo, spend
                 <Text style={{
                     ...styles.daySpendingBudgetText,
                     color: budget > 0 ? 'black' : 'rgb(255, 69, 58)'
-                }}>{budget} &#8381;</Text>
+                }}>
+                    {budget} &#8381;
+                </Text>
             </View>
             <View style={styles.daySpendingBudgetContainer}>
                 <Text style={styles.daySpendingBudgetLabel}>Остаток</Text>
