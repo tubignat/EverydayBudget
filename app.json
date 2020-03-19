@@ -1,13 +1,11 @@
 {
   "expo": {
-    "name": "SpendingsTracker",
-    "slug": "SpendingsTracker",
+    "name": "EverydayBudget",
+    "slug": "EverydayBudget",
     "privacy": "public",
     "sdkVersion": "33.0.0",
     "platforms": [
-      "ios",
-      "android",
-      "web"
+      "ios"
     ],
     "version": "1.0.0",
     "orientation": "portrait",
@@ -25,7 +23,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.ignattubylov.spendingstracker"
+      "bundleIdentifier": "app.everydaybudget.everydaybudget"
     }
   }
 }
