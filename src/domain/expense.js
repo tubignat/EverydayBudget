@@ -19,7 +19,9 @@ export class ExpensesStorage {
             const expensesString = await AsyncStorage.getItem(this.getStorageKey());
             if (expensesString !== null) {
                 this.expenses = JSON.parse(expensesString);
-                this.expenseIdSeq = this.getHighestId(this.expenses) + 1;
+                if (this.expenses.length > 0) {
+                    this.expenseIdSeq = this.getHighestId(this.expenses) + 1;
+                }
             }
         }
         catch (e) {

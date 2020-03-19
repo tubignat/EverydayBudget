@@ -19,7 +19,10 @@ export class SpendingsStorage {
             const spendingsStorage = await AsyncStorage.getItem(this.getStorageKey());
             if (spendingsStorage !== null) {
                 this.spendings = JSON.parse(spendingsStorage);
-                this.spendings.forEach((s, i) => s.id = i);
+
+                if (this.spendings.length > 0) {
+                    this.spendings.forEach((s, i) => s.id = i);
+                }
             }
         }
         catch (e) {

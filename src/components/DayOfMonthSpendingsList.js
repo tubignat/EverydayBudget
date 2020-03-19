@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Animated } from 'react-native';
+import { View, Text, StyleSheet, Animated, TouchableWithoutFeedback } from 'react-native';
 import { _daysInMonth } from '../domain/budget';
 import { IconButton } from './IconButton';
 import TextInputWithTemporaryInvalidValue from '../components/TextInputWithTemporaryInvalidValue';
@@ -23,6 +23,8 @@ function DayOfMonthSpending({ spending, remove, edit }) {
     const [expandAnim] = useState(new Animated.Value(0));
     const [fadeAnim] = useState(new Animated.Value(0));
 
+    let textInputRef;
+
     useEffect(() => {
         Animated.parallel([
             Animated.timing(fadeAnim, { toValue: 1, duration: 150 }),
@@ -36,19 +38,22 @@ function DayOfMonthSpending({ spending, remove, edit }) {
         height: expandAnim,
         opacity: fadeAnim
     }}>
-        <View style={styles.incomeViewAmount}>
-            <TextInputWithTemporaryInvalidValue
-                style={styles.incomeViewAmountText}
-                value={spending.amount.toString()}
-                onChange={(text) => edit(Number(text))}
-                placeholder=''
-                isValidValue={(text) => {
-                    const number = Number(text);
-                    return !isNaN(number) && number !== 0;
-                }}
-            />
-            <Text style={styles.incomeViewAmountText}> &#8381;</Text>
-        </View>
+        <TouchableWithoutFeedback onPress={() => textInputRef.focus()} >
+            <View style={styles.incomeViewAmount}>
+                <TextInputWithTemporaryInvalidValue
+                    forwardedRef={ref => textInputRef = ref}
+                    style={styles.incomeViewAmountText}
+                    value={spending.amount.toString()}
+                    onChange={(text) => edit(Number(text))}
+                    placeholder=''
+                    isValidValue={(text) => {
+                        const number = Number(text);
+                        return !isNaN(number) && number !== 0;
+                    }}
+                />
+                <Text style={styles.incomeViewAmountText}> &#8381;</Text>
+            </View>
+        </TouchableWithoutFeedback>
         <IconButton size={40} innerSize={18} icon='close-circle' color='rgb(255, 69, 58)' onPress={onRemove} />
     </Animated.View>
 
@@ -85,6 +90,8 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         alignSelf: 'center',
+        alignItems: 'center',
+        height: '100%'
     },
     incomeViewAmountText: {
         fontSize: 22

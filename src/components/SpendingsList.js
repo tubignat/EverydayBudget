@@ -20,7 +20,6 @@ class SpendingsList extends Component {
 }
 
 class SpendingView extends Component {
-
     constructor(props) {
         super(props);
 

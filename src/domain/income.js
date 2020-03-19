@@ -19,7 +19,10 @@ export class IncomesStorage {
             const incomesString = await AsyncStorage.getItem(this.getStorageKey());
             if (incomesString !== null) {
                 this.incomes = JSON.parse(incomesString);
-                this.incomeIdSeq = this.getHighestId(this.incomes) + 1;
+
+                if (this.incomes.length > 0) {
+                    this.incomeIdSeq = this.getHighestId(this.incomes) + 1;
+                }
             }
         }
         catch (e) {

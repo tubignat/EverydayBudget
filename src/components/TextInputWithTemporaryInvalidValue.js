@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { TextInput } from 'react-native';
 
-export default class TextInputWithTemporaryInvalidValue extends Component {
+class TextInputWithTemporaryInvalidValue extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -13,6 +13,7 @@ export default class TextInputWithTemporaryInvalidValue extends Component {
 
     render() {
         return <TextInput
+            ref={this.props.forwardedRef}
             placeholder={this.props.placeholder}
             selectTextOnFocus
             style={this.props.style}
@@ -37,3 +38,5 @@ export default class TextInputWithTemporaryInvalidValue extends Component {
         this.setState({ isTemporaryInvalidValue: false, temporaryValue: '' })
     }
 }
+
+export default TextInputWithTemporaryInvalidValue;

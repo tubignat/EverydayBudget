@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { IconButton } from '../components/IconButton';
-import { ScrollView, View, Text, TextInput, StyleSheet, KeyboardAvoidingView, Animated } from 'react-native';
+import { ScrollView, View, Text, TextInput, StyleSheet, KeyboardAvoidingView, Animated, TouchableWithoutFeedback } from 'react-native';
 import { observer } from 'mobx-react';
 import TextInputWithTemporaryInvalidValue from '../components/TextInputWithTemporaryInvalidValue';
 import { TextButton } from '../components/TextButton';
@@ -137,6 +137,8 @@ class IncomeView extends Component {
             expandAnim: new Animated.Value(0)
         };
 
+        this.textInputRef = React.createRef();
+
         Animated.timing(this.state.fadeAnim, { toValue: 1, duration: 150 }).start();
         Animated.timing(this.state.expandAnim, { toValue: height, duration: 150 }).start();
     }
@@ -148,19 +150,22 @@ class IncomeView extends Component {
             opacity: this.state.fadeAnim
         }}>
             <View style={styles.wrapper}>
-                <View style={styles.incomeViewAmount}>
-                    <TextInputWithTemporaryInvalidValue
-                        style={styles.incomeViewAmountText}
-                        value={this.props.income.amount.toString()}
-                        onChange={(text) => this.props.onAmountChanged(Number(text))}
-                        placeholder=''
-                        isValidValue={(text) => {
-                            const number = Number(text);
-                            return !isNaN(number) && number !== 0;
-                        }}
-                    />
-                    <Text style={styles.incomeViewAmountText}> &#8381;</Text>
-                </View>
+                <TouchableWithoutFeedback onPress={() => this.textInputRef.focus()}>
+                    <View style={styles.incomeViewAmount}>
+                        <TextInputWithTemporaryInvalidValue
+                            forwardedRef={ref => this.textInputRef = ref}
+                            style={styles.incomeViewAmountText}
+                            value={this.props.income.amount.toString()}
+                            onChange={(text) => this.props.onAmountChanged(Number(text))}
+                            placeholder=''
+                            isValidValue={(text) => {
+                                const number = Number(text);
+                                return !isNaN(number) && number !== 0;
+                            }}
+                        />
+                        <Text style={styles.incomeViewAmountText}> &#8381;</Text>
+                    </View>
+                </TouchableWithoutFeedback>
                 <TextInput
                     style={styles.incomeViewText}
                     onChangeText={this.props.onDescriptionChanged}
@@ -241,6 +246,8 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         alignSelf: 'center',
+        alignItems: 'center',
+        height: '100%'
     },
     incomeViewAmountText: {
         fontSize: 18,
