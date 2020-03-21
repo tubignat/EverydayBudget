@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ButtonWrapper } from './common/ButtonWrapper';
 import { IconOutline } from '@ant-design/icons-react-native';
-import { Font } from 'expo';
+import * as Font from 'expo-font';
 import { View, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -33,20 +33,27 @@ export class AddSpendingButton extends Component {
     }
 
     render() {
-        return <ButtonWrapper width={60} height={60} renderNormal={this.renderNormal} renderPressed={this.renderPressed} onPress={this.props.onPress} disabled={this.props.disabled} />
+        return <ButtonWrapper
+            width={60}
+            height={60}
+            renderNormal={this.renderNormal}
+            renderPressed={this.renderPressed}
+            onPress={this.props.onPress}
+            disabled={this.props.disabled}
+        />
     }
 
     renderNormal = () => {
         return <View style={styles.AddSpendingButton}>
             {
-                this.state.fontLoaded && <IconOutline style={[styles.addSpendingIcon, { color: this.props.disabled ? 'lightgray' : 'rgb(48, 209, 88)' }]} name='check-circle' />
+                this.state.fontLoaded && <IconOutline style={[styles.addSpendingIcon, { color: this.props.disabled ? 'lightgray' : 'rgb(48, 209, 88)' }]} name='plus-circle' />
             }
         </View>;
     }
     renderPressed = () => {
         return <View style={[styles.AddSpendingButton, { backgroundColor: 'rgb(48, 209, 88)' }]}>
             {
-                this.state.fontLoaded && <IconOutline style={[styles.addSpendingIcon, { color: 'white' }]} name='check-circle' />
+                this.state.fontLoaded && <IconOutline style={[styles.addSpendingIcon, { color: 'white' }]} name='plus-circle' />
             }
         </View>;
     }

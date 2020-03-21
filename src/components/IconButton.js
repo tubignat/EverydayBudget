@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ButtonWrapper } from './common/ButtonWrapper';
 import { IconOutline } from '@ant-design/icons-react-native';
-import { Font } from 'expo';
+import * as Font from 'expo-font';
 import { View, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
