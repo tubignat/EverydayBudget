@@ -93,35 +93,85 @@ export default class Settings extends Component {
 class IncomesList extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            moveAnim: new Animated.Value(0),
+            fontSizeAnim: new Animated.Value(1),
+            fadeAnim: new Animated.Value(this.props.incomes.length === 0 ? 1 : 0)
+        };
     }
 
     render() {
         return <View style={styles.incomesList}>
             {
-                this.props.incomes.length === 0 &&
-                <View style={styles.emptyListTextContainer}>
-                    <Text style={styles.emptyListText}>{this.props.thereAreNoValuesYetText}</Text>
-                    <TextButton text='Добавить' height={50} fontSize={15} onPress={this.props.onAdd} />
-                </View>
+                <Animated.View style={{
+                    ...styles.emptyListTextContainer,
+                    zIndex: this.props.incomes.length === 0 ? 100 : 0
+                }}>
+                    <Animated.Text style={{
+                        ...styles.emptyListText,
+                        opacity: this.state.fadeAnim
+                    }}>
+                        {this.props.thereAreNoValuesYetText}
+                    </Animated.Text>
+                    <View style={{ opacity: this.props.incomes.length === 0 ? 1 : 0 }}>
+                        <TextButton forwardedRef={ref => this.addButonRef = ref} text='Добавить' height={50} fontSize={15} onPress={this.onAdd} />
+                    </View>
+                </Animated.View>
             }
-            {
-                this.props.incomes.map((i) =>
-                    <IncomeView
-                        key={i.id}
-                        income={i}
-                        onRemoveButtonPressed={() => this.props.onRemove(i.id)}
-                        onAmountChanged={(amount) => this.props.onAmountChanged(i.id, amount)}
-                        onDescriptionChanged={(description) => this.props.onDescriptionChanged(i.id, description)}
-                    />
-                )
-            }
-            {
-                this.props.incomes.length !== 0 && <View style={styles.addButton}>
-                    <TextButton text='Добавить' height={50} fontSize={18} onPress={this.props.onAdd} />
-                </View>
-            }
+            <View style={{ minHeight: 70 }}>
+                {
+                    this.props.incomes.map((i) =>
+                        <IncomeView
+                            key={i.id}
+                            income={i}
+                            onRemoveButtonPressed={() => this.props.onRemove(i.id)}
+                            onAmountChanged={(amount) => this.props.onAmountChanged(i.id, amount)}
+                            onDescriptionChanged={(description) => this.props.onDescriptionChanged(i.id, description)}
+                            onRemoveAnimationStart={this.onRemoveAnimationStart}
+                        />
+                    )
+                }
+                {
+                    this.props.incomes.length > 0 &&
+                    <Animated.View style={{
+                        ...styles.addButton,
+                        transform: [{ translateX: this.state.moveAnim }, { scaleX: this.state.fontSizeAnim }, { scaleY: this.state.fontSizeAnim }]
+                    }}>
+                        <TextButton forwardedRef={ref => this.addButtonRef2 = ref} text='Добавить' height={50} fontSize={18} onPress={this.props.onAdd} />
+                    </Animated.View>
+                }
+            </View>
         </View>
+    }
+
+    onAdd = () => {
+        this.props.onAdd();
+        this.addButonRef.measure((fx, fy, width, height, px, py) => {
+            this.state.moveAnim.setValue(px - 40 - 24);
+            this.state.fontSizeAnim.setValue(0.85);
+            this.state.fadeAnim.setValue(1);
+            Animated
+                .parallel([
+                    Animated.timing(this.state.moveAnim, { toValue: 0, duration: 150 }),
+                    Animated.timing(this.state.fontSizeAnim, { toValue: 1, duration: 150 }),
+                    Animated.timing(this.state.fadeAnim, { toValue: 0, duration: 75 })
+                ])
+                .start();
+        });
+    }
+
+    onRemoveAnimationStart = () => {
+        if (this.props.incomes.length === 1) {
+            this.addButonRef.measure((fx, fy, width, height, px, py) => {
+                Animated
+                    .parallel([
+                        Animated.timing(this.state.moveAnim, { toValue: px - 40 - 24, duration: 150 }),
+                        Animated.timing(this.state.fontSizeAnim, { toValue: 0.85, duration: 150 }),
+                    ])
+                    .start();
+                Animated.timing(this.state.fadeAnim, { toValue: 1, duration: 600 }).start();
+            })
+        }
     }
 }
 
@@ -129,8 +179,6 @@ class IncomesList extends Component {
 class IncomeView extends Component {
     constructor(props) {
         super(props);
-
-        const height = 50;
 
         this.state = {
             fadeAnim: new Animated.Value(0),
@@ -140,7 +188,7 @@ class IncomeView extends Component {
         this.textInputRef = React.createRef();
 
         Animated.timing(this.state.fadeAnim, { toValue: 1, duration: 150 }).start();
-        Animated.timing(this.state.expandAnim, { toValue: height, duration: 150 }).start();
+        Animated.timing(this.state.expandAnim, { toValue: 50, duration: 150 }).start();
     }
 
     render() {
@@ -186,6 +234,7 @@ class IncomeView extends Component {
     }
 
     onRemove = () => {
+        this.props.onRemoveAnimationStart();
         Animated.parallel([
             Animated.timing(this.state.expandAnim, { toValue: 0, duration: 200 }),
             Animated.timing(this.state.fadeAnim, { toValue: 0, duration: 150 }),
@@ -211,7 +260,8 @@ const styles = StyleSheet.create({
         marginRight: 0,
         marginBottom: 40,
         flex: 1,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        position: 'relative'
     },
     addButton: {
         flex: 1,
@@ -227,6 +277,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
+        position: 'absolute',
+        width: '100%'
     },
     emptyListText: {
         color: 'gray',

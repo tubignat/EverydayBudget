@@ -1,10 +1,10 @@
 {
-  "expoServerPort": null,
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerPort": 19000,
+  "packagerPort": 19003,
+  "packagerPid": 26916,
+  "expoServerNgrokUrl": "https://n4-reg.tubignat.spendingstracker.exp.direct",
+  "packagerNgrokUrl": "https://packager.n4-reg.tubignat.spendingstracker.exp.direct",
+  "ngrokPid": 26927,
   "devToolsPort": 19002,
   "webpackServerPort": null
 }

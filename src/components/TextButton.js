@@ -16,6 +16,7 @@ export class TextButton extends Component {
 
     render() {
         return <ButtonWrapper
+            forwardedRef={this.props.forwardedRef}
             style={{ height: this.props.height, justifyContent: 'center' }}
             renderNormal={this.renderNormal}
             renderPressed={this.renderPressed}

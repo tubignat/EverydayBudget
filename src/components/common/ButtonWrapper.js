@@ -9,6 +9,7 @@ export class ButtonWrapper extends Component {
 
     render() {
         return <View
+            ref={this.props.forwardedRef}
             onStartShouldSetResponder={() => !this.props.disabled}
             onResponderGrant={this.onGrant}
             onResponderRelease={this.onRelease}
