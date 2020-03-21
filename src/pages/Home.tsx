@@ -1,20 +1,29 @@
 import React, { Component } from 'react';
-import { ScrollView, View, Text, Dimensions, StyleSheet, Alert } from 'react-native';
+import { View, Text, Dimensions, StyleSheet } from 'react-native';
 import { KeyBoard } from '../components/keyboard/Keyboard';
 import { AddSpendingButton } from '../components/AddSpendingButton';
-import { observer } from 'mobx-react';
-import { getBudgetPerDay, getSaldo } from "../domain/budget";
 import Page from '../components/Page'
-
+import { observer } from '../../node_modules/mobx-react/dist/mobx-react';
+import { Application } from '../domain/Application';
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = width < 350;
 const isBigScreen = height > 800;
 
-@observer
-export default class Home extends Component {
+interface IHomeProps {
+    application: Application
+}
 
-    constructor(props) {
+interface IHomeState {
+    newTransactionRubles: number,
+    newTransactionKopecks: number[],
+    isKopeckMode: boolean
+}
+
+@observer
+export default class Home extends Component<IHomeProps, IHomeState> {
+
+    constructor(props: IHomeProps) {
         super(props);
         this.state = {
             newTransactionRubles: 0,
@@ -23,19 +32,10 @@ export default class Home extends Component {
         };
     }
 
-    getTodaysBudget(incomesStorage, expensesStorage, spendingsStorage) {
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = date.getMonth();
-        const day = date.getDate();
-
-        const budgetPerDay = getBudgetPerDay(incomesStorage.getIncomes(year, month).map(i => i.amount), expensesStorage.getExpenses(year, month).map(e => e.amount), year, month);
-        return getSaldo(budgetPerDay, spendingsStorage.allSpendings, year, month, day);
-    }
-
     render() {
         const { newTransactionRubles, isKopeckMode, newTransactionKopecks } = this.state;
-        const todaysBudget = this.getTodaysBudget(this.props.incomesStorage, this.props.expensesStorage, this.props.spendingsStorage).toFixed(0);
+        const { application } = this.props;
+        const todaysLimit = application.todaysLimit;
 
         return <Page>
             {
@@ -44,43 +44,49 @@ export default class Home extends Component {
                 </View>
             }
             <View style={styles.keyboardGroupContainer}>
+
                 <View style={styles.budgetContainer}>
                     <Text style={styles.budgetText}>Бюджет на сегодня</Text>
-                    <Text
-                        style={[styles.budget, { color: todaysBudget < 0 ? 'rgb(255, 69, 58)' : 'black' }]}>{todaysBudget} &#8381;</Text>
+                    <Text style={{ ...styles.budget, color: todaysLimit < 0 ? 'rgb(255, 69, 58)' : 'black' }}>
+                        {todaysLimit.toFixed(0)} &#8381;
+                    </Text>
                 </View>
+
                 <View style={styles.addTransactionContainer}>
                     <Text style={styles.addTransactionText}>Добавить трату</Text>
                     <View style={styles.addTransactionInput}>
-                        <Text style={[styles.transaction, {}]}>
+                        <Text style={styles.transaction}>
                             {newTransactionRubles}{isKopeckMode ? '.' : ''}{isKopeckMode ? newTransactionKopecks.join('') : ''} &#8381;
                         </Text>
-                        <AddSpendingButton onPress={this.onAddButtonPressed}
-                            disabled={newTransactionRubles === 0 && newTransactionKopecks.length !== 2} />
+                        <AddSpendingButton
+                            onPress={this.onAddButtonPressed}
+                            disabled={newTransactionRubles === 0 && newTransactionKopecks.length !== 2}
+                        />
                     </View>
                 </View>
+
                 <KeyBoard onKeyPressed={this.handleKeyPressed} onRemoveKeyPressed={this.handleRemoveKeyPressed} />
+
             </View>
         </Page>
     }
 
-    handleKeyPressed = (char) => {
+    handleKeyPressed = (char: string) => {
         const { isKopeckMode, newTransactionRubles, newTransactionKopecks } = this.state;
 
         if (char === '.') {
             this.setState({ isKopeckMode: true })
-        } else if (isKopeckMode) {
-            if (newTransactionKopecks.length < 2) {
-                const kopecks = newTransactionKopecks;
-                if (kopecks.length === 1 && kopecks[0] === 0 && char === 0) {
-                    return;
-                }
-                kopecks[kopecks.length] = char;
-                this.setState({ newTransactionKopecks: kopecks });
-            }
+
         } else {
-            const amount = newTransactionRubles <= 9999 ? Number(newTransactionRubles.toString().concat(char)) : newTransactionRubles;
-            this.setState({ newTransactionRubles: amount });
+            const updatedRubles = isKopeckMode || newTransactionRubles > 9999
+                ? newTransactionRubles
+                : Number(newTransactionRubles.toString().concat(char));
+
+            const updatedKopecks = !isKopeckMode || newTransactionKopecks.length === 2 || (newTransactionKopecks[0] === 0 && Number(char) === 0)
+                ? newTransactionKopecks
+                : newTransactionKopecks.concat(Number(char));
+
+            this.setState({ newTransactionRubles: updatedRubles, newTransactionKopecks: updatedKopecks });
         }
     };
 
@@ -89,15 +95,13 @@ export default class Home extends Component {
     };
 
     onAddButtonPressed = () => {
-        if (this.state.newTransactionRubles !== 0 || this.state.newTransactionKopecks.length === 2) {
-            const date = new Date();
-            const kopecks = Number(this.state.newTransactionKopecks.join(''));
-            const amount = this.state.newTransactionRubles + (kopecks / 100);
-            this.props.spendingsStorage.addSpending(date.getFullYear(), date.getMonth(), date.getDate(), amount)
-            this.setState({ newTransactionRubles: 0, isKopeckMode: false, newTransactionKopecks: [] });
-        }
-    }
+        const kopecks = Number(this.state.newTransactionKopecks.join(''));
+        const amount = this.state.newTransactionRubles + (kopecks / 100);
 
+        this.props.application.addSpending(this.props.application.day, amount);
+
+        this.setState({ newTransactionRubles: 0, isKopeckMode: false, newTransactionKopecks: [] });
+    }
 }
 
 const styles = StyleSheet.create({

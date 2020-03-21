@@ -1,33 +1,34 @@
 
 import React, { Component } from 'react';
 import { ScrollView, View, Text, Dimensions, StyleSheet } from 'react-native';
-import { observer } from 'mobx-react';
-import { IconButton } from '../components/IconButton';
 import Page from '../components/Page'
 import SpendingsList from '../components/SpendingsList'
+import { observer } from '../../node_modules/mobx-react/dist/mobx-react';
+import { Application } from '../domain/Application';
+import { SpendingId } from '../domain/SpendingsRepository';
+
+interface ITodaySpendingsProps {
+    application: Application
+}
 
 @observer
-export default class TodaySpendings extends Component {
+export default class TodaySpendings extends Component<ITodaySpendingsProps> {
 
-    constructor(props) {
+    constructor(props: ITodaySpendingsProps) {
         super(props);
         this.state = {};
     }
 
     render() {
-        const { storage } = this.props;
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = date.getMonth();
-        const day = date.getDate();
+        const { application } = this.props;
 
-        const spendings = storage.getSpendings(year, month, day);
+        const spendings = application.todaysSpendings;
 
         return <Page>
             <ScrollView style={styles.container}>
                 <Text style={styles.header}>Траты за сегодня</Text>
                 {
-                    spendings.length > 0 && <SpendingsList spendings={spendings} remove={(id) => storage.removeSpending(id)} />
+                    spendings.length > 0 && <SpendingsList spendings={spendings} remove={(id: SpendingId) => application.removeSpending(id)} />
                 }
                 {
                     spendings.length == 0 &&

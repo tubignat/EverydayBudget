@@ -1,10 +1,9 @@
 {
   "expoServerPort": 19000,
-  "packagerPort": 19003,
-  "packagerPid": 28299,
-  "expoServerNgrokUrl": "https://n4-reg.tubignat.spendingstracker.exp.direct",
-  "packagerNgrokUrl": "https://packager.n4-reg.tubignat.spendingstracker.exp.direct",
-  "ngrokPid": 28310,
+  "expoServerNgrokUrl": "https://eb-idt.tubignat.spendingstracker.exp.direct",
+  "packagerNgrokUrl": "https://packager.eb-idt.tubignat.spendingstracker.exp.direct",
+  "ngrokPid": 36490,
   "devToolsPort": 19002,
-  "webpackServerPort": null
+  "packagerPort": 19004,
+  "packagerPid": 36478
 }
