@@ -6,9 +6,11 @@ import { Application } from '../domain/Application';
 import { IncomesList } from '../components/SettingsIncomesList';
 import { IncomeId } from '../domain/IncomesRepository';
 import { ExpenseId } from '../domain/ExpensesRepository';
+import { Locale } from '../locale/Locale';
 
 interface ISettingsProps {
-    application: Application
+    application: Application,
+    locale: Locale
 }
 
 @observer
@@ -20,37 +22,39 @@ export default class Settings extends Component<ISettingsProps> {
     }
 
     render() {
-        const { application } = this.props;
+        const { application, locale } = this.props;
 
         return <Page>
             <KeyboardAvoidingView behavior='padding'>
                 <ScrollView style={{ padding: 20, paddingTop: 45 }}>
                     <View style={{ paddingBottom: 130 }}>
-                        <Text style={styles.header}>Настройки</Text>
-                        <Text style={styles.subheader}>Доходы</Text>
+                        <Text style={styles.header}>{locale.settingsPageTitle}</Text>
+                        <Text style={styles.subheader}>{locale.incomes}</Text>
 
                         <IncomesList
+                            locale={locale}
                             incomes={application.incomes}
-                            thereAreNoValuesYetText={'Пока доходов нет. '}
+                            thereAreNoValuesYetText={locale.noIncomesYet}
                             onRemove={application.removeIncome}
                             onAmountChanged={(id: IncomeId, amount: number) => application.editIncome(id, amount, null)}
                             onDescriptionChanged={(id: IncomeId, description: string) => application.editIncome(id, null, description)}
-                            onAdd={() => application.addIncome(0, 'Новый доход')}
+                            onAdd={() => application.addIncome(0, locale.newIncome)}
                         />
 
-                        <Text style={styles.subheader}>Регулярные расходы</Text>
+                        <Text style={styles.subheader}>{locale.recurringExpenses}</Text>
 
                         <IncomesList
+                            locale={locale}
                             incomes={application.expenses}
-                            thereAreNoValuesYetText={'Пока расходов нет. '}
+                            thereAreNoValuesYetText={locale.noExpensesYet}
                             onRemove={application.removeExpense}
                             onAmountChanged={(id: ExpenseId, amount: number) => application.editExpense(id, amount, null)}
                             onDescriptionChanged={(id: ExpenseId, description: string) => application.editExpense(id, null, description)}
-                            onAdd={() => application.addExpense(0, 'Новый расход')}
+                            onAdd={() => application.addExpense(0, locale.newExpense)}
                         />
 
                         <View style={styles.budgetPerDayContainer}>
-                            <Text style={styles.subheader}>Бюджет на день</Text>
+                            <Text style={styles.subheader}>{locale.budgetPerDay}</Text>
                             <Text style={styles.budgetPerDayAmount}>{application.budgetPerDay.toFixed(0)} &#8381;</Text>
                         </View>
                     </View>

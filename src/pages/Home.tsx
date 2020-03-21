@@ -5,13 +5,15 @@ import { AddSpendingButton } from '../components/AddSpendingButton';
 import Page from '../components/Page'
 import { observer } from '../../node_modules/mobx-react/dist/mobx-react';
 import { Application } from '../domain/Application';
+import { Locale } from '../locale/Locale';
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = width < 350;
 const isBigScreen = height > 800;
 
 interface IHomeProps {
-    application: Application
+    application: Application,
+    locale: Locale
 }
 
 interface IHomeState {
@@ -34,26 +36,30 @@ export default class Home extends Component<IHomeProps, IHomeState> {
 
     render() {
         const { newTransactionRubles, isKopeckMode, newTransactionKopecks } = this.state;
-        const { application } = this.props;
+        const { application, locale } = this.props;
         const todaysLimit = application.todaysLimit;
 
         return <Page>
             {
                 isBigScreen && <View style={styles.todaysBudgetContainer}>
-                    <Text style={styles.header}>Главная</Text>
+                    <Text style={styles.header}>
+                        {locale.homePageTitle}
+                    </Text>
                 </View>
             }
             <View style={styles.keyboardGroupContainer}>
 
                 <View style={styles.budgetContainer}>
-                    <Text style={styles.budgetText}>Бюджет на сегодня</Text>
+                    <Text style={styles.budgetText}>
+                        {locale.todaysLimit}
+                    </Text>
                     <Text style={{ ...styles.budget, color: todaysLimit < 0 ? 'rgb(255, 69, 58)' : 'black' }}>
                         {todaysLimit.toFixed(0)} &#8381;
                     </Text>
                 </View>
 
                 <View style={styles.addTransactionContainer}>
-                    <Text style={styles.addTransactionText}>Добавить трату</Text>
+                    <Text style={styles.addTransactionText}>{locale.addExpense}</Text>
                     <View style={styles.addTransactionInput}>
                         <Text style={styles.transaction}>
                             {newTransactionRubles}{isKopeckMode ? '.' : ''}{isKopeckMode ? newTransactionKopecks.join('') : ''} &#8381;

@@ -15,6 +15,8 @@ export class IncomesList extends Component {
     }
 
     render() {
+        const { locale } = this.props;
+
         return <View style={styles.incomesList}>
             {
                 <Animated.View style={{
@@ -28,7 +30,7 @@ export class IncomesList extends Component {
                         {this.props.thereAreNoValuesYetText}
                     </Animated.Text>
                     <View style={{ opacity: this.props.incomes.length === 0 ? 1 : 0 }}>
-                        <TextButton forwardedRef={ref => this.addButonRef = ref} text='Добавить' height={50} fontSize={15} onPress={this.onAdd} />
+                        <TextButton forwardedRef={ref => this.addButonRef = ref} text={locale.add} height={50} fontSize={15} onPress={this.onAdd} />
                     </View>
                 </Animated.View>
             }
@@ -36,6 +38,7 @@ export class IncomesList extends Component {
                 {
                     this.props.incomes.map((i) =>
                         <IncomeView
+                            locale={locale}
                             key={i.id}
                             income={i}
                             onRemoveButtonPressed={() => this.props.onRemove(i.id)}
@@ -51,7 +54,7 @@ export class IncomesList extends Component {
                         ...styles.addButton,
                         transform: [{ translateX: this.state.moveAnim }, { scaleX: this.state.fontSizeAnim }, { scaleY: this.state.fontSizeAnim }]
                     }}>
-                        <TextButton forwardedRef={ref => this.addButtonRef2 = ref} text='Добавить' height={50} fontSize={18} onPress={this.props.onAdd} />
+                        <TextButton forwardedRef={ref => this.addButtonRef2 = ref} text={locale.add} height={50} fontSize={18} onPress={this.props.onAdd} />
                     </Animated.View>
                 }
             </View>
@@ -105,6 +108,8 @@ class IncomeView extends Component {
     }
 
     render() {
+        const { locale } = this.props;
+
         return <Animated.View style={{
             ...styles.incomeView,
             height: this.state.expandAnim,
@@ -132,7 +137,7 @@ class IncomeView extends Component {
                     onChangeText={this.props.onDescriptionChanged}
                     value={this.props.income.description}
                     selectTextOnFocus
-                    placeholder='Описание...'
+                    placeholder={locale.description}
                 />
             </View>
             <Animated.View style={{

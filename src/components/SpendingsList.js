@@ -4,6 +4,7 @@ import { IconButton } from '../components/IconButton';
 
 class SpendingsList extends Component {
     render() {
+        const { locale } = this.props;
         const total = this.props.spendings.map(s => s.amount).reduce((sum, nextAmount) => sum += nextAmount);
         return <View>
             {
@@ -12,7 +13,7 @@ class SpendingsList extends Component {
             <View style={styles.border} />
             <View style={styles.totalContainer}>
                 <Text style={[styles.total, { fontSize: total % 1 !== 0 && total >= 10000 ? 28 : 30 }]}>{total % 1 === 0 ? total : total.toFixed(2)} &#8381;</Text>
-                <Text style={[styles.totalText, { fontSize: total % 1 !== 0 && total >= 10000 ? 28 : 30 }]}>потрачено</Text>
+                <Text style={[styles.totalText, { fontSize: total % 1 !== 0 && total >= 10000 ? 28 : 30 }]}>{locale.totalExpensesToday}</Text>
             </View>
             <View style={styles.placeholder}></View>
         </View>

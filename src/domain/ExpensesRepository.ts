@@ -72,7 +72,7 @@ export class ExpensesRepository implements IExpensesRepository {
         this.expenses[index] = {
             ...this.expenses[index],
             amount: amount ? amount : this.expenses[index].amount,
-            description: description ? description : this.expenses[index].description
+            description: description !== null ? description : this.expenses[index].description
         };
 
         AsyncStorage

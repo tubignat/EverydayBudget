@@ -38,7 +38,7 @@ export class Application {
     @observable public day: number;
 
     @computed public get todaysLimit() {
-        return this.saldos[this.day];
+        return this.saldos[this.day - 1];
     }
 
     @computed public get todaysSpendings() {

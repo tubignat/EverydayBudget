@@ -12,11 +12,13 @@ import { observer } from '../../node_modules/mobx-react/dist/mobx-react';
 import { Application } from '../domain/Application';
 import { SpendingId } from '../domain/SpendingsRepository';
 import { DaysSpendingsPanel, TableHeader, TableRow } from '../components/MonthSpendingsTable';
+import { Locale } from '../locale/Locale';
 
 interface IMonthSpendingsProps {
     application: Application,
     onModalOpen: () => void,
-    onModalClose: () => void
+    onModalClose: () => void,
+    locale: Locale
 }
 
 interface IMonthSpendingsState {
@@ -38,7 +40,7 @@ export default class MonthSpendings extends Component<IMonthSpendingsProps, IMon
     }
 
     render() {
-        const { application } = this.props;
+        const { application, locale } = this.props;
         const days = Array.from({ length: application.daysInMonth }, (_, k) => k + 1);
         const budget = this.state.openedDay > 2 ? application.saldos[this.state.openedDay - 2] + application.budgetPerDay : application.budgetPerDay;
 
@@ -46,6 +48,7 @@ export default class MonthSpendings extends Component<IMonthSpendingsProps, IMon
             {
                 this.state.isModalOpen &&
                 <DaysSpendingsPanel
+                    locale={locale}
                     closePanel={this.closeModal}
                     day={this.state.openedDay}
                     month={application.month}
@@ -61,13 +64,14 @@ export default class MonthSpendings extends Component<IMonthSpendingsProps, IMon
                 <KeyboardAvoidingView behavior='padding'>
                     <ScrollView style={{ padding: 20, paddingTop: 45 }}>
                         <View style={{ paddingBottom: 120 }}>
-                            <Text style={styles.header}>Статистика</Text>
+                            <Text style={styles.header}>{locale.statisticsPageTitle}</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', width: 230 }}>
                             </View>
                             <View style={{ marginTop: 20 }}>
-                                <TableHeader />
+                                <TableHeader locale={locale} />
                                 {
                                     days.map(d => <TableRow
+                                        locale={locale}
                                         key={d}
                                         day={d}
                                         month={application.month}

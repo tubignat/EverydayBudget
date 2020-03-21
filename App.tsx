@@ -12,11 +12,14 @@ import { Application } from './src/domain/Application';
 import MonthSpendings from './src/pages/MonthSpendings';
 import { SetUpMonthsRepository } from './src/domain/SetUpMonthsRepository';
 import { EnsureMonthIsSetUpService } from './src/domain/EnsureMonthIsSetUpService';
+import * as Localization from 'expo-localization';
+import { Locale, getLocale } from './src/locale/Locale';
 
 @observer
 export default class App extends Component<{}, { isScrollLocked: boolean, isInitialized: boolean }> {
 
     private application: Application;
+    private locale: Locale;
 
     constructor(props: {}) {
         super(props);
@@ -46,6 +49,8 @@ export default class App extends Component<{}, { isScrollLocked: boolean, isInit
 
         this.application.init();
 
+        this.locale = getLocale(Localization.locale);
+
         this.setState({ isInitialized: true });
     }
 
@@ -53,11 +58,12 @@ export default class App extends Component<{}, { isScrollLocked: boolean, isInit
         return (
             this.state.isInitialized &&
             <Swiper loop={false} index={1} bounces={true} scrollEnabled={!this.state.isScrollLocked} showsPagination={!this.state.isScrollLocked}>
-                <Settings application={this.application} />
-                <Home application={this.application} />
-                <TodaySpendings application={this.application} />
+                <Settings application={this.application} locale={this.locale} />
+                <Home application={this.application} locale={this.locale} />
+                <TodaySpendings application={this.application} locale={this.locale} />
                 <MonthSpendings
                     application={this.application}
+                    locale={this.locale}
                     onModalOpen={() => this.setState({ isScrollLocked: true })}
                     onModalClose={() => this.setState({ isScrollLocked: false })}
                 />

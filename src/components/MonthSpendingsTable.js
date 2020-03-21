@@ -15,16 +15,14 @@ import { TextButton } from './TextButton';
 
 const Window = Dimensions.get('window')
 
-export function DaysSpendingsPanel({ closePanel, month, day, budget, saldo, spendings, remove, edit, add }) {
-    const monthName = getMonthName(month);
-
+export function DaysSpendingsPanel({ closePanel, month, day, budget, saldo, spendings, remove, edit, add, locale }) {
     return <SlidingUpPanel onClose={closePanel} offsetTop={Window.height / 4}>
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.daySpendingHeader}>
-                <Text style={styles.daySpendingDateText}>{day} {monthName}</Text>
+                <Text style={styles.daySpendingDateText}>{locale.getDateText(day, month)}</Text>
             </View>
             <View style={styles.daySpendingBudgetContainer}>
-                <Text style={styles.daySpendingBudgetLabel}>Бюджет</Text>
+                <Text style={styles.daySpendingBudgetLabel}>{locale.budget}</Text>
                 <Text style={{
                     ...styles.daySpendingBudgetText,
                     color: budget > 0 ? 'black' : 'rgb(255, 69, 58)'
@@ -33,7 +31,7 @@ export function DaysSpendingsPanel({ closePanel, month, day, budget, saldo, spen
                 </Text>
             </View>
             <View style={styles.daySpendingBudgetContainer}>
-                <Text style={styles.daySpendingBudgetLabel}>Остаток</Text>
+                <Text style={styles.daySpendingBudgetLabel}>{locale.saldos}</Text>
                 <Text style={{
                     ...styles.daySpendingBudgetText,
                     color: saldo > 0 ? 'black' : 'rgb(255, 69, 58)'
@@ -41,52 +39,23 @@ export function DaysSpendingsPanel({ closePanel, month, day, budget, saldo, spen
             </View>
             {
                 spendings.length > 0 &&
-                <DayOfMonthSpendingsList spendings={spendings} remove={remove} edit={edit} add={() => add(day)} />
+                <DayOfMonthSpendingsList locale={locale} spendings={spendings} remove={remove} edit={edit} add={() => add(day)} />
             }
             {
                 spendings.length === 0 &&
                 <View style={styles.emptyListTextContainer}>
-                    <Text style={styles.emptyListText}>За этот день трат нет. </Text>
-                    <TextButton text='Добавить' height={50} fontSize={15} onPress={() => add(day)} />
+                    <Text style={styles.emptyListText}>{locale.noSpendingForThisDay}</Text>
+                    <TextButton text={locale.add} height={50} fontSize={15} onPress={() => add(day)} />
                 </View>
             }
         </ScrollView>
     </SlidingUpPanel>
-
-    function getMonthName(month) {
-        switch (month) {
-            case 0:
-                return 'января';
-            case 1:
-                return 'февраля';
-            case 2:
-                return 'марта';
-            case 3:
-                return 'апреля';
-            case 4:
-                return 'мая';
-            case 5:
-                return 'июня';
-            case 6:
-                return 'июля';
-            case 7:
-                return 'августа';
-            case 8:
-                return 'сентября';
-            case 9:
-                return 'октября';
-            case 10:
-                return 'ноября';
-            case 11:
-                return 'декабря';
-        }
-    }
 }
 
-export function TableHeader() {
+export function TableHeader({ locale }) {
     return <View style={styles.tableHeaderContainer}>
-        <Text style={[styles.tableHeaderCell, { width: 65 }]}>День</Text>
-        <Text style={[styles.tableHeaderCell, { textAlign: 'right' }]}>Остаток</Text>
+        <Text style={[styles.tableHeaderCell, { width: 65 }]}>{locale.dateColumn}</Text>
+        <Text style={[styles.tableHeaderCell, { textAlign: 'right' }]}>{locale.saldoColumn}</Text>
     </View>
 }
 
@@ -98,7 +67,7 @@ export class TableRow extends Component {
     }
 
     render() {
-        const { day, month, year, saldo, isToday } = this.props;
+        const { day, month, year, saldo, isToday, locale } = this.props;
         const dayOfWeek = new Date(year, month, day).getDay();
         const style = isToday ? [styles.dayOfMonth, styles.weekend] : styles.dayOfMonth;
 
@@ -114,7 +83,7 @@ export class TableRow extends Component {
                 ]}
             >
                 <Text style={[styles.tableRowCell, style]}>
-                    {day}, {this.getDayOfWeekAbbreviation(dayOfWeek)}
+                    {day},  {locale.getDayOfWeekAbbr(dayOfWeek)}
                 </Text>
                 <Text
                     style={[styles.daysBudget, styles.tableRowCell, { color: saldo > 0 ? 'black' : 'rgb(255, 69, 58)' }]}
@@ -126,25 +95,6 @@ export class TableRow extends Component {
 
     }
 
-    getDayOfWeekAbbreviation = (datOfWeek) => {
-        switch (datOfWeek) {
-            case 0:
-                return 'вс';
-            case 1:
-                return 'пн';
-            case 2:
-                return 'вт';
-            case 3:
-                return 'ср';
-            case 4:
-                return 'чт';
-            case 5:
-                return 'пт';
-            case 6:
-                return 'сб';
-        }
-    }
-
     isWeekend = (dayOfWeek) => dayOfWeek === 6 || dayOfWeek === 0;
     isSunday = (dayOfWeek) => dayOfWeek === 0;
 
@@ -152,7 +102,7 @@ export class TableRow extends Component {
 
 const styles = StyleSheet.create({
     dayOfMonth: {
-        width: 65
+        width: 75
     },
     weekend: {
         color: 'crimson',
@@ -251,11 +201,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         paddingLeft: 5,
     },
-
-
-
-
-
     daySpendingHeader: {
         justifyContent: 'space-between',
         alignItems: 'flex-start',

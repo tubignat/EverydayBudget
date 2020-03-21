@@ -72,7 +72,7 @@ export class IncomesRepository implements IIncomesRepository {
         this.incomes[index] = {
             ...this.incomes[index],
             amount: amount ? amount : this.incomes[index].amount,
-            description: description ? description : this.incomes[index].description
+            description: description !== null ? description : this.incomes[index].description
         };
 
         AsyncStorage

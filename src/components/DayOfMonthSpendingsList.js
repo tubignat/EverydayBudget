@@ -4,14 +4,14 @@ import { IconButton } from './IconButton';
 import TextInputWithTemporaryInvalidValue from '../components/TextInputWithTemporaryInvalidValue';
 import { TextButton } from './TextButton';
 
-function DayOfMonthSpendingsList({ spendings, remove, edit, add }) {
+function DayOfMonthSpendingsList({ spendings, remove, edit, add, locale }) {
     return <View style={styles.dayOfMonthSpendingsList}>
         {
             spendings.map(s => <DayOfMonthSpending spending={s} key={s.id} remove={() => remove(s.id)} edit={(amount) => edit(s.id, amount)} />)
         }
         {
             spendings.length !== 0 && <View style={styles.addButton}>
-                <TextButton text='Добавить' height={50} fontSize={18} onPress={add} />
+                <TextButton text={locale.add} height={50} fontSize={18} onPress={add} />
             </View>
         }
     </View>
