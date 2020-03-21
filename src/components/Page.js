@@ -1,11 +1,15 @@
 import React from 'react';
-import {View, StyleSheet, Dimensions} from 'react-native';
+import { View, StyleSheet, Dimensions, StatusBar } from 'react-native';
 
-const {height, width} = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 export default function Page({ children }) {
     return (
         <View>
-            <View style={styles.statusBar}/>
+            <StatusBar
+                hidden={false}
+                barStyle='dark-content'
+            />
+            <View style={styles.statusBar} />
             <View style={styles.content}>
                 {
                     children
