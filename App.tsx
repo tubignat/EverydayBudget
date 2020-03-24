@@ -1,4 +1,4 @@
-import React, { Component, Context } from 'react';
+import React, { Component } from 'react';
 import Swiper from 'react-native-swiper';
 import Home from './src/pages/Home';
 import Settings from './src/pages/Settings';
@@ -14,9 +14,12 @@ import { SetUpMonthsRepository } from './src/domain/SetUpMonthsRepository';
 import { EnsureMonthIsSetUpService } from './src/domain/EnsureMonthIsSetUpService';
 import { UserPreferencesRepository } from './src/domain/UserPreferencesRepository';
 import { ApplicationContext } from './src/domain/ApplicationContext';
+import { AppState, AppStateStatus, Image, View, Animated } from 'react-native';
 
 @observer
-export default class App extends Component<{}, { isScrollLocked: boolean, isInitialized: boolean }> {
+export default class App extends Component<{}, {
+    isScrollLocked: boolean, isInitialized: boolean, appState: AppStateStatus, protectScreenOpacity: Animated.Value, protectScreenDisplay: boolean
+}> {
 
     private application: Application | undefined;
 
@@ -24,11 +27,40 @@ export default class App extends Component<{}, { isScrollLocked: boolean, isInit
         super(props);
         this.state = {
             isScrollLocked: false,
-            isInitialized: false
+            isInitialized: false,
+            appState: AppState.currentState,
+            protectScreenOpacity: new Animated.Value(0),
+            protectScreenDisplay: false
         };
 
-        this.init();
     }
+
+    componentDidMount() {
+        this.init();
+        AppState.addEventListener('change', this.handleAppStateChange);
+    }
+
+    componentWillUnmount() {
+        AppState.removeEventListener('change', this.handleAppStateChange);
+    }
+
+    private handleAppStateChange = (nextAppState: AppStateStatus) => {
+        if (nextAppState === 'active') {
+            this.application?.init();
+            Animated
+                .timing(this.state.protectScreenOpacity, { toValue: 0, duration: 200 })
+                .start(() => this.setState({ protectScreenDisplay: false }));
+        }
+
+        if (nextAppState === 'inactive') {
+            this.setState({ protectScreenDisplay: true });
+            Animated
+                .timing(this.state.protectScreenOpacity, { toValue: 1 })
+                .start();
+        }
+
+        this.setState({ appState: nextAppState });
+    };
 
     async init() {
         const spendingsRepository = new SpendingsRepository();
@@ -76,6 +108,15 @@ export default class App extends Component<{}, { isScrollLocked: boolean, isInit
                         onModalClose={() => this.setState({ isScrollLocked: false })}
                     />
                 </Swiper>
+                <Animated.View style={{
+                    height: '100%', width: '100%', justifyContent: 'center',
+                    alignItems: 'center', position: 'absolute', top: 0,
+                    backgroundColor: 'white',
+                    opacity: this.state.protectScreenOpacity,
+                    display: this.state.protectScreenDisplay ? 'flex' : 'none'
+                }}>
+                    <Image source={require('./assets/icon.png')} style={{ width: 150, height: 150 }} />
+                </Animated.View>
             </ApplicationContext.Provider>
         );
     }
