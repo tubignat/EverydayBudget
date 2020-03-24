@@ -14,6 +14,8 @@ export const enLocale: Locale = {
     noExpensesYet: 'No expenses yet. ',
     budgetPerDay: 'Budget per day',
     description: 'Description...',
+    language: 'Language',
+    currency: 'Currency',
 
     todaysExpenses: 'Today\'s spending',
     noExpensesToday: 'No spending today',
@@ -44,11 +46,11 @@ export const enLocale: Locale = {
     getDayOfWeekAbbr: (dayOfWeek: number) => daysOfWeekAbbr[dayOfWeek]
 }
 
-const months = {
+const months: { [month: number]: string } = {
     0: 'January', 1: 'February', 2: 'March', 3: 'April', 4: 'May', 5: 'June',
     6: 'July', 7: 'August', 8: 'September', 9: 'October', 10: 'November', 11: 'December',
 }
 
-const daysOfWeekAbbr = {
+const daysOfWeekAbbr: { [month: number]: string } = {
     0: 'su', 1: 'mo', 2: 'tu', 3: 'we', 4: 'th', 5: 'fr', 6: 'sa'
 }

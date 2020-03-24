@@ -3,8 +3,12 @@ import { IconButton } from '../components/IconButton';
 import { View, Text, TextInput, Animated, TouchableWithoutFeedback, StyleSheet } from 'react-native';
 import TextInputWithTemporaryInvalidValue from '../components/TextInputWithTemporaryInvalidValue';
 import { TextButton } from '../components/TextButton';
+import { ApplicationContext } from '../domain/ApplicationContext';
 
 export class IncomesList extends Component {
+
+    static contextType = ApplicationContext;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -15,7 +19,7 @@ export class IncomesList extends Component {
     }
 
     render() {
-        const { locale } = this.props;
+        const { locale } = this.context;
 
         return <View style={styles.incomesList}>
             {
@@ -93,6 +97,9 @@ export class IncomesList extends Component {
 }
 
 class IncomeView extends Component {
+
+    static contextType = ApplicationContext;
+
     constructor(props) {
         super(props);
 
@@ -108,7 +115,7 @@ class IncomeView extends Component {
     }
 
     render() {
-        const { locale } = this.props;
+        const { locale, currency } = this.context;
 
         return <Animated.View style={{
             ...styles.incomeView,
@@ -129,7 +136,7 @@ class IncomeView extends Component {
                                 return !isNaN(number) && number !== 0;
                             }}
                         />
-                        <Text style={styles.incomeViewAmountText}> &#8381;</Text>
+                        <Text style={styles.incomeViewAmountText}> {currency}</Text>
                     </View>
                 </TouchableWithoutFeedback>
                 <TextInput

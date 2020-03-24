@@ -4,11 +4,16 @@ import { IIncomesRepository, Income, IncomeId } from "./IncomesRepository";
 import { BudgetService } from "./BudgetService";
 import { observable, computed } from "../../node_modules/mobx/lib/mobx";
 import { EnsureMonthIsSetUpService } from "./EnsureMonthIsSetUpService";
+import { Language, Currency, IUserPreferencesRepository } from "./UserPreferencesRepository";
+import * as Localization from 'expo-localization';
+import { enLocale } from "../locale/EnLocale";
+import { ruLocale } from "../locale/RuLocale";
 
 export class Application {
     private expensesRepository: IExpensesRepository;
     private spendingRepository: ISpendingsRepository;
     private incomesRepository: IIncomesRepository;
+    private userPreferencesRepository: IUserPreferencesRepository;
 
     private ensureMonthIsSetUpService: EnsureMonthIsSetUpService;
     private budgetService: BudgetService;
@@ -17,25 +22,30 @@ export class Application {
         incomesRepository: IIncomesRepository,
         expensesRepository: IExpensesRepository,
         spendingRepository: ISpendingsRepository,
+        userPreferencesRepository: IUserPreferencesRepository,
         ensureMonthIsSetUpService: EnsureMonthIsSetUpService,
         budgetService: BudgetService
     ) {
         this.incomesRepository = incomesRepository;
         this.expensesRepository = expensesRepository;
         this.spendingRepository = spendingRepository;
+        this.userPreferencesRepository = userPreferencesRepository;
         this.ensureMonthIsSetUpService = ensureMonthIsSetUpService;
         this.budgetService = budgetService;
     }
 
-    @observable public incomes: Income[];
-    @observable public expenses: Expense[];
-    @observable public spendings: Spending[];
-    @observable public budgetPerDay: number;
-    @observable public saldos: number[];
+    @observable public language: Language = 'en';
+    @observable public currency: Currency = '$';
 
-    @observable public year: number;
-    @observable public month: number;
-    @observable public day: number;
+    @observable public incomes: Income[] = [];
+    @observable public expenses: Expense[] = [];
+    @observable public spendings: Spending[] = [];
+    @observable public budgetPerDay: number = 0;
+    @observable public saldos: number[] = [];
+
+    @observable public year: number = 0;
+    @observable public month: number = 0;
+    @observable public day: number = 0;
 
     @computed public get todaysLimit() {
         return this.saldos[this.day - 1];
@@ -47,6 +57,10 @@ export class Application {
 
     @computed public get daysInMonth() {
         return new Date(this.year, this.month + 1, 0).getDate();
+    }
+
+    @computed public get locale() {
+        return this.language === 'ru' ? ruLocale : enLocale;
     }
 
     public init = () => {
@@ -65,6 +79,10 @@ export class Application {
         this.budgetPerDay = this.budgetService.getBudgetPerDay(this.year, this.month);
 
         this.saldos = this.budgetService.getSaldos(this.budgetPerDay, this.year, this.month);
+
+        const preferences = this.userPreferencesRepository.get();
+        this.language = preferences.language ?? this.getLanguageFromSystem();
+        this.currency = preferences.currency ?? this.getCurrencyFromSystem();
     }
 
     public addSpending = (day: number, amount: number) => {
@@ -87,7 +105,7 @@ export class Application {
         this.init();
     }
 
-    public editIncome = (id: IncomeId, amount: number, description: string) => {
+    public editIncome = (id: IncomeId, amount: number | null, description: string | null) => {
         this.incomesRepository.edit(id, description, amount);
         this.init();
     }
@@ -102,7 +120,7 @@ export class Application {
         this.init();
     }
 
-    public editExpense = (id: ExpenseId, amount: number, description: string) => {
+    public editExpense = (id: ExpenseId, amount: number | null, description: string | null) => {
         this.expensesRepository.edit(id, description, amount);
         this.init();
     }
@@ -110,5 +128,25 @@ export class Application {
     public removeExpense = (id: ExpenseId) => {
         this.expensesRepository.remove(id);
         this.init();
+    }
+
+    public changeCurrency = (newCurrency: Currency) => {
+        this.userPreferencesRepository.set({ currency: newCurrency, language: this.language });
+        this.init();
+    }
+
+    public changeLanguage = (newLanguage: Language) => {
+        this.userPreferencesRepository.set({ language: newLanguage, currency: this.currency });
+        this.init();
+    }
+
+    private getLanguageFromSystem = (): Language => {
+        const ruLocaleRegex = /^ru-\w\w$/
+        return ruLocaleRegex.test(Localization.locale) ? 'ru' : 'en'
+    }
+
+    private getCurrencyFromSystem = (): Currency => {
+        const ruLocaleRegex = /^\w\w-RU$/
+        return ruLocaleRegex.test(Localization.locale) ? '₽' : '$'
     }
 }

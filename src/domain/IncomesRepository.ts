@@ -13,10 +13,9 @@ export type Income = {
 export interface IIncomesRepository {
     add: (year: number, month: number, description: string, amount: number) => void;
     addMany: (year: number, month: number, incomes: { description: string, amount: number }[]) => void;
-    edit: (id: IncomeId, description: string, amount: number) => void;
+    edit: (id: IncomeId, description: string | null, amount: number | null) => void;
     remove: (id: IncomeId) => void;
     get: (year: number, month: number) => Income[];
-    init: () => Promise<void>;
 }
 
 export class IncomesRepository implements IIncomesRepository {
@@ -67,7 +66,7 @@ export class IncomesRepository implements IIncomesRepository {
             .catch(error => console.error(error));
     }
 
-    edit = (id: number, description: string, amount: number) => {
+    edit = (id: number, description: string | null, amount: number | null) => {
         const index = this.incomes.findIndex(i => i.id === id);
         this.incomes[index] = {
             ...this.incomes[index],

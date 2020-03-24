@@ -1,26 +1,28 @@
 import React, { Component } from 'react';
 import { Animated, View, Text, StyleSheet } from 'react-native';
 import { IconButton } from '../components/IconButton';
+import { ApplicationContext } from '../domain/ApplicationContext';
 
-class SpendingsList extends Component {
-    render() {
-        const { locale } = this.props;
-        const total = this.props.spendings.map(s => s.amount).reduce((sum, nextAmount) => sum += nextAmount);
-        return <View>
-            {
-                this.props.spendings.map(s => <SpendingView key={s.id} amount={s.amount} onRemoveButtonPressed={() => this.props.remove(s.id)} />)
-            }
-            <View style={styles.border} />
-            <View style={styles.totalContainer}>
-                <Text style={[styles.total, { fontSize: total % 1 !== 0 && total >= 10000 ? 28 : 30 }]}>{total % 1 === 0 ? total : total.toFixed(2)} &#8381;</Text>
-                <Text style={[styles.totalText, { fontSize: total % 1 !== 0 && total >= 10000 ? 28 : 30 }]}>{locale.totalExpensesToday}</Text>
-            </View>
-            <View style={styles.placeholder}></View>
+function SpendingsList({ spendings, remove }) {
+    const { locale, currency } = React.useContext(ApplicationContext);
+    const total = spendings.map(s => s.amount).reduce((sum, nextAmount) => sum += nextAmount);
+    return <View>
+        {
+            spendings.map(s => <SpendingView key={s.id} amount={s.amount} onRemoveButtonPressed={() => remove(s.id)} />)
+        }
+        <View style={styles.border} />
+        <View style={styles.totalContainer}>
+            <Text style={[styles.total, { fontSize: total % 1 !== 0 && total >= 10000 ? 28 : 30 }]}>{total % 1 === 0 ? total : total.toFixed(2)} {currency}</Text>
+            <Text style={[styles.totalText, { fontSize: total % 1 !== 0 && total >= 10000 ? 28 : 30 }]}>{locale.totalExpensesToday}</Text>
         </View>
-    }
+        <View style={styles.placeholder}></View>
+    </View>
 }
 
 class SpendingView extends Component {
+
+    static contextType = ApplicationContext;
+
     constructor(props) {
         super(props);
 
@@ -36,12 +38,15 @@ class SpendingView extends Component {
     }
 
     render() {
+
+        const { currency } = this.context;
+
         return <Animated.View style={{
             ...styles.spendingView,
             height: this.state.expandAnim,
             opacity: this.state.fadeAnim
         }}>
-            <Text style={styles.spendingViewText}>{this.props.amount % 1 === 0 ? this.props.amount : this.props.amount.toFixed(2)} &#8381;</Text>
+            <Text style={styles.spendingViewText}>{this.props.amount % 1 === 0 ? this.props.amount : this.props.amount.toFixed(2)} {currency}</Text>
             <IconButton size={40} innerSize={20} icon={'close-circle'} color='rgb(255, 69, 58)' onPress={this.onRemove} />
         </Animated.View>
     }

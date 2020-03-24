@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, Animated, TouchableWithoutFeedback } from 'react-native';
 import { IconButton } from './IconButton';
 import TextInputWithTemporaryInvalidValue from '../components/TextInputWithTemporaryInvalidValue';
 import { TextButton } from './TextButton';
+import { ApplicationContext } from '../domain/ApplicationContext';
 
-function DayOfMonthSpendingsList({ spendings, remove, edit, add, locale }) {
+function DayOfMonthSpendingsList({ spendings, remove, edit, add }) {
+    const { locale } = useContext(ApplicationContext);
     return <View style={styles.dayOfMonthSpendingsList}>
         {
             spendings.map(s => <DayOfMonthSpending spending={s} key={s.id} remove={() => remove(s.id)} edit={(amount) => edit(s.id, amount)} />)
@@ -18,6 +20,7 @@ function DayOfMonthSpendingsList({ spendings, remove, edit, add, locale }) {
 }
 
 function DayOfMonthSpending({ spending, remove, edit }) {
+    const { currency } = useContext(ApplicationContext);
 
     const [expandAnim] = useState(new Animated.Value(0));
     const [fadeAnim] = useState(new Animated.Value(0));
@@ -50,7 +53,7 @@ function DayOfMonthSpending({ spending, remove, edit }) {
                         return !isNaN(number) && number !== 0;
                     }}
                 />
-                <Text style={styles.incomeViewAmountText}> &#8381;</Text>
+                <Text style={styles.incomeViewAmountText}> {currency}</Text>
             </View>
         </TouchableWithoutFeedback>
         <IconButton size={40} innerSize={18} icon='close-circle' color='rgb(255, 69, 58)' onPress={onRemove} />

@@ -13,10 +13,9 @@ export type Expense = {
 export interface IExpensesRepository {
     add: (year: number, month: number, description: string, amount: number) => void;
     addMany: (year: number, month: number, incomes: { description: string, amount: number }[]) => void;
-    edit: (id: ExpenseId, description: string, amount: number) => void;
+    edit: (id: ExpenseId, description: string | null, amount: number | null) => void;
     remove: (id: ExpenseId) => void;
     get: (year: number, month: number) => Expense[];
-    init: () => Promise<void>;
 }
 
 export class ExpensesRepository implements IExpensesRepository {
@@ -67,7 +66,7 @@ export class ExpensesRepository implements IExpensesRepository {
             .catch(error => console.error(error));
     }
 
-    edit = (id: number, description: string, amount: number) => {
+    edit = (id: number, description: string | null, amount: number | null) => {
         const index = this.expenses.findIndex(i => i.id === id);
         this.expenses[index] = {
             ...this.expenses[index],

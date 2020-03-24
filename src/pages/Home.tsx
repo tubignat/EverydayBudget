@@ -4,17 +4,11 @@ import { KeyBoard } from '../components/keyboard/Keyboard';
 import { AddSpendingButton } from '../components/AddSpendingButton';
 import Page from '../components/Page'
 import { observer } from '../../node_modules/mobx-react/dist/mobx-react';
-import { Application } from '../domain/Application';
-import { Locale } from '../locale/Locale';
+import { ApplicationContext } from '../domain/ApplicationContext';
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = width < 350;
 const isBigScreen = height > 800;
-
-interface IHomeProps {
-    application: Application,
-    locale: Locale
-}
 
 interface IHomeState {
     newTransactionRubles: number,
@@ -23,9 +17,11 @@ interface IHomeState {
 }
 
 @observer
-export default class Home extends Component<IHomeProps, IHomeState> {
+export default class Home extends Component<{}, IHomeState> {
 
-    constructor(props: IHomeProps) {
+    static contextType = ApplicationContext;
+
+    constructor(props: {}) {
         super(props);
         this.state = {
             newTransactionRubles: 0,
@@ -36,8 +32,7 @@ export default class Home extends Component<IHomeProps, IHomeState> {
 
     render() {
         const { newTransactionRubles, isKopeckMode, newTransactionKopecks } = this.state;
-        const { application, locale } = this.props;
-        const todaysLimit = application.todaysLimit;
+        const { currency, locale, todaysLimit } = this.context;
 
         return <Page>
             {
@@ -54,7 +49,7 @@ export default class Home extends Component<IHomeProps, IHomeState> {
                         {locale.todaysLimit}
                     </Text>
                     <Text style={{ ...styles.budget, color: todaysLimit < 0 ? 'rgb(255, 69, 58)' : 'black' }}>
-                        {todaysLimit.toFixed(0)} &#8381;
+                        {todaysLimit.toFixed(0)} {currency}
                     </Text>
                 </View>
 
@@ -62,7 +57,7 @@ export default class Home extends Component<IHomeProps, IHomeState> {
                     <Text style={styles.addTransactionText}>{locale.addExpense}</Text>
                     <View style={styles.addTransactionInput}>
                         <Text style={styles.transaction}>
-                            {newTransactionRubles}{isKopeckMode ? '.' : ''}{isKopeckMode ? newTransactionKopecks.join('') : ''} &#8381;
+                            {newTransactionRubles}{isKopeckMode ? '.' : ''}{isKopeckMode ? newTransactionKopecks.join('') : ''} {currency}
                         </Text>
                         <AddSpendingButton
                             onPress={this.onAddButtonPressed}
@@ -104,7 +99,7 @@ export default class Home extends Component<IHomeProps, IHomeState> {
         const kopecks = Number(this.state.newTransactionKopecks.join(''));
         const amount = this.state.newTransactionRubles + (kopecks / 100);
 
-        this.props.application.addSpending(this.props.application.day, amount);
+        this.context.addSpending(this.context.day, amount);
 
         this.setState({ newTransactionRubles: 0, isKopeckMode: false, newTransactionKopecks: [] });
     }

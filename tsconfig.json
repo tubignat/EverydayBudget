@@ -12,7 +12,8 @@
     "noEmit": true,
     "strict": true,
     "experimentalDecorators": true,
-    "target": "esnext"
+    "target": "esnext",
+    "strictNullChecks": true
   },
   "exclude": [
     "node_modules",

@@ -11,9 +11,11 @@ export const ruLocale: Locale = {
     noIncomesYet: 'Пока доходов нет. ',
     recurringExpenses: 'Регулярный расходы',
     newExpense: 'Новый расход',
-    noExpensesYet: 'Пока расходов нет',
+    noExpensesYet: 'Пока расходов нет. ',
     budgetPerDay: 'Бюджет на день',
     description: 'Описание...',
+    language: 'Язык',
+    currency: 'Валюта',
 
     todaysExpenses: 'Траты за сегодня',
     noExpensesToday: 'За сегодня трат пока нет',
@@ -33,11 +35,11 @@ export const ruLocale: Locale = {
     getDayOfWeekAbbr: (dayOfWeek: number) => daysOfWeekAbbr[dayOfWeek]
 }
 
-const ruMonths = {
+const ruMonths: { [month: number]: string } = {
     0: 'января', 1: 'февраля', 2: 'марта', 3: 'апреля', 4: 'мая', 5: 'июня',
     6: 'июля', 7: 'августа', 8: 'сентября', 9: 'октября', 10: 'ноября', 11: 'декабря',
 }
 
-const daysOfWeekAbbr = {
+const daysOfWeekAbbr: { [month: number]: string } = {
     0: 'вс', 1: 'пн', 2: 'вт', 3: 'ср', 4: 'чт', 5: 'пт', 6: 'сб'
 }

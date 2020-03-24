@@ -1,6 +1,3 @@
-import { ruLocale } from "./RuLocale";
-import { enLocale } from "./EnLocale";
-
 export type Locale = {
     homePageTitle: string
     todaysLimit: string
@@ -16,6 +13,8 @@ export type Locale = {
     add: string
     budgetPerDay: string
     description: string
+    language: string
+    currency: string
 
     todaysExpenses: string
     noExpensesToday: string
@@ -30,9 +29,4 @@ export type Locale = {
 
     getDateText: (day: number, month: number) => string
     getDayOfWeekAbbr: (dayOfWeek: number) => string
-}
-
-export function getLocale(systemLocale: string) {
-    const ruLocaleRegex = /^ru-\w\w$/
-    return ruLocaleRegex.test(systemLocale) ? ruLocale : enLocale
 }

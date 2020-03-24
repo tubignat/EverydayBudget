@@ -1,46 +1,37 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { ScrollView, View, Text, Dimensions, StyleSheet } from 'react-native';
 import Page from '../components/Page'
 import SpendingsList from '../components/SpendingsList'
 import { observer } from '../../node_modules/mobx-react/dist/mobx-react';
-import { Application } from '../domain/Application';
 import { SpendingId } from '../domain/SpendingsRepository';
-import { Locale } from '../locale/Locale';
+import { ApplicationContext } from '../domain/ApplicationContext';
 
-interface ITodaySpendingsProps {
-    application: Application,
-    locale: Locale
-}
+function TodaySpendings() {
 
-@observer
-export default class TodaySpendings extends Component<ITodaySpendingsProps> {
-
-    constructor(props: ITodaySpendingsProps) {
-        super(props);
-        this.state = {};
+    const application = React.useContext(ApplicationContext);
+    if (!application) {
+        return null;
     }
 
-    render() {
-        const { application, locale } = this.props;
+    const spendings = application.todaysSpendings;
 
-        const spendings = application.todaysSpendings;
-
-        return <Page>
-            <ScrollView style={styles.container}>
-                <Text style={styles.header}>{locale.todaysExpenses}</Text>
-                {
-                    spendings.length > 0 && <SpendingsList locale={locale} spendings={spendings} remove={(id: SpendingId) => application.removeSpending(id)} />
-                }
-                {
-                    spendings.length == 0 &&
-                    <View style={styles.emptyListTextContainer}>
-                        <Text style={styles.emptyListText}>{locale.noExpensesToday}</Text>
-                    </View>
-                }
-            </ScrollView>
-        </Page>
-    }
+    return <Page>
+        <ScrollView style={styles.container}>
+            <Text style={styles.header}>{application.locale.todaysExpenses}</Text>
+            {
+                spendings.length > 0 && <SpendingsList spendings={spendings} remove={(id: SpendingId) => application.removeSpending(id)} />
+            }
+            {
+                spendings.length == 0 &&
+                <View style={styles.emptyListTextContainer}>
+                    <Text style={styles.emptyListText}>{application.locale.noExpensesToday}</Text>
+                </View>
+            }
+        </ScrollView>
+    </Page>
 }
+
+export default observer(TodaySpendings);
 
 const styles = StyleSheet.create({
     container: {

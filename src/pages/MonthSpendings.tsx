@@ -9,16 +9,13 @@ import {
 
 import Page from '../components/Page'
 import { observer } from '../../node_modules/mobx-react/dist/mobx-react';
-import { Application } from '../domain/Application';
-import { SpendingId } from '../domain/SpendingsRepository';
+import { SpendingId, Spending } from '../domain/SpendingsRepository';
 import { DaysSpendingsPanel, TableHeader, TableRow } from '../components/MonthSpendingsTable';
-import { Locale } from '../locale/Locale';
+import { ApplicationContext } from '../domain/ApplicationContext';
 
 interface IMonthSpendingsProps {
-    application: Application,
     onModalOpen: () => void,
     onModalClose: () => void,
-    locale: Locale
 }
 
 interface IMonthSpendingsState {
@@ -30,6 +27,8 @@ interface IMonthSpendingsState {
 @observer
 export default class MonthSpendings extends Component<IMonthSpendingsProps, IMonthSpendingsState> {
 
+    static contextType = ApplicationContext;
+
     constructor(props: IMonthSpendingsProps) {
         super(props);
         this.state = {
@@ -40,7 +39,7 @@ export default class MonthSpendings extends Component<IMonthSpendingsProps, IMon
     }
 
     render() {
-        const { application, locale } = this.props;
+        const application = this.context;
         const days = Array.from({ length: application.daysInMonth }, (_, k) => k + 1);
         const budget = this.state.openedDay > 2 ? application.saldos[this.state.openedDay - 2] + application.budgetPerDay : application.budgetPerDay;
 
@@ -48,13 +47,12 @@ export default class MonthSpendings extends Component<IMonthSpendingsProps, IMon
             {
                 this.state.isModalOpen &&
                 <DaysSpendingsPanel
-                    locale={locale}
                     closePanel={this.closeModal}
                     day={this.state.openedDay}
                     month={application.month}
                     budget={budget.toFixed(0)}
                     saldo={application.saldos[this.state.openedDay - 1].toFixed(0)}
-                    spendings={application.spendings.filter(s => s.day === this.state.openedDay)}
+                    spendings={application.spendings.filter((s: Spending) => s.day === this.state.openedDay)}
                     remove={(id: SpendingId) => application.removeSpending(id)}
                     edit={(id: SpendingId, amount: number) => application.editSpending(id, amount)}
                     add={(day: number) => application.addSpending(day, 0)}
@@ -64,14 +62,13 @@ export default class MonthSpendings extends Component<IMonthSpendingsProps, IMon
                 <KeyboardAvoidingView behavior='padding'>
                     <ScrollView style={{ padding: 20, paddingTop: 45 }}>
                         <View style={{ paddingBottom: 120 }}>
-                            <Text style={styles.header}>{locale.statisticsPageTitle}</Text>
+                            <Text style={styles.header}>{application.locale.statisticsPageTitle}</Text>
                             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', width: 230 }}>
                             </View>
                             <View style={{ marginTop: 20 }}>
-                                <TableHeader locale={locale} />
+                                <TableHeader />
                                 {
                                     days.map(d => <TableRow
-                                        locale={locale}
                                         key={d}
                                         day={d}
                                         month={application.month}
@@ -89,7 +86,7 @@ export default class MonthSpendings extends Component<IMonthSpendingsProps, IMon
         </View>
     }
 
-    openModal = (day) => {
+    openModal = (day: number) => {
         this.setState({ isModalOpen: true, openedDay: day });
         this.props.onModalOpen();
     }
@@ -97,35 +94,6 @@ export default class MonthSpendings extends Component<IMonthSpendingsProps, IMon
     closeModal = () => {
         this.setState({ isModalOpen: false });
         this.props.onModalClose();
-    }
-
-    getMonthName = (month) => {
-        switch (month) {
-            case 0:
-                return 'Январь';
-            case 1:
-                return 'Февраль';
-            case 2:
-                return 'Март';
-            case 3:
-                return 'Апрель';
-            case 4:
-                return 'Май';
-            case 5:
-                return 'Июнь';
-            case 6:
-                return 'Июль';
-            case 7:
-                return 'Август';
-            case 8:
-                return 'Сентябрь';
-            case 9:
-                return 'Октябрь';
-            case 10:
-                return 'Ноябрь';
-            case 11:
-                return 'Декабрь';
-        }
     }
 }
 

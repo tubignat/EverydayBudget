@@ -11,11 +11,14 @@ import {
 import SlidingUpPanel from './SlidingUpPanel';
 import DayOfMonthSpendingsList from './DayOfMonthSpendingsList';
 import { TextButton } from './TextButton';
+import { ApplicationContext } from '../domain/ApplicationContext';
 
 
 const Window = Dimensions.get('window')
 
-export function DaysSpendingsPanel({ closePanel, month, day, budget, saldo, spendings, remove, edit, add, locale }) {
+export function DaysSpendingsPanel({ closePanel, month, day, budget, saldo, spendings, remove, edit, add }) {
+    const { currency, locale } = React.useContext(ApplicationContext);
+
     return <SlidingUpPanel onClose={closePanel} offsetTop={Window.height / 4}>
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.daySpendingHeader}>
@@ -27,7 +30,7 @@ export function DaysSpendingsPanel({ closePanel, month, day, budget, saldo, spen
                     ...styles.daySpendingBudgetText,
                     color: budget > 0 ? 'black' : 'rgb(255, 69, 58)'
                 }}>
-                    {budget} &#8381;
+                    {budget} {currency}
                 </Text>
             </View>
             <View style={styles.daySpendingBudgetContainer}>
@@ -35,11 +38,11 @@ export function DaysSpendingsPanel({ closePanel, month, day, budget, saldo, spen
                 <Text style={{
                     ...styles.daySpendingBudgetText,
                     color: saldo > 0 ? 'black' : 'rgb(255, 69, 58)'
-                }}>{saldo} &#8381;</Text>
+                }}>{saldo} {currency}</Text>
             </View>
             {
                 spendings.length > 0 &&
-                <DayOfMonthSpendingsList locale={locale} spendings={spendings} remove={remove} edit={edit} add={() => add(day)} />
+                <DayOfMonthSpendingsList spendings={spendings} remove={remove} edit={edit} add={() => add(day)} />
             }
             {
                 spendings.length === 0 &&
@@ -52,22 +55,26 @@ export function DaysSpendingsPanel({ closePanel, month, day, budget, saldo, spen
     </SlidingUpPanel>
 }
 
-export function TableHeader({ locale }) {
+export function TableHeader() {
+    const { locale } = React.useContext(ApplicationContext);
     return <View style={styles.tableHeaderContainer}>
         <Text style={[styles.tableHeaderCell, { width: 65 }]}>{locale.dateColumn}</Text>
         <Text style={[styles.tableHeaderCell, { textAlign: 'right' }]}>{locale.saldoColumn}</Text>
     </View>
 }
 
-
 export class TableRow extends Component {
+
+    static contextType = ApplicationContext;
+
     constructor(props) {
         super(props);
         this.state = {};
     }
 
     render() {
-        const { day, month, year, saldo, isToday, locale } = this.props;
+        const { day, month, year, saldo, isToday } = this.props;
+        const { locale, currency } = this.context;
         const dayOfWeek = new Date(year, month, day).getDay();
         const style = isToday ? [styles.dayOfMonth, styles.weekend] : styles.dayOfMonth;
 
@@ -88,7 +95,7 @@ export class TableRow extends Component {
                 <Text
                     style={[styles.daysBudget, styles.tableRowCell, { color: saldo > 0 ? 'black' : 'rgb(255, 69, 58)' }]}
                 >
-                    {saldo} &#8381;
+                    {saldo} {currency}
                 </Text>
             </View>
         </TouchableWithoutFeedback>

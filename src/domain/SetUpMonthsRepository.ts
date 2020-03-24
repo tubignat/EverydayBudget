@@ -8,7 +8,6 @@ type MonthSetUp = {
 export interface ISetUpMonthsRepository {
     markMonthAsSetUp: (year: number, month: number) => void;
     isMonthSetUp: (year: number, month: number) => boolean;
-    init: () => Promise<void>;
 }
 
 export class SetUpMonthsRepository implements ISetUpMonthsRepository {

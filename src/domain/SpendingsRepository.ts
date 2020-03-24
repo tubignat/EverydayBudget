@@ -5,18 +5,17 @@ export type SpendingId = number;
 export type Spending = {
     id: SpendingId;
     amount: number;
-    description: string;
+    description: string | null;
     year: number;
     month: number;
     day: number;
 }
 
 export interface ISpendingsRepository {
-    add: (year: number, month: number, day: number, description: string, amount: number) => void;
-    edit: (id: SpendingId, description: string, amount: number) => void;
+    add: (year: number, month: number, day: number, description: string | null, amount: number) => void;
+    edit: (id: SpendingId, description: string | null, amount: number) => void;
     remove: (id: SpendingId) => void;
     get: (year: number, month: number) => Spending[];
-    init: () => Promise<void>;
 }
 
 export class SpendingsRepository implements ISpendingsRepository {
@@ -34,7 +33,7 @@ export class SpendingsRepository implements ISpendingsRepository {
         })
         .catch(error => console.log(error));
 
-    add = (year: number, month: number, day: number, description: string, amount: number) => {
+    add = (year: number, month: number, day: number, description: string | null, amount: number) => {
         this.spendingIdSeq++;
         this.spendings.push({
             id: this.spendingIdSeq,
@@ -50,7 +49,7 @@ export class SpendingsRepository implements ISpendingsRepository {
             .catch(error => console.error(error));
     };
 
-    edit = (id: number, description: string, amount: number) => {
+    edit = (id: number, description: string | null, amount: number) => {
         const index = this.spendings.findIndex(i => i.id === id);
         this.spendings[index] = {
             ...this.spendings[index],

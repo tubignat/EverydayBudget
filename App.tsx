@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Context } from 'react';
 import Swiper from 'react-native-swiper';
 import Home from './src/pages/Home';
 import Settings from './src/pages/Settings';
@@ -12,14 +12,13 @@ import { Application } from './src/domain/Application';
 import MonthSpendings from './src/pages/MonthSpendings';
 import { SetUpMonthsRepository } from './src/domain/SetUpMonthsRepository';
 import { EnsureMonthIsSetUpService } from './src/domain/EnsureMonthIsSetUpService';
-import * as Localization from 'expo-localization';
-import { Locale, getLocale } from './src/locale/Locale';
+import { UserPreferencesRepository } from './src/domain/UserPreferencesRepository';
+import { ApplicationContext } from './src/domain/ApplicationContext';
 
 @observer
 export default class App extends Component<{}, { isScrollLocked: boolean, isInitialized: boolean }> {
 
-    private application: Application;
-    private locale: Locale;
+    private application: Application | undefined;
 
     constructor(props: {}) {
         super(props);
@@ -36,38 +35,48 @@ export default class App extends Component<{}, { isScrollLocked: boolean, isInit
         const incomesRepository = new IncomesRepository();
         const expensesRepository = new ExpensesRepository();
         const setUpMonthsRepository = new SetUpMonthsRepository();
+        const userPreferencesRepository = new UserPreferencesRepository();
 
         const ensureMonthIsSetUpService = new EnsureMonthIsSetUpService(incomesRepository, expensesRepository, setUpMonthsRepository);
         const budgetService = new BudgetService(incomesRepository, expensesRepository, spendingsRepository);
 
-        this.application = new Application(incomesRepository, expensesRepository, spendingsRepository, ensureMonthIsSetUpService, budgetService);
+        this.application = new Application(
+            incomesRepository,
+            expensesRepository,
+            spendingsRepository,
+            userPreferencesRepository,
+            ensureMonthIsSetUpService,
+            budgetService);
 
         await spendingsRepository.init();
         await incomesRepository.init();
         await expensesRepository.init();
         await setUpMonthsRepository.init();
+        await userPreferencesRepository.init();
 
         this.application.init();
-
-        this.locale = getLocale(Localization.locale);
 
         this.setState({ isInitialized: true });
     }
 
     render() {
+        if (!this.application) {
+            return null;
+        }
+
         return (
             this.state.isInitialized &&
-            <Swiper loop={false} index={1} bounces={true} scrollEnabled={!this.state.isScrollLocked} showsPagination={!this.state.isScrollLocked}>
-                <Settings application={this.application} locale={this.locale} />
-                <Home application={this.application} locale={this.locale} />
-                <TodaySpendings application={this.application} locale={this.locale} />
-                <MonthSpendings
-                    application={this.application}
-                    locale={this.locale}
-                    onModalOpen={() => this.setState({ isScrollLocked: true })}
-                    onModalClose={() => this.setState({ isScrollLocked: false })}
-                />
-            </Swiper>
+            <ApplicationContext.Provider value={this.application}>
+                <Swiper loop={false} index={1} bounces={true} scrollEnabled={!this.state.isScrollLocked} showsPagination={!this.state.isScrollLocked}>
+                    <Settings />
+                    <Home />
+                    <TodaySpendings />
+                    <MonthSpendings
+                        onModalOpen={() => this.setState({ isScrollLocked: true })}
+                        onModalClose={() => this.setState({ isScrollLocked: false })}
+                    />
+                </Swiper>
+            </ApplicationContext.Provider>
         );
     }
 }
