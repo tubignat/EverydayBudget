@@ -1,5 +1,6 @@
 export type Locale = {
     homePageTitle: string
+    today: string
     todaysLimit: string
     addExpense: string
 
@@ -15,6 +16,8 @@ export type Locale = {
     description: string
     language: string
     currency: string
+    website: string
+    privacyPolicy: string
 
     todaysExpenses: string
     noExpensesToday: string

@@ -2,6 +2,7 @@ import { Locale } from "./Locale";
 
 export const enLocale: Locale = {
     homePageTitle: 'Home',
+    today: 'today',
     todaysLimit: 'Balance',
     addExpense: 'Enter new expense',
 
@@ -16,6 +17,8 @@ export const enLocale: Locale = {
     description: 'Description...',
     language: 'Language',
     currency: 'Currency',
+    website: 'Website',
+    privacyPolicy: 'Privacy policy',
 
     todaysExpenses: 'Today\'s spending',
     noExpensesToday: 'No spending today',

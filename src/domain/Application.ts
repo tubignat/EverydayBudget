@@ -63,6 +63,10 @@ export class Application {
         return this.language === 'ru' ? ruLocale : enLocale;
     }
 
+    @computed public get todaysDelta() {
+        return this.budgetPerDay - this.todaysSpendings.map(s => s.amount).reduce((sum, spending) => sum + spending, 0);
+    }
+
     public init = () => {
         const date = new Date();
 

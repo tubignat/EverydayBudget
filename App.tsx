@@ -14,7 +14,7 @@ import { SetUpMonthsRepository } from './src/domain/SetUpMonthsRepository';
 import { EnsureMonthIsSetUpService } from './src/domain/EnsureMonthIsSetUpService';
 import { UserPreferencesRepository } from './src/domain/UserPreferencesRepository';
 import { ApplicationContext } from './src/domain/ApplicationContext';
-import { AppState, AppStateStatus, Image, View, Animated } from 'react-native';
+import { AppState, AppStateStatus, Image, Animated } from 'react-native';
 
 @observer
 export default class App extends Component<{}, {

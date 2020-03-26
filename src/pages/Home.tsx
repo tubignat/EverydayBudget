@@ -5,6 +5,7 @@ import { AddSpendingButton } from '../components/AddSpendingButton';
 import Page from '../components/Page'
 import { observer } from '../../node_modules/mobx-react/dist/mobx-react';
 import { ApplicationContext } from '../domain/ApplicationContext';
+import { Application } from '../domain/Application';
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = width < 350;
@@ -32,7 +33,7 @@ export default class Home extends Component<{}, IHomeState> {
 
     render() {
         const { newTransactionRubles, isKopeckMode, newTransactionKopecks } = this.state;
-        const { currency, locale, todaysLimit } = this.context;
+        const { currency, locale, todaysLimit, todaysDelta }: Application = this.context;
 
         return <Page>
             {
@@ -51,6 +52,12 @@ export default class Home extends Component<{}, IHomeState> {
                     <Text style={{ ...styles.budget, color: todaysLimit < 0 ? 'rgb(255, 69, 58)' : 'black' }}>
                         {todaysLimit.toFixed(0)} {currency}
                     </Text>
+                    <View style={styles.delta}>
+                        <Text style={{ ...styles.deltaAmount, color: todaysDelta < 0 ? 'rgb(255, 69, 58)' : 'rgb(52, 199, 89)' }}>
+                            {todaysDelta > 0 ? '+' : ''}{todaysDelta.toFixed(0)} {currency}
+                        </Text>
+                        <Text style={styles.deltaLabel}>  {locale.today} </Text>
+                    </View>
                 </View>
 
                 <View style={styles.addTransactionContainer}>
@@ -117,10 +124,10 @@ const styles = StyleSheet.create({
     },
     budgetContainer: {
         marginLeft: 20,
-        marginBottom: 30,
+        marginBottom: 40,
     },
     budget: {
-        fontSize: isSmallScreen ? 40 : 60,
+        fontSize: isSmallScreen ? 40 : 50,
         marginLeft: 10,
         fontWeight: '200'
     },
@@ -160,5 +167,18 @@ const styles = StyleSheet.create({
         paddingTop: isSmallScreen ? 30 : 45,
         padding: isSmallScreen ? 15 : 20,
         height: '100%',
+    },
+    delta: {
+        flexDirection: 'row',
+        marginLeft: 10,
+        alignItems: 'center',
+        marginTop: 5
+    },
+    deltaLabel: {
+        color: 'gray',
+        fontSize: 15,
+    },
+    deltaAmount: {
+        fontSize: 18,
     }
 });

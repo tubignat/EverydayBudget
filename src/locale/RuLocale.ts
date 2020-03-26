@@ -2,7 +2,8 @@ import { Locale } from "./Locale";
 
 export const ruLocale: Locale = {
     homePageTitle: 'Главная',
-    todaysLimit: 'Бюджет на сегодня',
+    today: 'сегодня',
+    todaysLimit: 'Баланс',
     addExpense: 'Добавить трату',
 
     settingsPageTitle: 'Настройки',
@@ -16,6 +17,8 @@ export const ruLocale: Locale = {
     description: 'Описание...',
     language: 'Язык',
     currency: 'Валюта',
+    website: 'Веб-сайт',
+    privacyPolicy: 'Политика конфиденциальности',
 
     todaysExpenses: 'Траты за сегодня',
     noExpensesToday: 'За сегодня трат пока нет',

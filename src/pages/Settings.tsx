@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, View, Text, StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, KeyboardAvoidingView, Linking } from 'react-native';
 import Page from '../components/Page'
 import { observer } from '../../node_modules/mobx-react/dist/mobx-react';
 import { IncomesList } from '../components/SettingsIncomesList';
@@ -60,6 +60,15 @@ export default class Settings extends Component {
                             <Text style={styles.subheader}>{application.locale.language}</Text>
                             <LanguageSelector language={application.language} onChange={application.changeLanguage} />
                         </View>
+
+                        <View style={styles.linksContainer}>
+                            <Text style={styles.link} onPress={() => Linking.openURL('https://everydaybudget.app')}>
+                                {application.locale.website}
+                            </Text>
+                            <Text style={styles.link} onPress={() => Linking.openURL('https://everydaybudget.app/policy')}>
+                                {application.locale.privacyPolicy}
+                            </Text>
+                        </View>
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
@@ -87,5 +96,16 @@ const styles = StyleSheet.create({
     budgetPerDayAmount: {
         fontSize: 22,
         marginRight: 20
+    },
+    linksContainer: {
+        marginTop: 40,
+        marginLeft: 15,
+    },
+    link: {
+        fontSize: 15,
+        color: 'gray',
+        textDecorationLine: 'underline',
+        paddingTop: 10,
+        paddingBottom: 10,
     }
 });

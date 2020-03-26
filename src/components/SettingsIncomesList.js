@@ -21,6 +21,11 @@ export class IncomesList extends Component {
     render() {
         const { locale } = this.context;
 
+        const translateY = this.state.fontSizeAnim.interpolate({
+            inputRange: [0.85, 1],
+            outputRange: [-10, 0]
+        })
+
         return <View style={styles.incomesList}>
             {
                 <Animated.View style={{
@@ -56,7 +61,11 @@ export class IncomesList extends Component {
                     this.props.incomes.length > 0 &&
                     <Animated.View style={{
                         ...styles.addButton,
-                        transform: [{ translateX: this.state.moveAnim }, { scaleX: this.state.fontSizeAnim }, { scaleY: this.state.fontSizeAnim }]
+                        transform: [
+                            { translateX: this.state.moveAnim },
+                            { translateY: translateY },
+                            { scaleX: this.state.fontSizeAnim },
+                            { scaleY: this.state.fontSizeAnim }]
                     }}>
                         <TextButton forwardedRef={ref => this.addButtonRef2 = ref} text={locale.add} height={50} fontSize={18} onPress={this.props.onAdd} />
                     </Animated.View>
@@ -84,13 +93,18 @@ export class IncomesList extends Component {
     onRemoveAnimationStart = () => {
         if (this.props.incomes.length === 1) {
             this.addButonRef.measure((fx, fy, width, height, px) => {
-                Animated
-                    .parallel([
-                        Animated.timing(this.state.moveAnim, { toValue: px - 40 - 24, duration: 150 }),
-                        Animated.timing(this.state.fontSizeAnim, { toValue: 0.85, duration: 150 }),
-                    ])
-                    .start();
-                Animated.timing(this.state.fadeAnim, { toValue: 1, duration: 600 }).start();
+
+                this.addButtonRef2.measure((fx, fy, width, height, px2) => {
+
+                    const toValue = this.context.language === 'ru' ? px - px2 - 8 : px - px2;
+                    Animated
+                        .parallel([
+                            Animated.timing(this.state.moveAnim, { toValue: toValue, duration: 150 }),
+                            Animated.timing(this.state.fontSizeAnim, { toValue: 0.85, duration: 150 }),
+                        ])
+                        .start();
+                    Animated.timing(this.state.fadeAnim, { toValue: 1, duration: 600 }).start();
+                })
             })
         }
     }
@@ -146,15 +160,15 @@ class IncomeView extends Component {
                     selectTextOnFocus
                     placeholder={locale.description}
                 />
+                <Animated.View style={{
+                    ...styles.removeButtonContainer,
+                    opacity: this.state.fadeAnim,
+                    transform: [{ scaleX: this.state.fadeAnim }, { scaleY: this.state.fadeAnim }]
+                }}>
+                    <IconButton size={40} innerSize={18} icon='close-circle' color='rgb(255, 69, 58)'
+                        onPress={this.onRemove} />
+                </Animated.View>
             </View>
-            <Animated.View style={{
-                ...styles.removeButtonContainer,
-                opacity: this.state.fadeAnim,
-                transform: [{ scaleX: this.state.fadeAnim }, { scaleY: this.state.fadeAnim }]
-            }}>
-                <IconButton size={40} innerSize={18} icon='close-circle' color='rgb(255, 69, 58)'
-                    onPress={this.onRemove} />
-            </Animated.View>
         </Animated.View>
     }
 
@@ -179,8 +193,10 @@ const styles = StyleSheet.create({
         position: 'relative'
     },
     addButton: {
-        flex: 1,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        width: '36%',
+        justifyContent: 'flex-end',
+        paddingRight: 28,
     },
     incomeView: {
         flex: 1,
@@ -188,7 +204,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     emptyListTextContainer: {
-        flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
@@ -197,24 +212,25 @@ const styles = StyleSheet.create({
     },
     emptyListText: {
         color: 'gray',
-        fontSize: 15
+        fontSize: 15,
     },
     wrapper: {
-        flex: 1,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        width: '100%'
     },
     incomeViewText: {
         alignSelf: 'center',
-        flex: 1,
-        flexGrow: 1.5,
         fontSize: 18,
+        width: '53%',
     },
     incomeViewAmount: {
-        flex: 1,
         flexDirection: 'row',
         alignSelf: 'center',
         alignItems: 'center',
-        height: '100%'
+        height: '100%',
+        justifyContent: 'flex-end',
+        paddingRight: 25,
+        width: '35%'
     },
     incomeViewAmountText: {
         fontSize: 18,
