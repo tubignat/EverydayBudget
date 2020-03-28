@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Animated, View, Text, StyleSheet } from 'react-native';
 import { IconButton } from '../components/IconButton';
 import { ApplicationContext } from '../domain/ApplicationContext';
+import { formatMoney } from '../domain/NumberFormat';
 
 function SpendingsList({ spendings, remove }) {
     const { locale, currency } = React.useContext(ApplicationContext);
@@ -12,7 +13,7 @@ function SpendingsList({ spendings, remove }) {
         }
         <View style={styles.border} />
         <View style={styles.totalContainer}>
-            <Text style={[styles.total, { fontSize: total % 1 !== 0 && total >= 10000 ? 28 : 30 }]}>{total % 1 === 0 ? total : total.toFixed(2)} {currency}</Text>
+            <Text style={[styles.total, { fontSize: total % 1 !== 0 && total >= 10000 ? 28 : 30 }]}>{formatMoney(total)} {currency}</Text>
             <Text style={[styles.totalText, { fontSize: total % 1 !== 0 && total >= 10000 ? 28 : 30 }]}>{locale.totalExpensesToday}</Text>
         </View>
         <View style={styles.placeholder}></View>
@@ -46,7 +47,7 @@ class SpendingView extends Component {
             height: this.state.expandAnim,
             opacity: this.state.fadeAnim
         }}>
-            <Text style={styles.spendingViewText}>{this.props.amount % 1 === 0 ? this.props.amount : this.props.amount.toFixed(2)} {currency}</Text>
+            <Text style={styles.spendingViewText}>{formatMoney(this.props.amount)} {currency}</Text>
             <IconButton size={40} innerSize={20} icon={'close-circle'} color='rgb(255, 69, 58)' onPress={this.onRemove} />
         </Animated.View>
     }

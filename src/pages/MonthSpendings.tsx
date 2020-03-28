@@ -50,8 +50,8 @@ export default class MonthSpendings extends Component<IMonthSpendingsProps, IMon
                     closePanel={this.closeModal}
                     day={this.state.openedDay}
                     month={application.month}
-                    budget={budget.toFixed(0)}
-                    saldo={application.saldos[this.state.openedDay - 1].toFixed(0)}
+                    budget={budget}
+                    saldo={application.saldos[this.state.openedDay - 1]}
                     spendings={application.spendings.filter((s: Spending) => s.day === this.state.openedDay)}
                     remove={(id: SpendingId) => application.removeSpending(id)}
                     edit={(id: SpendingId, amount: number) => application.editSpending(id, amount)}
@@ -73,7 +73,7 @@ export default class MonthSpendings extends Component<IMonthSpendingsProps, IMon
                                         day={d}
                                         month={application.month}
                                         year={application.year}
-                                        saldo={application.saldos[d - 1].toFixed(0)}
+                                        saldo={application.saldos[d - 1]}
                                         onClick={() => this.openModal(d)}
                                         isToday={d === application.day}
                                     />)

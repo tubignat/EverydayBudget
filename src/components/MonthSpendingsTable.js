@@ -12,6 +12,7 @@ import SlidingUpPanel from './SlidingUpPanel';
 import DayOfMonthSpendingsList from './DayOfMonthSpendingsList';
 import { TextButton } from './TextButton';
 import { ApplicationContext } from '../domain/ApplicationContext';
+import { formatMoney } from '../domain/NumberFormat';
 
 
 const Window = Dimensions.get('window')
@@ -30,7 +31,7 @@ export function DaysSpendingsPanel({ closePanel, month, day, budget, saldo, spen
                     ...styles.daySpendingBudgetText,
                     color: budget > 0 ? 'black' : 'rgb(255, 69, 58)'
                 }}>
-                    {budget} {currency}
+                    {formatMoney(budget)} {currency}
                 </Text>
             </View>
             <View style={styles.daySpendingBudgetContainer}>
@@ -38,7 +39,7 @@ export function DaysSpendingsPanel({ closePanel, month, day, budget, saldo, spen
                 <Text style={{
                     ...styles.daySpendingBudgetText,
                     color: saldo > 0 ? 'black' : 'rgb(255, 69, 58)'
-                }}>{saldo} {currency}</Text>
+                }}>{formatMoney(saldo)} {currency}</Text>
             </View>
             {
                 spendings.length > 0 &&
@@ -95,7 +96,7 @@ export class TableRow extends Component {
                 <Text
                     style={[styles.daysBudget, styles.tableRowCell, { color: saldo > 0 ? 'black' : 'rgb(255, 69, 58)' }]}
                 >
-                    {saldo} {currency}
+                    {formatMoney(saldo)} {currency}
                 </Text>
             </View>
         </TouchableWithoutFeedback>

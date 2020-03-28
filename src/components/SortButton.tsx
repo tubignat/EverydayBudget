@@ -2,8 +2,8 @@ import React from 'react';
 import { View, StyleSheet, Animated } from 'react-native';
 
 export function SortButton({ onPress, checked }: { onPress: () => void, checked: boolean }) {
-    const pressedScale = 0.7;
-    const uncheckedScale = 0.8;
+    const pressedScale = 0.75;
+    const uncheckedScale = 0.85;
     const checkedScale = 1;
 
     let onPressedAnimationOver: (() => void) | null = null;

@@ -6,6 +6,7 @@ import Page from '../components/Page'
 import { observer } from '../../node_modules/mobx-react/dist/mobx-react';
 import { ApplicationContext } from '../domain/ApplicationContext';
 import { Application } from '../domain/Application';
+import { formatMoney } from '../domain/NumberFormat';
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = width < 350;
@@ -50,11 +51,11 @@ export default class Home extends Component<{}, IHomeState> {
                         {locale.todaysLimit}
                     </Text>
                     <Text style={{ ...styles.budget, color: todaysLimit < 0 ? 'rgb(255, 69, 58)' : 'black' }}>
-                        {todaysLimit.toFixed(0)} {currency}
+                        {formatMoney(todaysLimit)} {currency}
                     </Text>
                     <View style={styles.delta}>
                         <Text style={{ ...styles.deltaAmount, color: todaysDelta < 0 ? 'rgb(255, 69, 58)' : 'rgb(52, 199, 89)' }}>
-                            {todaysDelta > 0 ? '+' : ''}{todaysDelta.toFixed(0)} {currency}
+                            {todaysDelta > 0 ? '+' : ''}{formatMoney(todaysDelta)} {currency}
                         </Text>
                         <Text style={styles.deltaLabel}>  {locale.today} </Text>
                     </View>
@@ -64,7 +65,7 @@ export default class Home extends Component<{}, IHomeState> {
                     <Text style={styles.addTransactionText}>{locale.addExpense}</Text>
                     <View style={styles.addTransactionInput}>
                         <Text style={styles.transaction}>
-                            {newTransactionRubles}{isKopeckMode ? '.' : ''}{isKopeckMode ? newTransactionKopecks.join('') : ''} {currency}
+                            {formatMoney(newTransactionRubles)}{isKopeckMode ? '.' : ''}{isKopeckMode ? newTransactionKopecks.join('') : ''} {currency}
                         </Text>
                         <AddSpendingButton
                             onPress={this.onAddButtonPressed}

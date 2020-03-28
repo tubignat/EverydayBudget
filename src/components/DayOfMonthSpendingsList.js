@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, Animated, TouchableWithoutFeedback } from 'react-native';
 import { IconButton } from './IconButton';
-import TextInputWithTemporaryInvalidValue from '../components/TextInputWithTemporaryInvalidValue';
+import AmountInput from '../components/TextInputWithTemporaryInvalidValue';
 import { TextButton } from './TextButton';
 import { ApplicationContext } from '../domain/ApplicationContext';
 
@@ -42,16 +42,12 @@ function DayOfMonthSpending({ spending, remove, edit }) {
     }}>
         <TouchableWithoutFeedback onPress={() => textInputRef.focus()} >
             <View style={styles.incomeViewAmount}>
-                <TextInputWithTemporaryInvalidValue
+                <AmountInput
                     forwardedRef={ref => textInputRef = ref}
                     style={styles.incomeViewAmountText}
-                    value={spending.amount.toString()}
-                    onChange={(text) => edit(Number(text))}
+                    value={spending.amount}
+                    onChange={(text) => edit(text)}
                     placeholder=''
-                    isValidValue={(text) => {
-                        const number = Number(text);
-                        return !isNaN(number) && number !== 0;
-                    }}
                 />
                 <Text style={styles.incomeViewAmountText}> {currency}</Text>
             </View>

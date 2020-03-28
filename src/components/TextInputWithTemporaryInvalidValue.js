@@ -1,8 +1,9 @@
 
 import React, { Component } from 'react';
 import { TextInput } from 'react-native';
+import { formatMoney } from '../domain/NumberFormat';
 
-class TextInputWithTemporaryInvalidValue extends Component {
+class AmountInput extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -17,7 +18,7 @@ class TextInputWithTemporaryInvalidValue extends Component {
             placeholder={this.props.placeholder}
             selectTextOnFocus
             style={this.props.style}
-            value={this.state.isTemporaryInvalidValue ? this.state.temporaryValue : this.props.value}
+            value={formatMoney(this.state.isTemporaryInvalidValue ? this.parseNumber(this.state.temporaryValue) : this.props.value)}
             keyboardType='number-pad'
             onChangeText={this.handleOnChange}
             onBlur={this.handleOnBlur}
@@ -29,11 +30,16 @@ class TextInputWithTemporaryInvalidValue extends Component {
     }
 
     handleOnBlur = () => {
-        if (this.props.isValidValue(this.state.temporaryValue)) {
-            this.props.onChange(this.state.temporaryValue);
+        const parsedNumber = this.parseNumber(this.state.temporaryValue);
+        if (parsedNumber !== NaN && parsedNumber !== 0) {
+            this.props.onChange(parsedNumber);
         }
         this.setState({ isTemporaryInvalidValue: false, temporaryValue: '' })
     }
+
+    parseNumber = (numberString) => {
+        return Number(numberString.replace(/\u2009/g, ''))
+    }
 }
 
-export default TextInputWithTemporaryInvalidValue;
+export default AmountInput;

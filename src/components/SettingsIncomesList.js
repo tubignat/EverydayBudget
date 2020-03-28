@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { IconButton } from '../components/IconButton';
 import { View, Text, TextInput, Animated, TouchableWithoutFeedback, StyleSheet } from 'react-native';
-import TextInputWithTemporaryInvalidValue from '../components/TextInputWithTemporaryInvalidValue';
+import AmountInput from '../components/TextInputWithTemporaryInvalidValue';
 import { TextButton } from '../components/TextButton';
 import { ApplicationContext } from '../domain/ApplicationContext';
 
@@ -139,16 +139,11 @@ class IncomeView extends Component {
             <View style={styles.wrapper}>
                 <TouchableWithoutFeedback onPress={() => this.textInputRef.focus()}>
                     <View style={styles.incomeViewAmount}>
-                        <TextInputWithTemporaryInvalidValue
+                        <AmountInput
                             forwardedRef={ref => this.textInputRef = ref}
                             style={styles.incomeViewAmountText}
-                            value={this.props.income.amount.toString()}
-                            onChange={(text) => this.props.onAmountChanged(Number(text))}
-                            placeholder=''
-                            isValidValue={(text) => {
-                                const number = Number(text);
-                                return !isNaN(number) && number !== 0;
-                            }}
+                            value={this.props.income.amount}
+                            onChange={(newAmount) => this.props.onAmountChanged(newAmount)}
                         />
                         <Text style={styles.incomeViewAmountText}> {currency}</Text>
                     </View>

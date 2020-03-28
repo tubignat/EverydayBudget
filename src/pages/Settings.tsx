@@ -10,6 +10,7 @@ import CurrencySelector from '../components/CurrencySelector';
 import { ApplicationContext } from '../domain/ApplicationContext';
 import { Application } from '../domain/Application';
 import { SortButton } from '../components/SortButton';
+import { formatMoney } from '../domain/NumberFormat';
 
 @observer
 export default class Settings extends Component<{}, {}, Application> {
@@ -77,7 +78,7 @@ export default class Settings extends Component<{}, {}, Application> {
 
                         <View style={styles.inlineSettingContainer}>
                             <Text style={styles.subheader}>{application.locale.budgetPerDay}</Text>
-                            <Text style={styles.budgetPerDayAmount}>{application.budgetPerDay.toFixed(0)} {application.currency}</Text>
+                            <Text style={styles.budgetPerDayAmount}>{formatMoney(application.budgetPerDay)} {application.currency}</Text>
                         </View>
 
                         <View style={{ ...styles.inlineSettingContainer, marginTop: 40 }}>
