@@ -2,10 +2,13 @@ import { AsyncStorage } from 'react-native';
 
 export type Currency = '€' | '$' | '₽';
 export type Language = 'en' | 'ru';
+export type SortMode = 'none' | 'asc' | 'desc';
 
 export type UserPreferences = {
     currency: Currency | null,
-    language: Language | null
+    language: Language | null,
+    sortExpenses: SortMode | null,
+    sortIncomes: SortMode | null
 }
 
 export interface IUserPreferencesRepository {
@@ -16,7 +19,9 @@ export interface IUserPreferencesRepository {
 export class UserPreferencesRepository implements IUserPreferencesRepository {
     private userPreferences: UserPreferences = {
         currency: null,
-        language: null
+        language: null,
+        sortExpenses: 'none',
+        sortIncomes: 'none',
     };
     private storageKey = 'user_preferences_storage';
 

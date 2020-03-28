@@ -4,7 +4,7 @@ import { IIncomesRepository, Income, IncomeId } from "./IncomesRepository";
 import { BudgetService } from "./BudgetService";
 import { observable, computed } from "../../node_modules/mobx/lib/mobx";
 import { EnsureMonthIsSetUpService } from "./EnsureMonthIsSetUpService";
-import { Language, Currency, IUserPreferencesRepository } from "./UserPreferencesRepository";
+import { Language, Currency, IUserPreferencesRepository, SortMode } from "./UserPreferencesRepository";
 import * as Localization from 'expo-localization';
 import { enLocale } from "../locale/EnLocale";
 import { ruLocale } from "../locale/RuLocale";
@@ -36,6 +36,8 @@ export class Application {
 
     @observable public language: Language = 'en';
     @observable public currency: Currency = '$';
+    @observable public sortExpenses: SortMode = 'none';
+    @observable public sortIncomes: SortMode = 'none';
 
     @observable public incomes: Income[] = [];
     @observable public expenses: Expense[] = [];
@@ -87,6 +89,8 @@ export class Application {
         const preferences = this.userPreferencesRepository.get();
         this.language = preferences.language ?? this.getLanguageFromSystem();
         this.currency = preferences.currency ?? this.getCurrencyFromSystem();
+        this.sortExpenses = preferences.sortExpenses ?? 'none';
+        this.sortIncomes = preferences.sortIncomes ?? 'none';
     }
 
     public addSpending = (day: number, amount: number) => {
@@ -135,12 +139,42 @@ export class Application {
     }
 
     public changeCurrency = (newCurrency: Currency) => {
-        this.userPreferencesRepository.set({ currency: newCurrency, language: this.language });
+        this.userPreferencesRepository.set({
+            currency: newCurrency,
+            language: this.language,
+            sortExpenses: this.sortExpenses,
+            sortIncomes: this.sortIncomes
+        });
         this.init();
     }
 
     public changeLanguage = (newLanguage: Language) => {
-        this.userPreferencesRepository.set({ language: newLanguage, currency: this.currency });
+        this.userPreferencesRepository.set({
+            language: newLanguage,
+            currency: this.currency,
+            sortExpenses: this.sortExpenses,
+            sortIncomes: this.sortIncomes
+        });
+        this.init();
+    }
+
+    public changeSortExpenses = (mode: SortMode) => {
+        this.userPreferencesRepository.set({
+            language: this.language,
+            currency: this.currency,
+            sortExpenses: mode,
+            sortIncomes: this.sortIncomes
+        });
+        this.init();
+    }
+
+    public changeSortIncomes = (mode: SortMode) => {
+        this.userPreferencesRepository.set({
+            language: this.language,
+            currency: this.currency,
+            sortExpenses: this.sortExpenses,
+            sortIncomes: mode
+        });
         this.init();
     }
 

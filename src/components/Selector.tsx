@@ -48,7 +48,8 @@ export function Selector({ buttons }: { buttons: SelectorButton[] }) {
         return {
             ...styles.icon,
             width: animatedButtons.find(p => p.text === button.text)?.animated,
-            borderColor: button.selected ? 'black' : 'lightgray'
+            borderColor: button.selected ? 'black' : 'lightgray',
+            borderWidth: button.selected ? 2 : 1,
         }
     }
 
@@ -56,7 +57,7 @@ export function Selector({ buttons }: { buttons: SelectorButton[] }) {
         return {
             ...styles.iconText,
             color: button.selected ? 'black' : 'darkgray',
-            fontWeight: button.selected ? 'normal' : 'normal',
+            fontWeight: button.selected ? 'bold' : 'normal',
             fontSize: button.selected ? 16 : 14
         }
     }
@@ -71,7 +72,10 @@ function SelectorButton({ text, onPress, disabled, containerStyle, textStyle }: 
     />
 
     function render(isPressed: boolean) {
-        return <Animated.View style={{ ...containerStyle, borderColor: isPressed ? 'rgb(255, 204, 0)' : containerStyle.borderColor }}>
+        return <Animated.View style={{
+            ...containerStyle,
+            borderColor: isPressed ? 'black' : containerStyle.borderColor
+        }}>
             <Text style={textStyle}>
                 {text}
             </Text>

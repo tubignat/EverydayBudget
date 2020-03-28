@@ -1,9 +1,9 @@
 {
-  "expoServerPort": 19000,
-  "expoServerNgrokUrl": "https://yn-36t.tubignat.spendingstracker.exp.direct",
-  "packagerNgrokUrl": "https://packager.yn-36t.tubignat.spendingstracker.exp.direct",
-  "ngrokPid": 55096,
+  "expoServerPort": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
   "devToolsPort": 19002,
-  "packagerPort": 19004,
-  "packagerPid": 55076
+  "packagerPort": null,
+  "packagerPid": null
 }

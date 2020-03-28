@@ -10,7 +10,7 @@ export const ruLocale: Locale = {
     incomes: 'Доходы',
     newIncome: 'Новый доход',
     noIncomesYet: 'Пока доходов нет. ',
-    recurringExpenses: 'Регулярный расходы',
+    recurringExpenses: 'Регулярные расходы',
     newExpense: 'Новый расход',
     noExpensesYet: 'Пока расходов нет. ',
     budgetPerDay: 'Бюджет на день',

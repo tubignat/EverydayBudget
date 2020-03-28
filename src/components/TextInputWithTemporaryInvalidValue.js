@@ -25,16 +25,13 @@ class TextInputWithTemporaryInvalidValue extends Component {
     }
 
     handleOnChange = (text) => {
-        if (this.props.isValidValue(text)) {
-            this.props.onChange(text);
-            this.setState({ isTemporaryInvalidValue: false, temporaryValue: '' });
-        }
-        else {
-            this.setState({ isTemporaryInvalidValue: true, temporaryValue: text });
-        }
+        this.setState({ isTemporaryInvalidValue: true, temporaryValue: text });
     }
 
     handleOnBlur = () => {
+        if (this.props.isValidValue(this.state.temporaryValue)) {
+            this.props.onChange(this.state.temporaryValue);
+        }
         this.setState({ isTemporaryInvalidValue: false, temporaryValue: '' })
     }
 }

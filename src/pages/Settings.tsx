@@ -8,25 +8,45 @@ import { ExpenseId } from '../domain/ExpensesRepository';
 import LanguageSelector from '../components/LanguageSelector';
 import CurrencySelector from '../components/CurrencySelector';
 import { ApplicationContext } from '../domain/ApplicationContext';
+import { Application } from '../domain/Application';
+import { SortButton } from '../components/SortButton';
 
 @observer
-export default class Settings extends Component {
+export default class Settings extends Component<{}, {}, Application> {
 
     static contextType = ApplicationContext;
+    context!: Application;
 
     render() {
         const application = this.context;
+        const expenses = application.sortExpenses === 'desc'
+            ? application.expenses.slice().sort((a, b) => b.amount - a.amount)
+            : application.expenses;
+
+        const incomes = application.sortIncomes === 'desc'
+            ? application.incomes.slice().sort((a, b) => b.amount - a.amount)
+            : application.incomes;
 
         return <Page>
             <KeyboardAvoidingView behavior='padding'>
                 <ScrollView style={{ padding: 20, paddingTop: 45 }}>
                     <View style={{ paddingBottom: 130 }}>
                         <Text style={styles.header}>{application.locale.settingsPageTitle}</Text>
-                        <Text style={styles.subheader}>{application.locale.incomes}</Text>
+
+                        <View style={styles.listSubheaderContainer}>
+                            <Text style={styles.subheader}>{application.locale.incomes}</Text>
+                            {
+                                incomes.length > 1 &&
+                                <SortButton
+                                    onPress={() => application.changeSortIncomes(application.sortIncomes === 'none' ? 'desc' : 'none')}
+                                    checked={application.sortIncomes !== 'none'}
+                                />
+                            }
+                        </View>
 
                         <IncomesList
                             locale={application.locale}
-                            incomes={application.incomes}
+                            incomes={incomes}
                             thereAreNoValuesYetText={application.locale.noIncomesYet}
                             onRemove={application.removeIncome}
                             onAmountChanged={(id: IncomeId, amount: number) => application.editIncome(id, amount, null)}
@@ -34,11 +54,20 @@ export default class Settings extends Component {
                             onAdd={() => application.addIncome(0, application.locale.newIncome)}
                         />
 
-                        <Text style={styles.subheader}>{application.locale.recurringExpenses}</Text>
+                        <View style={styles.listSubheaderContainer}>
+                            <Text style={styles.subheader}>{application.locale.recurringExpenses}</Text>
+                            {
+                                expenses.length > 1 &&
+                                <SortButton
+                                    onPress={() => application.changeSortExpenses(application.sortExpenses === 'none' ? 'desc' : 'none')}
+                                    checked={application.sortExpenses !== 'none'}
+                                />
+                            }
+                        </View>
 
                         <IncomesList
                             locale={application.locale}
-                            incomes={application.expenses}
+                            incomes={expenses}
                             thereAreNoValuesYetText={application.locale.noExpensesYet}
                             onRemove={application.removeExpense}
                             onAmountChanged={(id: ExpenseId, amount: number) => application.editExpense(id, amount, null)}
@@ -74,6 +103,8 @@ export default class Settings extends Component {
             </KeyboardAvoidingView>
         </Page>
     }
+
+
 }
 
 const styles = StyleSheet.create({
@@ -107,5 +138,18 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
         paddingTop: 10,
         paddingBottom: 10,
+    },
+    listSubheaderContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginRight: 5,
+        height: 35
+    },
+    sortButton: {
+        height: 40,
+        width: 40,
+        borderWidth: 1,
+        borderRadius: 10
     }
 });
