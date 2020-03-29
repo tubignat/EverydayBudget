@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { IconButton } from '../components/IconButton';
-import { View, Text, TextInput, Animated, TouchableWithoutFeedback, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Animated, TouchableWithoutFeedback, StyleSheet, Dimensions } from 'react-native';
 import AmountInput from '../components/TextInputWithTemporaryInvalidValue';
 import { TextButton } from '../components/TextButton';
 import { ApplicationContext } from '../domain/ApplicationContext';
+
+const isSmallScreen = Dimensions.get('window').width < 350;
 
 export class IncomesList extends Component {
 
@@ -189,7 +191,7 @@ const styles = StyleSheet.create({
     },
     addButton: {
         flexDirection: 'row',
-        width: '36%',
+        width: isSmallScreen ? '42%' : '36%',
         justifyContent: 'flex-end',
         paddingRight: 28,
     },
