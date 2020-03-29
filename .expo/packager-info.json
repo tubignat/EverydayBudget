@@ -1,9 +1,9 @@
 {
-  "expoServerPort": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerPort": 19000,
+  "expoServerNgrokUrl": "https://57-huk.anonymous.spendingstracker.exp.direct",
+  "packagerNgrokUrl": "https://packager.57-huk.anonymous.spendingstracker.exp.direct",
+  "ngrokPid": 66440,
   "devToolsPort": 19002,
-  "packagerPort": null,
-  "packagerPid": null
+  "packagerPort": 19002,
+  "packagerPid": 66432
 }
