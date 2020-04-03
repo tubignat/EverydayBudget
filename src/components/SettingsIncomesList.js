@@ -77,7 +77,7 @@ export class IncomesList extends Component {
     }
 
     onAdd = () => {
-        this.props.onAdd();
+
         this.addButonRef.measure((fx, fy, width, height, px) => {
             this.state.moveAnim.setValue(px - 40 - 24);
             this.state.fontSizeAnim.setValue(0.85);
@@ -89,6 +89,8 @@ export class IncomesList extends Component {
                     Animated.timing(this.state.fadeAnim, { toValue: 0, duration: 75 })
                 ])
                 .start();
+
+            this.props.onAdd();
         });
     }
 

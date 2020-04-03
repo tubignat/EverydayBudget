@@ -33,6 +33,7 @@ export function Selector({ buttons }: { buttons: SelectorButton[] }) {
             {
                 buttons.map(button =>
                     <SelectorButton
+                        key={button.text}
                         text={button.text}
                         onPress={button.onPress}
                         containerStyle={getContainerStyle(button)}

@@ -20,13 +20,18 @@ export default class Settings extends Component<{}, {}, Application> {
 
     render() {
         const application = this.context;
-        const expenses = application.sortExpenses === 'desc'
-            ? application.expenses.slice().sort((a, b) => b.amount - a.amount)
-            : application.expenses;
 
         const incomes = application.sortIncomes === 'desc'
             ? application.incomes.slice().sort((a, b) => b.amount - a.amount)
             : application.incomes;
+
+        const showSortIncomesButton = this.canBeSorted(application.incomes.map(e => e.amount));
+
+        const expenses = application.sortExpenses === 'desc'
+            ? application.expenses.slice().sort((a, b) => b.amount - a.amount)
+            : application.expenses;
+
+        const showSortExpensesButton = this.canBeSorted(application.expenses.map(e => e.amount));
 
         return <Page>
             <KeyboardAvoidingView behavior='padding'>
@@ -37,7 +42,7 @@ export default class Settings extends Component<{}, {}, Application> {
                         <View style={styles.listSubheaderContainer}>
                             <Text style={styles.subheader}>{application.locale.incomes}</Text>
                             {
-                                incomes.length > 1 &&
+                                showSortIncomesButton &&
                                 <SortButton
                                     onPress={() => application.changeSortIncomes(application.sortIncomes === 'none' ? 'desc' : 'none')}
                                     checked={application.sortIncomes !== 'none'}
@@ -58,7 +63,7 @@ export default class Settings extends Component<{}, {}, Application> {
                         <View style={styles.listSubheaderContainer}>
                             <Text style={styles.subheader}>{application.locale.recurringExpenses}</Text>
                             {
-                                expenses.length > 1 &&
+                                showSortExpensesButton &&
                                 <SortButton
                                     onPress={() => application.changeSortExpenses(application.sortExpenses === 'none' ? 'desc' : 'none')}
                                     checked={application.sortExpenses !== 'none'}
@@ -105,7 +110,16 @@ export default class Settings extends Component<{}, {}, Application> {
         </Page>
     }
 
+    canBeSorted = (amounts: number[]) => {
+        for (let i = 1; i < amounts.length; i++) {
 
+            if (amounts[i] > amounts[i - 1]) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
 
 const styles = StyleSheet.create({
