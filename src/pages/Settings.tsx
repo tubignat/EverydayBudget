@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, View, Text, StyleSheet, KeyboardAvoidingView, Linking } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, KeyboardAvoidingView, Linking, Dimensions } from 'react-native';
 import Page from '../components/Page'
 import { observer } from '../../node_modules/mobx-react/dist/mobx-react';
 import { IncomesList } from '../components/SettingsIncomesList';
@@ -11,6 +11,10 @@ import { ApplicationContext } from '../domain/ApplicationContext';
 import { Application } from '../domain/Application';
 import { SortButton } from '../components/SortButton';
 import { formatMoney } from '../domain/NumberFormat';
+
+const { width, height } = Dimensions.get('window');
+const isSmallScreen = width < 350;
+const isBigScreen = height > 800;
 
 @observer
 export default class Settings extends Component<{}, {}, Application> {
@@ -35,74 +39,80 @@ export default class Settings extends Component<{}, {}, Application> {
 
         return <Page>
             <KeyboardAvoidingView behavior='padding'>
-                <ScrollView style={{ padding: 20, paddingTop: 45 }}>
+                <ScrollView style={styles.pageContainer}>
                     <View style={{ paddingBottom: 130 }}>
-                        <Text style={styles.header}>{application.locale.settingsPageTitle}</Text>
+                        <Text style={styles.header}>
+                            {application.locale.settingsPageTitle}
+                        </Text>
 
-                        <View style={styles.listSubheaderContainer}>
-                            <Text style={styles.subheader}>{application.locale.incomes}</Text>
-                            {
-                                showSortIncomesButton &&
-                                <SortButton
-                                    onPress={() => application.changeSortIncomes(application.sortIncomes === 'none' ? 'desc' : 'none')}
-                                    checked={application.sortIncomes !== 'none'}
-                                />
-                            }
-                        </View>
+                        <View style={styles.pageContent}>
+                            <View style={styles.listSubheaderContainer}>
+                                <Text style={styles.subheader}>
+                                    {application.locale.incomes}
+                                </Text>
+                                {
+                                    showSortIncomesButton &&
+                                    <SortButton
+                                        onPress={() => application.changeSortIncomes(application.sortIncomes === 'none' ? 'desc' : 'none')}
+                                        checked={application.sortIncomes !== 'none'}
+                                    />
+                                }
+                            </View>
 
-                        <IncomesList
-                            locale={application.locale}
-                            incomes={incomes}
-                            thereAreNoValuesYetText={application.locale.noIncomesYet}
-                            onRemove={application.removeIncome}
-                            onAmountChanged={(id: IncomeId, amount: number) => application.editIncome(id, amount, null)}
-                            onDescriptionChanged={(id: IncomeId, description: string) => application.editIncome(id, null, description)}
-                            onAdd={() => application.addIncome(0, application.locale.newIncome)}
-                        />
+                            <IncomesList
+                                locale={application.locale}
+                                incomes={incomes}
+                                thereAreNoValuesYetText={application.locale.noIncomesYet}
+                                onRemove={application.removeIncome}
+                                onAmountChanged={(id: IncomeId, amount: number) => application.editIncome(id, amount, null)}
+                                onDescriptionChanged={(id: IncomeId, description: string) => application.editIncome(id, null, description)}
+                                onAdd={() => application.addIncome(0, application.locale.newIncome)}
+                            />
 
-                        <View style={styles.listSubheaderContainer}>
-                            <Text style={styles.subheader}>{application.locale.recurringExpenses}</Text>
-                            {
-                                showSortExpensesButton &&
-                                <SortButton
-                                    onPress={() => application.changeSortExpenses(application.sortExpenses === 'none' ? 'desc' : 'none')}
-                                    checked={application.sortExpenses !== 'none'}
-                                />
-                            }
-                        </View>
+                            <View style={styles.listSubheaderContainer}>
+                                <Text style={styles.subheader}>{application.locale.recurringExpenses}</Text>
+                                {
+                                    showSortExpensesButton &&
+                                    <SortButton
+                                        onPress={() => application.changeSortExpenses(application.sortExpenses === 'none' ? 'desc' : 'none')}
+                                        checked={application.sortExpenses !== 'none'}
+                                    />
+                                }
+                            </View>
 
-                        <IncomesList
-                            locale={application.locale}
-                            incomes={expenses}
-                            thereAreNoValuesYetText={application.locale.noExpensesYet}
-                            onRemove={application.removeExpense}
-                            onAmountChanged={(id: ExpenseId, amount: number) => application.editExpense(id, amount, null)}
-                            onDescriptionChanged={(id: ExpenseId, description: string) => application.editExpense(id, null, description)}
-                            onAdd={() => application.addExpense(0, application.locale.newExpense)}
-                        />
+                            <IncomesList
+                                locale={application.locale}
+                                incomes={expenses}
+                                thereAreNoValuesYetText={application.locale.noExpensesYet}
+                                onRemove={application.removeExpense}
+                                onAmountChanged={(id: ExpenseId, amount: number) => application.editExpense(id, amount, null)}
+                                onDescriptionChanged={(id: ExpenseId, description: string) => application.editExpense(id, null, description)}
+                                onAdd={() => application.addExpense(0, application.locale.newExpense)}
+                            />
 
-                        <View style={styles.inlineSettingContainer}>
-                            <Text style={styles.subheader}>{application.locale.budgetPerDay}</Text>
-                            <Text style={styles.budgetPerDayAmount}>{formatMoney(application.budgetPerDay)} {application.currency}</Text>
-                        </View>
+                            <View style={styles.inlineSettingContainer}>
+                                <Text style={styles.subheader}>{application.locale.budgetPerDay}</Text>
+                                <Text style={styles.budgetPerDayAmount}>{formatMoney(application.budgetPerDay)} {application.currency}</Text>
+                            </View>
 
-                        <View style={{ ...styles.inlineSettingContainer, marginTop: 40 }}>
-                            <Text style={styles.subheader}>{application.locale.currency}</Text>
-                            <CurrencySelector currency={application.currency} onChange={application.changeCurrency} />
-                        </View>
+                            <View style={{ ...styles.inlineSettingContainer, marginTop: 40 }}>
+                                <Text style={styles.subheader}>{application.locale.currency}</Text>
+                                <CurrencySelector currency={application.currency} onChange={application.changeCurrency} />
+                            </View>
 
-                        <View style={{ ...styles.inlineSettingContainer, marginTop: -20 }}>
-                            <Text style={styles.subheader}>{application.locale.language}</Text>
-                            <LanguageSelector language={application.language} onChange={application.changeLanguage} />
-                        </View>
+                            <View style={{ ...styles.inlineSettingContainer, marginTop: -20 }}>
+                                <Text style={styles.subheader}>{application.locale.language}</Text>
+                                <LanguageSelector language={application.language} onChange={application.changeLanguage} />
+                            </View>
 
-                        <View style={styles.linksContainer}>
-                            <Text style={styles.link} onPress={() => Linking.openURL('https://everydaybudget.app')}>
-                                {application.locale.website}
-                            </Text>
-                            <Text style={styles.link} onPress={() => Linking.openURL('https://everydaybudget.app/policy')}>
-                                {application.locale.privacyPolicy}
-                            </Text>
+                            <View style={styles.linksContainer}>
+                                <Text style={styles.link} onPress={() => Linking.openURL('https://everydaybudget.app')}>
+                                    {application.locale.website}
+                                </Text>
+                                <Text style={styles.link} onPress={() => Linking.openURL('https://everydaybudget.app/policy')}>
+                                    {application.locale.privacyPolicy}
+                                </Text>
+                            </View>
                         </View>
                     </View>
                 </ScrollView>
@@ -123,29 +133,37 @@ export default class Settings extends Component<{}, {}, Application> {
 }
 
 const styles = StyleSheet.create({
+    pageContainer: {
+        paddingLeft: 24,
+        paddingRight: isSmallScreen ? 12 : 24,
+        paddingVertical: isBigScreen ? 64 : 32,
+    },
+    pageContent: {
+        paddingLeft: isSmallScreen ? 0 : 16,
+        paddingRight: isBigScreen ? 16 : 0,
+    },
     header: {
         fontSize: 40,
         fontWeight: '300',
-        marginBottom: 40
+        height: 48,
+        marginBottom: 56
     },
     subheader: {
         color: 'gray',
         fontSize: 20,
-        marginLeft: 15,
     },
     inlineSettingContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 40
+        marginBottom: 40,
+        height: 32,
     },
     budgetPerDayAmount: {
         fontSize: 22,
-        marginRight: 20
     },
     linksContainer: {
         marginTop: 40,
-        marginLeft: 15,
     },
     link: {
         fontSize: 15,
@@ -158,8 +176,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginRight: 5,
-        height: 35
+        height: 32,
+        marginBottom: 24,
     },
     sortButton: {
         height: 40,

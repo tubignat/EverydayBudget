@@ -30,7 +30,7 @@ export const enLocale: Locale = {
     budget: 'Budget',
     saldos: 'Remained',
     noSpendingForThisDay: 'No spending that day. ',
-    add: 'Add',
+    add: 'Add    ',
 
     getDateText: (day: number, month: number) => {
         if (day === 1) {

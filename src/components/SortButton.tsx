@@ -1,101 +1,32 @@
 import React from 'react';
-import { View, StyleSheet, Animated } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
+import { ButtonWrapper } from './common/ButtonWrapper';
 
 export function SortButton({ onPress, checked }: { onPress: () => void, checked: boolean }) {
-    const pressedScale = 0.75;
-    const uncheckedScale = 0.85;
-    const checkedScale = 1;
+    return <ButtonWrapper
+        renderNormal={renderNormal}
+        renderPressed={renderNormal}
+        onPress={onPress}
+    />
 
-    let onPressedAnimationOver: (() => void) | null = null;
-    let isPressedAnimationInProgress = false;
+    function renderNormal() {
+        const containerStyle = checked
+            ? { ...styles.sortButton, ...styles.checked }
+            : styles.sortButton;
+        const textStyle = checked ? styles.textChecked : styles.text;
 
-    const [scale] = React.useState(new Animated.Value(checked ? checkedScale : uncheckedScale));
-
-    const onRelease = () => {
-        const toValue = checked ? uncheckedScale : checkedScale;
-        if (isPressedAnimationInProgress) {
-            onPressedAnimationOver = () => {
-                onPress();
-                Animated.timing(scale, { toValue: toValue, duration: 150 }).start();
-                onPressedAnimationOver = null;
-            }
-        } else {
-            onPress();
-            Animated.timing(scale, { toValue: toValue, duration: 150 }).start();
-        }
-    }
-
-    const onGrant = () => {
-        isPressedAnimationInProgress = true;
-        Animated
-            .timing(scale, { toValue: pressedScale, duration: 80 })
-            .start(() => {
-                isPressedAnimationInProgress = false;
-                onPressedAnimationOver && onPressedAnimationOver()
-            })
-    }
-
-    const onTerminate = () => {
-        const toValue = checked ? checkedScale : uncheckedScale;
-        Animated.timing(scale, { toValue: toValue, duration: 100 }).start()
-    }
-
-    return <View
-        onStartShouldSetResponder={() => true}
-        onResponderGrant={onGrant}
-        onResponderRelease={onRelease}
-        onResponderTerminate={onTerminate}
-    >
-        {
-            render()
-        }
-    </View>
-
-    function getSortButtonStyle(scale: Animated.Value) {
-        return {
-            ...styles.sortButton,
-            height: Animated.multiply(35, scale),
-            width: Animated.multiply(55, scale),
-        }
-    }
-
-    function getTextStyle(scale: Animated.Value) {
-        return {
-            ...styles.text,
-            fontSize: scale.interpolate({
-                inputRange: [pressedScale, uncheckedScale, checkedScale],
-                outputRange: [10, 13, 13]
-            })
-        }
-    }
-
-    function render() {
-        let style = getSortButtonStyle(scale);
-        checked && (style = { ...style, ...styles.checked });
-
-        let textStyle = getTextStyle(scale);
-        checked && (textStyle = { ...textStyle, ...styles.textChecked });
-
-        return (
-            <View style={styles.container}>
-                <Animated.View style={style}>
-                    <Animated.Text style={textStyle}>Sort</Animated.Text>
-                </Animated.View>
-            </View>
-        )
+        return <View style={containerStyle}>
+            <Text style={textStyle}>Sort</Text>
+        </View>
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        height: 35,
-        width: 55,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
     sortButton: {
         borderWidth: 1,
         borderRadius: 20,
+        height: 32,
+        width: 48,
         borderColor: 'gray',
         alignItems: 'center',
         justifyContent: 'center'
@@ -104,10 +35,16 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         borderWidth: 2
     },
+    pressed: {
+        borderColor: 'black',
+        borderWidth: 1
+    },
     text: {
-        color: 'gray'
+        color: 'gray',
+        fontSize: 12
     },
     textChecked: {
+        fontSize: 12,
         color: 'black',
         fontWeight: 'bold'
     }
