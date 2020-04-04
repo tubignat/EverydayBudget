@@ -1,6 +1,6 @@
-import { IIncomesRepository } from "./IncomesRepository";
-import { IExpensesRepository } from "./ExpensesRepository";
-import { ISetUpMonthsRepository } from "./SetUpMonthsRepository";
+import { IIncomesRepository } from "../repositories/IncomesRepository";
+import { IExpensesRepository } from "../repositories/ExpensesRepository";
+import { ISetUpMonthsRepository } from "../repositories/SetUpMonthsRepository";
 
 export class EnsureMonthIsSetUpService {
     private incomesRepository: IIncomesRepository

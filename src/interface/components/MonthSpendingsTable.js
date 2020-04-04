@@ -11,8 +11,8 @@ import {
 import SlidingUpPanel from './SlidingUpPanel';
 import DayOfMonthSpendingsList from './DayOfMonthSpendingsList';
 import { TextButton } from './TextButton';
-import { ApplicationContext } from '../domain/ApplicationContext';
-import { formatMoney } from '../domain/NumberFormat';
+import { ApplicationContext } from '../ApplicationContext';
+import { formatMoney } from '../NumberFormat';
 
 
 const Window = Dimensions.get('window')

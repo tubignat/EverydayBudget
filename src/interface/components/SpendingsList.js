@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Animated, View, Text, StyleSheet } from 'react-native';
-import { IconButton } from '../components/IconButton';
-import { ApplicationContext } from '../domain/ApplicationContext';
-import { formatMoney } from '../domain/NumberFormat';
+import { IconButton } from './IconButton';
+import { ApplicationContext } from '../ApplicationContext';
+import { formatMoney } from '../NumberFormat';
 
 function SpendingsList({ spendings, remove }) {
     const { locale, currency } = React.useContext(ApplicationContext);

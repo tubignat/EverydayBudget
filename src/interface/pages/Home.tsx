@@ -3,10 +3,10 @@ import { View, Text, Dimensions, StyleSheet } from 'react-native';
 import { KeyBoard } from '../components/keyboard/Keyboard';
 import { AddSpendingButton } from '../components/AddSpendingButton';
 import Page from '../components/Page'
-import { observer } from '../../node_modules/mobx-react/dist/mobx-react';
-import { ApplicationContext } from '../domain/ApplicationContext';
-import { Application } from '../domain/Application';
-import { formatMoney } from '../domain/NumberFormat';
+import { observer } from 'mobx-react';
+import { ApplicationContext } from '../ApplicationContext';
+import { ApplicationState } from '../ApplicationState';
+import { formatMoney } from '../NumberFormat';
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = width < 350;
@@ -34,7 +34,7 @@ export default class Home extends Component<{}, IHomeState> {
 
     render() {
         const { newTransactionRubles, isKopeckMode, newTransactionKopecks } = this.state;
-        const { currency, locale, todaysLimit, todaysDelta }: Application = this.context;
+        const { currency, locale, todaysLimit, todaysDelta }: ApplicationState = this.context;
 
         return <Page>
             {

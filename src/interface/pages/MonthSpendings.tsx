@@ -8,10 +8,10 @@ import {
 } from 'react-native';
 
 import Page from '../components/Page'
-import { observer } from '../../node_modules/mobx-react/dist/mobx-react';
-import { SpendingId, Spending } from '../domain/SpendingsRepository';
+import { observer } from 'mobx-react';
+import { SpendingId, Spending } from '../../domain/repositories/SpendingsRepository';
 import { DaysSpendingsPanel, TableHeader, TableRow } from '../components/MonthSpendingsTable';
-import { ApplicationContext } from '../domain/ApplicationContext';
+import { ApplicationContext } from '../ApplicationContext';
 
 interface IMonthSpendingsProps {
     onModalOpen: () => void,

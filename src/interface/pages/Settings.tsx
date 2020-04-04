@@ -1,26 +1,26 @@
 import React, { Component } from 'react';
 import { ScrollView, View, Text, StyleSheet, KeyboardAvoidingView, Linking, Dimensions } from 'react-native';
 import Page from '../components/Page'
-import { observer } from '../../node_modules/mobx-react/dist/mobx-react';
+import { observer } from 'mobx-react';
 import { IncomesList } from '../components/SettingsIncomesList';
-import { IncomeId } from '../domain/IncomesRepository';
-import { ExpenseId } from '../domain/ExpensesRepository';
+import { IncomeId } from '../../domain/repositories/IncomesRepository';
+import { ExpenseId } from '../../domain/repositories/ExpensesRepository';
 import LanguageSelector from '../components/LanguageSelector';
 import CurrencySelector from '../components/CurrencySelector';
-import { ApplicationContext } from '../domain/ApplicationContext';
-import { Application } from '../domain/Application';
+import { ApplicationContext } from '../ApplicationContext';
+import { ApplicationState } from '../ApplicationState';
 import { SortButton } from '../components/SortButton';
-import { formatMoney } from '../domain/NumberFormat';
+import { formatMoney } from '../NumberFormat';
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = width < 350;
 const isBigScreen = height > 800;
 
 @observer
-export default class Settings extends Component<{}, {}, Application> {
+export default class Settings extends Component<{}, {}, ApplicationState> {
 
     static contextType = ApplicationContext;
-    context!: Application;
+    context!: ApplicationState;
 
     render() {
         const application = this.context;

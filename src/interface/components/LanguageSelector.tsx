@@ -1,5 +1,5 @@
 import React from 'react';
-import { Language } from '../domain/UserPreferencesRepository';
+import { Language } from '../../domain/repositories/UserPreferencesRepository';
 import { Selector } from './Selector';
 
 export default function LanguageSelector({ language, onChange }: { language: Language, onChange: (language: Language) => void }) {

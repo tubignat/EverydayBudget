@@ -1,5 +1,5 @@
 import React from 'react';
-import { Currency } from '../domain/UserPreferencesRepository';
+import { Currency } from '../../domain/repositories/UserPreferencesRepository';
 import { Selector } from './Selector';
 
 export default function CurrencySelector({ currency, onChange }: { currency: Currency, onChange: (currency: Currency) => void }) {

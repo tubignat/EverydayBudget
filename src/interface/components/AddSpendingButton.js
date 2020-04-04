@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { ButtonWrapper } from './common/ButtonWrapper';
 import { IconOutline } from '@ant-design/icons-react-native';
-import * as Font from 'expo-font';
 import { View, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -25,13 +24,6 @@ export class AddSpendingButton extends Component {
         this.state = {};
     }
 
-    async componentDidMount() {
-        await Font.loadAsync({
-            'antoutline': require('../../node_modules/@ant-design/icons-react-native/fonts/antoutline.ttf')
-        });
-        this.setState({ fontLoaded: true })
-    }
-
     render() {
         return <ButtonWrapper
             width={60}
@@ -45,16 +37,12 @@ export class AddSpendingButton extends Component {
 
     renderNormal = () => {
         return <View style={styles.AddSpendingButton}>
-            {
-                this.state.fontLoaded && <IconOutline style={[styles.addSpendingIcon, { color: this.props.disabled ? 'lightgray' : 'rgb(48, 209, 88)' }]} name='plus-circle' />
-            }
+            <IconOutline style={[styles.addSpendingIcon, { color: this.props.disabled ? 'lightgray' : 'rgb(48, 209, 88)' }]} name='plus-circle' />
         </View>;
     }
     renderPressed = () => {
         return <View style={[styles.AddSpendingButton, { backgroundColor: 'rgb(48, 209, 88)' }]}>
-            {
-                this.state.fontLoaded && <IconOutline style={[styles.addSpendingIcon, { color: 'white' }]} name='plus-circle' />
-            }
+            <IconOutline style={[styles.addSpendingIcon, { color: 'white' }]} name='plus-circle' />
         </View>;
     }
 }

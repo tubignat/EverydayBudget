@@ -1,15 +1,15 @@
-import { IExpensesRepository, Expense, ExpenseId } from "./ExpensesRepository";
-import { ISpendingsRepository, Spending, SpendingId } from "./SpendingsRepository";
-import { IIncomesRepository, Income, IncomeId } from "./IncomesRepository";
-import { BudgetService } from "./BudgetService";
-import { observable, computed } from "../../node_modules/mobx/lib/mobx";
-import { EnsureMonthIsSetUpService } from "./EnsureMonthIsSetUpService";
-import { Language, Currency, IUserPreferencesRepository, SortMode } from "./UserPreferencesRepository";
+import { IExpensesRepository, Expense, ExpenseId } from "../domain/repositories/ExpensesRepository";
+import { ISpendingsRepository, Spending, SpendingId } from "../domain/repositories/SpendingsRepository";
+import { IIncomesRepository, Income, IncomeId } from "../domain/repositories/IncomesRepository";
+import { BudgetService } from "../domain/services/BudgetService";
+import { observable, computed } from "mobx";
+import { EnsureMonthIsSetUpService } from "../domain/services/EnsureMonthIsSetUpService";
+import { Language, Currency, IUserPreferencesRepository, SortMode } from "../domain/repositories/UserPreferencesRepository";
 import * as Localization from 'expo-localization';
-import { enLocale } from "../locale/EnLocale";
-import { ruLocale } from "../locale/RuLocale";
+import { enLocale } from "./locale/EnLocale";
+import { ruLocale } from "./locale/RuLocale";
 
-export class Application {
+export class ApplicationState {
     private expensesRepository: IExpensesRepository;
     private spendingRepository: ISpendingsRepository;
     private incomesRepository: IIncomesRepository;

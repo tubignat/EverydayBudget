@@ -1,8 +1,21 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, ViewStyle } from 'react-native';
 
-export class ButtonWrapper extends Component {
-    constructor(props) {
+interface IButtonWrapperProps {
+    forwardedRef?: React.Ref<View>
+    style?: ViewStyle
+    disabled: boolean
+    renderPressed: () => JSX.Element
+    renderNormal: () => JSX.Element
+    onPress: () => void
+}
+
+interface IButtonWrapperState {
+    isPressed: boolean
+}
+
+export class ButtonWrapper extends Component<IButtonWrapperProps, IButtonWrapperState> {
+    constructor(props: IButtonWrapperProps) {
         super(props);
         this.state = { isPressed: false }
     }

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { IconButton } from '../components/IconButton';
-import { View, Text, TextInput, Animated, TouchableWithoutFeedback, StyleSheet, Dimensions } from 'react-native';
-import AmountInput from '../components/TextInputWithTemporaryInvalidValue';
-import { TextButton } from '../components/TextButton';
-import { ApplicationContext } from '../domain/ApplicationContext';
+import { IconButton } from './IconButton';
+import { View, Text, TextInput, Animated, TouchableWithoutFeedback, StyleSheet } from 'react-native';
+import AmountInput from './TextInputWithTemporaryInvalidValue';
+import { TextButton } from './TextButton';
+import { ApplicationContext } from '../ApplicationContext';
 
 export class IncomesList extends Component {
 

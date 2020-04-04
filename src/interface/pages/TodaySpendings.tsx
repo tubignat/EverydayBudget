@@ -2,9 +2,9 @@ import React from 'react';
 import { ScrollView, View, Text, Dimensions, StyleSheet } from 'react-native';
 import Page from '../components/Page'
 import SpendingsList from '../components/SpendingsList'
-import { observer } from '../../node_modules/mobx-react/dist/mobx-react';
-import { SpendingId } from '../domain/SpendingsRepository';
-import { ApplicationContext } from '../domain/ApplicationContext';
+import { observer } from 'mobx-react';
+import { SpendingId } from '../../domain/repositories/SpendingsRepository';
+import { ApplicationContext } from '../ApplicationContext';
 
 function TodaySpendings() {
 

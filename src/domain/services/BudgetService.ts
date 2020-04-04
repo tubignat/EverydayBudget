@@ -1,6 +1,6 @@
-import { IExpensesRepository } from "./ExpensesRepository";
-import { ISpendingsRepository } from "./SpendingsRepository";
-import { IIncomesRepository } from "./IncomesRepository";
+import { IExpensesRepository } from "../repositories/ExpensesRepository";
+import { ISpendingsRepository } from "../repositories/SpendingsRepository";
+import { IIncomesRepository } from "../repositories/IncomesRepository";
 
 export class BudgetService {
     private expensesRepository: IExpensesRepository;
@@ -20,7 +20,7 @@ export class BudgetService {
         const totalExpense = this.expensesRepository.get(year, month).reduce((sum, expense) => sum + expense.amount, 0);
 
         return (totalIncome - totalExpense) / daysInMonth;
-    };
+    }
 
     getSaldos = (budgetPerDay: number, year: number, month: number) => {
         const daysInMonth = this.daysInMonth(year, month);

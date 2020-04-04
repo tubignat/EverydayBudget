@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, Animated, TouchableWithoutFeedback } from 'react-native';
 import { IconButton } from './IconButton';
-import AmountInput from '../components/TextInputWithTemporaryInvalidValue';
+import AmountInput from './TextInputWithTemporaryInvalidValue';
 import { TextButton } from './TextButton';
-import { ApplicationContext } from '../domain/ApplicationContext';
+import { ApplicationContext } from '../ApplicationContext';
 
 function DayOfMonthSpendingsList({ spendings, remove, edit, add }) {
     const { locale } = useContext(ApplicationContext);

@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { TextInput } from 'react-native';
-import { formatMoney } from '../domain/NumberFormat';
+import { formatMoney } from '../NumberFormat';
 
 class AmountInput extends Component {
     constructor(props) {

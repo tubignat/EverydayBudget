@@ -1,27 +1,28 @@
 import React, { Component } from 'react';
 import Swiper from 'react-native-swiper';
-import Home from './src/pages/Home';
-import Settings from './src/pages/Settings';
-import TodaySpendings from './src/pages/TodaySpendings';
-import { SpendingsRepository } from './src/domain/SpendingsRepository';
-import { observer } from './node_modules/mobx-react/dist/mobx-react';
-import { IncomesRepository } from './src/domain/IncomesRepository';
-import { ExpensesRepository } from './src/domain/ExpensesRepository';
-import { BudgetService } from './src/domain/BudgetService';
-import { Application } from './src/domain/Application';
-import MonthSpendings from './src/pages/MonthSpendings';
-import { SetUpMonthsRepository } from './src/domain/SetUpMonthsRepository';
-import { EnsureMonthIsSetUpService } from './src/domain/EnsureMonthIsSetUpService';
-import { UserPreferencesRepository } from './src/domain/UserPreferencesRepository';
-import { ApplicationContext } from './src/domain/ApplicationContext';
+import Home from './src/interface/pages/Home';
+import Settings from './src/interface/pages/Settings';
+import TodaySpendings from './src/interface/pages/TodaySpendings';
+import { SpendingsRepository } from './src/domain/repositories/SpendingsRepository';
+import { observer } from 'mobx-react';
+import { IncomesRepository } from './src/domain/repositories/IncomesRepository';
+import { ExpensesRepository } from './src/domain/repositories/ExpensesRepository';
+import { BudgetService } from './src/domain/services/BudgetService';
+import { ApplicationState } from './src/interface/ApplicationState';
+import MonthSpendings from './src/interface/pages/MonthSpendings';
+import { SetUpMonthsRepository } from './src/domain/repositories/SetUpMonthsRepository';
+import { EnsureMonthIsSetUpService } from './src/domain/services/EnsureMonthIsSetUpService';
+import { UserPreferencesRepository } from './src/domain/repositories/UserPreferencesRepository';
+import { ApplicationContext } from './src/interface/ApplicationContext';
 import { AppState, AppStateStatus, Image, Animated } from 'react-native';
+import * as Font from 'expo-font';
 
 @observer
 export default class App extends Component<{}, {
     isScrollLocked: boolean, isInitialized: boolean, appState: AppStateStatus, protectScreenOpacity: Animated.Value, protectScreenDisplay: boolean
 }> {
 
-    private application: Application | undefined;
+    private applicationState: ApplicationState | undefined;
 
     constructor(props: {}) {
         super(props);
@@ -46,7 +47,7 @@ export default class App extends Component<{}, {
 
     private handleAppStateChange = (nextAppState: AppStateStatus) => {
         if (nextAppState === 'active') {
-            this.application?.init();
+            this.applicationState?.init();
             Animated
                 .timing(this.state.protectScreenOpacity, { toValue: 0, duration: 200 })
                 .start(() => this.setState({ protectScreenDisplay: false }));
@@ -63,6 +64,10 @@ export default class App extends Component<{}, {
     };
 
     async init() {
+        await Font.loadAsync({
+            'antoutline': require('./node_modules/@ant-design/icons-react-native/fonts/antoutline.ttf')
+        });
+
         const spendingsRepository = new SpendingsRepository();
         const incomesRepository = new IncomesRepository();
         const expensesRepository = new ExpensesRepository();
@@ -72,7 +77,7 @@ export default class App extends Component<{}, {
         const ensureMonthIsSetUpService = new EnsureMonthIsSetUpService(incomesRepository, expensesRepository, setUpMonthsRepository);
         const budgetService = new BudgetService(incomesRepository, expensesRepository, spendingsRepository);
 
-        this.application = new Application(
+        this.applicationState = new ApplicationState(
             incomesRepository,
             expensesRepository,
             spendingsRepository,
@@ -86,19 +91,19 @@ export default class App extends Component<{}, {
         await setUpMonthsRepository.init();
         await userPreferencesRepository.init();
 
-        this.application.init();
+        this.applicationState.init();
 
         this.setState({ isInitialized: true });
     }
 
     render() {
-        if (!this.application) {
+        if (!this.applicationState) {
             return null;
         }
 
         return (
             this.state.isInitialized &&
-            <ApplicationContext.Provider value={this.application}>
+            <ApplicationContext.Provider value={this.applicationState}>
                 <Swiper loop={false} index={1} bounces={true} scrollEnabled={!this.state.isScrollLocked} showsPagination={!this.state.isScrollLocked}>
                     <Settings />
                     <Home />

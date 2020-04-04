@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { ButtonWrapper } from './common/ButtonWrapper';
 import { IconOutline } from '@ant-design/icons-react-native';
-import * as Font from 'expo-font';
 import { View, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -13,26 +12,10 @@ const styles = StyleSheet.create({
     }
 })
 
-let isFontLoaded = false;
-const promise = new Promise(async resolve => {
-    await Font.loadAsync({
-        'antoutline': require('../../node_modules/@ant-design/icons-react-native/fonts/antoutline.ttf')
-    });
-    isFontLoaded = true;
-    resolve();
-})
-
 export class IconButton extends Component {
     constructor(props) {
         super(props);
         this.state = {};
-    }
-
-    async componentDidMount() {
-        if (!isFontLoaded) {
-            await promise;
-        }
-        this.setState({ fontLoaded: true })
     }
 
     render() {
@@ -47,18 +30,12 @@ export class IconButton extends Component {
 
     renderNormal = () => {
         return <View style={styles.button}>
-            {
-                this.state.fontLoaded &&
-                <IconOutline style={{ fontSize: this.props.innerSize, color: this.props.color }} name={this.props.icon} />
-            }
+            <IconOutline style={{ fontSize: this.props.innerSize, color: this.props.color }} name={this.props.icon} />
         </View>;
     }
     renderPressed = () => {
         return <View style={[styles.button, { backgroundColor: this.props.color }]}>
-            {
-                this.state.fontLoaded &&
-                <IconOutline style={{ fontSize: this.props.innerSize, color: 'white' }} name={this.props.icon} />
-            }
+            <IconOutline style={{ fontSize: this.props.innerSize, color: 'white' }} name={this.props.icon} />
         </View>;
     }
 }

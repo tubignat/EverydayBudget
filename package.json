@@ -6,7 +6,9 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "test": "jest",
+    "tsc-test": "tsc --project . --noEmit"
   },
   "dependencies": {
     "@ant-design/icons-react-native": "2.0.0",
@@ -14,6 +16,7 @@
     "@react-native-community/async-storage": "^1.6.3",
     "eslint": "^5.16.0",
     "expo": "^36.0.0",
+    "expo-localization": "~8.0.0",
     "mobx": "^5.10.1",
     "mobx-react": "^6.0.3",
     "react": "16.9.0",
@@ -21,16 +24,42 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.1.tar.gz",
     "react-native-keyboard-aware-scrollview": "^2.0.0",
     "react-native-swiper": "^1.5.14",
-    "react-native-web": "^0.11.7",
-    "expo-localization": "~8.0.0"
+    "react-native-web": "^0.11.7"
   },
   "devDependencies": {
-    "@types/jest": "^25.1.4",
+    "@types/jest": "^25.2.1",
     "@types/react": "^16.9.25",
     "@types/react-native": "^0.61.23",
     "@types/react-test-renderer": "^16.9.2",
     "babel-preset-expo": "^8.0.0",
+    "jest": "^25.2.7",
+    "jest-expo": "^37.0.0",
+    "react-test-renderer": "^16.13.1",
+    "ts-jest": "^25.3.1",
     "typescript": "^3.8.3"
   },
-  "private": true
+  "private": true,
+  "jest": {
+    "preset": "jest-expo",
+    "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js",
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testMatch": [
+      "**/__tests__/**/*.ts?(x)",
+      "**/?(*.)+(spec|test).ts?(x)"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "ts",
+      "tsx"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfig": {
+          "jsx": "react"
+        }
+      }
+    }
+  }
 }
