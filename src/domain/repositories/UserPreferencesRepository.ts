@@ -2,7 +2,7 @@ import { AsyncStorage } from 'react-native';
 
 export type Currency = '€' | '$' | '₽';
 export type Language = 'en' | 'ru';
-export type ColorSchemePreference = 'light' | 'dark' | 'system';
+export type ColorSchemePreference = 'light' | 'dark' | 'auto';
 export type SortMode = 'none' | 'asc' | 'desc';
 
 export type UserPreferences = {
@@ -22,7 +22,7 @@ export class UserPreferencesRepository implements IUserPreferencesRepository {
     private userPreferences: UserPreferences = {
         currency: null,
         language: null,
-        colorSchemePreference: 'system',
+        colorSchemePreference: 'auto',
         sortExpenses: 'none',
         sortIncomes: 'none',
     };

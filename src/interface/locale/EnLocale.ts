@@ -17,6 +17,7 @@ export const enLocale: Locale = {
     description: 'Description...',
     language: 'Language',
     currency: 'Currency',
+    appearance: 'Appearance',
     website: 'Website',
     privacyPolicy: 'Privacy policy',
 

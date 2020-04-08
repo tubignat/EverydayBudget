@@ -9,16 +9,19 @@ export default function CurrencySelector({ currency, onChange, scheme }: { curre
             text: '₽',
             selected: currency === '₽',
             onPress: () => onChange('₽'),
+            width: 40
         },
         {
             text: '$',
             selected: currency === '$',
             onPress: () => onChange('$'),
+            width: 40
         },
         {
             text: '€',
             selected: currency === '€',
             onPress: () => onChange('€'),
+            width: 40
         },
     ];
 

@@ -111,8 +111,12 @@ let styles = StyleSheet.create({
     },
     handleAura: {
         opacity: .9,
-        padding: 10,
-        borderRadius: 50
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderBottomLeftRadius: 50,
+        borderBottomRightRadius: 50,
+        paddingHorizontal: 10
     },
     handle: {
         width: 50,

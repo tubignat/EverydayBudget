@@ -10,6 +10,7 @@ import { enLocale } from "./locale/EnLocale";
 import { ruLocale } from "./locale/RuLocale";
 import { lightColorScheme } from "./color/LightColorScheme";
 import { darkColorScheme } from "./color/DarkColorScheme";
+import { Appearance } from 'react-native-appearance';
 
 export class ApplicationState {
     private expensesRepository: IExpensesRepository;
@@ -38,7 +39,7 @@ export class ApplicationState {
 
     @observable public language: Language = 'en';
     @observable public currency: Currency = '$';
-    @observable public colorSchemePreference: ColorSchemePreference = 'system';
+    @observable public colorSchemePreference: ColorSchemePreference = 'auto';
     @observable public sortExpenses: SortMode = 'none';
     @observable public sortIncomes: SortMode = 'none';
 
@@ -69,6 +70,18 @@ export class ApplicationState {
     }
 
     @computed public get colorScheme() {
+        if (this.colorSchemePreference === 'light') {
+            return lightColorScheme;
+        }
+
+        if (this.colorSchemePreference === 'dark') {
+            return darkColorScheme;
+        }
+
+        if (Appearance.getColorScheme() === 'dark') {
+            return darkColorScheme
+        }
+
         return lightColorScheme;
     }
 
@@ -98,7 +111,7 @@ export class ApplicationState {
         this.currency = preferences.currency ?? this.getCurrencyFromSystem();
         this.sortExpenses = preferences.sortExpenses ?? 'none';
         this.sortIncomes = preferences.sortIncomes ?? 'none';
-        this.colorSchemePreference = preferences.colorSchemePreference;
+        this.colorSchemePreference = preferences.colorSchemePreference ?? 'auto';
     }
 
     public addSpending = (day: number, amount: number) => {
@@ -186,6 +199,17 @@ export class ApplicationState {
             sortExpenses: this.sortExpenses,
             colorSchemePreference: this.colorSchemePreference,
             sortIncomes: mode
+        });
+        this.init();
+    }
+
+    public changeColorSchemePreference = (preference: ColorSchemePreference) => {
+        this.userPreferencesRepository.set({
+            language: this.language,
+            currency: this.currency,
+            sortExpenses: this.sortExpenses,
+            colorSchemePreference: preference,
+            sortIncomes: this.sortIncomes
         });
         this.init();
     }

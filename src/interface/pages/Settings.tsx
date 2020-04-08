@@ -12,6 +12,7 @@ import { ApplicationState } from '../ApplicationState';
 import { SortButton } from '../components/SortButton';
 import { formatMoney } from '../NumberFormat';
 import { ColorScheme } from '../color/ColorScheme';
+import ColorSchemeSelector from '../components/ColorSchemeSelector';
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = width < 350;
@@ -105,6 +106,20 @@ export default class Settings extends Component<{}, {}, ApplicationState> {
                             <View style={{ ...styles.inlineSettingContainer, marginTop: -20 }}>
                                 <Text style={styles.subheader}>{application.locale.language}</Text>
                                 <LanguageSelector language={application.language} onChange={application.changeLanguage} scheme={application.colorScheme} />
+                            </View>
+
+                            <View style={{
+                                ...styles.inlineSettingContainer, marginTop: 24,
+                                flexDirection: isSmallScreen ? 'column' : 'row',
+                                alignItems: isSmallScreen ? 'flex-start' : 'center',
+                                height: isSmallScreen ? 88 : 32
+                            }}>
+                                <Text style={styles.subheader}>{application.locale.appearance}</Text>
+                                <ColorSchemeSelector
+                                    preference={application.colorSchemePreference}
+                                    onChange={application.changeColorSchemePreference}
+                                    scheme={application.colorScheme}
+                                />
                             </View>
 
                             <View style={styles.linksContainer}>

@@ -16,6 +16,7 @@ export type Locale = {
     description: string
     language: string
     currency: string
+    appearance: string
     website: string
     privacyPolicy: string
 

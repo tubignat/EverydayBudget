@@ -17,6 +17,7 @@ export const ruLocale: Locale = {
     description: 'Описание...',
     language: 'Язык',
     currency: 'Валюта',
+    appearance: 'Тема',
     website: 'Веб-сайт',
     privacyPolicy: 'Политика конфиденциальности',
 

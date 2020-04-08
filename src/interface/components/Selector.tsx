@@ -7,6 +7,7 @@ type SelectorButton = {
     text: string
     onPress: () => void
     selected: boolean
+    width: number
 }
 
 export function Selector({ buttons, scheme }: { buttons: SelectorButton[], scheme: ColorScheme }) {
@@ -14,7 +15,7 @@ export function Selector({ buttons, scheme }: { buttons: SelectorButton[], schem
     const [animatedButtons] = React.useState(buttons.map(button => {
         return {
             ...button,
-            animated: button.selected ? new Animated.Value(50) : new Animated.Value(40),
+            animated: button.selected ? new Animated.Value(button.width + 10) : new Animated.Value(button.width),
         }
     }));
 
@@ -22,7 +23,7 @@ export function Selector({ buttons, scheme }: { buttons: SelectorButton[], schem
         const updatedValues = animatedButtons.filter(ab => buttons.find(b => b.text === ab.text)?.selected !== ab.selected);
 
         updatedValues.forEach(value => {
-            const toValue = value.selected ? 40 : 50;
+            const toValue = value.selected ? value.width : value.width + 10;
             Animated.timing(value.animated, { toValue: toValue, duration: 200 }).start();
 
             value.selected = !value.selected;

@@ -9,11 +9,13 @@ export default function LanguageSelector({ language, onChange, scheme }: { langu
             text: 'Rus',
             selected: language === 'ru',
             onPress: () => onChange('ru'),
+            width: 40
         },
         {
             text: 'Eng',
             selected: language === 'en',
             onPress: () => onChange('en'),
+            width: 40
         },
     ];
 
