@@ -1,15 +1,18 @@
 import React from 'react';
 import { View, StyleSheet, Dimensions, StatusBar } from 'react-native';
+import { ColorScheme } from '../color/ColorScheme';
+import { darkColorScheme } from '../color/DarkColorScheme';
 
 const { height, width } = Dimensions.get('window');
-export default function Page({ children }) {
+const isBigScreen = height > 800;
+export default function Page({ children, scheme }: { children: JSX.Element | (JSX.Element | boolean)[], scheme: ColorScheme }) {
     return (
         <View>
             <StatusBar
                 hidden={false}
-                barStyle='dark-content'
+                barStyle={scheme.background === darkColorScheme.background ? 'light-content' : 'dark-content'}
             />
-            <View style={styles.statusBar} />
+            <View style={{ ...styles.statusBar, backgroundColor: scheme.background }} />
             <View style={styles.content}>
                 {
                     children
@@ -26,10 +29,9 @@ const styles = StyleSheet.create({
     },
     statusBar: {
         position: 'absolute',
-        height: 20,
         width: '100%',
         zIndex: 2,
         opacity: .9,
-        backgroundColor: 'white'
+        height: isBigScreen ? 40 : 20
     }
 });

@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
         color: 'lightgray'
     },
     disabledPickerContainer: {
-
         borderColor: 'lightgray',
     }
 });

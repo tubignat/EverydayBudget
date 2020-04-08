@@ -1,12 +1,17 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { ButtonWrapper } from './common/ButtonWrapper';
+import { ColorScheme } from '../color/ColorScheme';
 
-export function SortButton({ onPress, checked }: { onPress: () => void, checked: boolean }) {
+export function SortButton({ onPress, checked, scheme }: { onPress: () => void, checked: boolean, scheme: ColorScheme }) {
+
+    const styles = getStyles(scheme);
+
     return <ButtonWrapper
         renderNormal={renderNormal}
         renderPressed={renderNormal}
         onPress={onPress}
+        disabled={false}
     />
 
     function renderNormal() {
@@ -21,31 +26,31 @@ export function SortButton({ onPress, checked }: { onPress: () => void, checked:
     }
 }
 
-const styles = StyleSheet.create({
+const getStyles = (scheme: ColorScheme) => StyleSheet.create({
     sortButton: {
         borderWidth: 1,
         borderRadius: 20,
         height: 32,
         width: 48,
-        borderColor: 'gray',
+        borderColor: scheme.inactive,
         alignItems: 'center',
         justifyContent: 'center'
     },
     checked: {
-        borderColor: 'black',
+        borderColor: scheme.primaryText,
         borderWidth: 2
     },
     pressed: {
-        borderColor: 'black',
+        borderColor: scheme.primaryText,
         borderWidth: 1
     },
     text: {
-        color: 'gray',
+        color: scheme.inactive,
         fontSize: 12
     },
     textChecked: {
         fontSize: 12,
-        color: 'black',
+        color: scheme.primaryText,
         fontWeight: 'bold'
     }
 });

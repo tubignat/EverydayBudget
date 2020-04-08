@@ -1,31 +1,57 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, Animated, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, StyleSheet, Animated, TouchableWithoutFeedback, TextInput } from 'react-native';
 import { IconButton } from './IconButton';
 import AmountInput from './TextInputWithTemporaryInvalidValue';
 import { TextButton } from './TextButton';
 import { ApplicationContext } from '../ApplicationContext';
+import { Spending, SpendingId } from '../../domain/repositories/SpendingsRepository';
+import { ColorScheme } from '../color/ColorScheme';
 
-function DayOfMonthSpendingsList({ spendings, remove, edit, add }) {
-    const { locale } = useContext(ApplicationContext);
+interface IDayOfMonthSpendingsListProps {
+    spendings: Spending[]
+    remove: (id: SpendingId) => void
+    edit: (id: SpendingId, amount: number) => void
+    add: () => void
+}
+
+function DayOfMonthSpendingsList({ spendings, remove, edit, add }: IDayOfMonthSpendingsListProps) {
+    const application = useContext(ApplicationContext);
+    if (!application) {
+        return null;
+    }
+
+    const styles = getStyles(application.colorScheme);
+
     return <View style={styles.dayOfMonthSpendingsList}>
         {
             spendings.map(s => <DayOfMonthSpending spending={s} key={s.id} remove={() => remove(s.id)} edit={(amount) => edit(s.id, amount)} />)
         }
         {
             spendings.length !== 0 && <View style={styles.addButton}>
-                <TextButton text={locale.add} height={50} fontSize={18} onPress={add} />
+                <TextButton text={application.locale.add} height={50} fontSize={18} onPress={add} disabled={false} scheme={application.colorScheme} />
             </View>
         }
     </View>
 }
 
-function DayOfMonthSpending({ spending, remove, edit }) {
-    const { currency } = useContext(ApplicationContext);
+interface IDayOfMonthSpendingProps {
+    spending: Spending
+    remove: () => void
+    edit: (amount: number) => void
+}
+
+function DayOfMonthSpending({ spending, remove, edit }: IDayOfMonthSpendingProps) {
+    const application = useContext(ApplicationContext);
+    if (!application) {
+        return null;
+    }
+
+    const styles = getStyles(application.colorScheme);
 
     const [expandAnim] = useState(new Animated.Value(0));
     const [fadeAnim] = useState(new Animated.Value(0));
 
-    let textInputRef;
+    let textInputRef: TextInput;
 
     useEffect(() => {
         Animated.parallel([
@@ -43,16 +69,16 @@ function DayOfMonthSpending({ spending, remove, edit }) {
         <TouchableWithoutFeedback onPress={() => textInputRef.focus()} >
             <View style={styles.incomeViewAmount}>
                 <AmountInput
-                    forwardedRef={ref => textInputRef = ref}
+                    forwardedRef={(ref: TextInput) => textInputRef = ref}
                     style={styles.incomeViewAmountText}
                     value={spending.amount}
-                    onChange={(text) => edit(text)}
+                    onChange={(amount: number) => edit(amount)}
                     placeholder=''
                 />
-                <Text style={styles.incomeViewAmountText}> {currency}</Text>
+                <Text style={styles.incomeViewAmountText}> {application.currency}</Text>
             </View>
         </TouchableWithoutFeedback>
-        <IconButton size={40} innerSize={18} icon='close-circle' color='rgb(255, 69, 58)' onPress={onRemove} />
+        <IconButton size={40} innerSize={18} icon='close-circle' color={application.colorScheme.danger} onPress={onRemove} />
     </Animated.View>
 
 
@@ -65,7 +91,7 @@ function DayOfMonthSpending({ spending, remove, edit }) {
     }
 }
 
-const styles = StyleSheet.create({
+const getStyles = (scheme: ColorScheme) => StyleSheet.create({
     addButton: {
         width: 110
     },
@@ -74,16 +100,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between'
     },
-    dayOfMonthSpendingText: {
-        fontSize: 22
-    },
     dayOfMonthSpendingsList: {
         marginLeft: 30,
         marginRight: 20,
         marginTop: 40,
         marginBottom: 160
     },
-
     incomeViewAmount: {
         flex: 1,
         flexDirection: 'row',
@@ -92,7 +114,8 @@ const styles = StyleSheet.create({
         height: '100%'
     },
     incomeViewAmountText: {
-        fontSize: 22
+        fontSize: 22,
+        color: scheme.primaryText
     },
 })
 

@@ -7,6 +7,7 @@ import { observer } from 'mobx-react';
 import { ApplicationContext } from '../ApplicationContext';
 import { ApplicationState } from '../ApplicationState';
 import { formatMoney } from '../NumberFormat';
+import { ColorScheme } from '../color/ColorScheme';
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = width < 350;
@@ -34,9 +35,11 @@ export default class Home extends Component<{}, IHomeState> {
 
     render() {
         const { newTransactionRubles, isKopeckMode, newTransactionKopecks } = this.state;
-        const { currency, locale, todaysLimit, todaysDelta }: ApplicationState = this.context;
+        const { currency, locale, todaysLimit, todaysDelta, colorScheme }: ApplicationState = this.context;
 
-        return <Page>
+        const styles = getStyles(colorScheme);
+
+        return <Page scheme={colorScheme}>
             {
                 isBigScreen && <View style={styles.todaysBudgetContainer}>
                     <Text style={styles.header}>
@@ -50,11 +53,11 @@ export default class Home extends Component<{}, IHomeState> {
                     <Text style={styles.budgetText}>
                         {locale.todaysLimit}
                     </Text>
-                    <Text style={{ ...styles.budget, color: todaysLimit < 0 ? 'rgb(255, 69, 58)' : 'black' }}>
+                    <Text style={{ ...styles.budget, color: todaysLimit < 0 ? colorScheme.danger : colorScheme.primaryText }}>
                         {formatMoney(todaysLimit)} {currency}
                     </Text>
                     <View style={styles.delta}>
-                        <Text style={{ ...styles.deltaAmount, color: todaysDelta < 0 ? 'rgb(255, 69, 58)' : 'rgb(52, 199, 89)' }}>
+                        <Text style={{ ...styles.deltaAmount, color: todaysDelta < 0 ? colorScheme.danger : colorScheme.success }}>
                             {todaysDelta > 0 ? '+' : ''}{formatMoney(todaysDelta)} {currency}
                         </Text>
                         <Text style={styles.deltaLabel}>  {locale.today} </Text>
@@ -70,11 +73,12 @@ export default class Home extends Component<{}, IHomeState> {
                         <AddSpendingButton
                             onPress={this.onAddButtonPressed}
                             disabled={newTransactionRubles === 0 && newTransactionKopecks.length !== 2}
+                            scheme={colorScheme}
                         />
                     </View>
                 </View>
 
-                <KeyBoard onKeyPressed={this.handleKeyPressed} onRemoveKeyPressed={this.handleRemoveKeyPressed} />
+                <KeyBoard onKeyPressed={this.handleKeyPressed} onRemoveKeyPressed={this.handleRemoveKeyPressed} color={colorScheme.primary} />
 
             </View>
         </Page>
@@ -113,15 +117,16 @@ export default class Home extends Component<{}, IHomeState> {
     }
 }
 
-const styles = StyleSheet.create({
+const getStyles = (scheme: ColorScheme) => StyleSheet.create({
     budgetText: {
-        color: 'gray',
+        color: scheme.secondaryText,
         marginBottom: 10,
     },
     header: {
         fontSize: 40,
         fontWeight: '300',
-        marginBottom: 40
+        marginBottom: 40,
+        color: scheme.primaryText
     },
     budgetContainer: {
         marginLeft: 20,
@@ -137,7 +142,7 @@ const styles = StyleSheet.create({
         marginBottom: isSmallScreen ? 10 : 20
     },
     addTransactionText: {
-        color: 'gray',
+        color: scheme.secondaryText,
         marginBottom: isSmallScreen ? 0 : 10
     },
     addTransactionInput: {
@@ -153,7 +158,8 @@ const styles = StyleSheet.create({
     },
     transaction: {
         fontSize: isSmallScreen ? 30 : 40,
-        fontWeight: '200'
+        fontWeight: '200',
+        color: scheme.primaryText
     },
     keyboardGroupContainer: {
         position: 'absolute',
@@ -176,7 +182,7 @@ const styles = StyleSheet.create({
         marginTop: 5
     },
     deltaLabel: {
-        color: 'gray',
+        color: scheme.secondaryText,
         fontSize: 15,
     },
     deltaAmount: {

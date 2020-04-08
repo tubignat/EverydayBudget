@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, PanResponder, TouchableWithoutFeedback, View, Dimensions, StyleSheet} from 'react-native';
+import { Animated, PanResponder, TouchableWithoutFeedback, View, Dimensions, StyleSheet } from 'react-native';
 
 let Window = Dimensions.get('window');
 class SlidingUpPanel extends React.Component {
@@ -45,9 +45,11 @@ class SlidingUpPanel extends React.Component {
                 </TouchableWithoutFeedback>
 
                 <View style={[styles.container, { top: this.props.offsetTop }]}>
-                    <Animated.View style={[{ top: top }, styles.draggablePanel]} >
+                    <Animated.View style={[{ top: top, backgroundColor: this.props.backgroundColor }, styles.draggablePanel]} >
                         <View style={styles.handleContainer} {...this.panResponder.panHandlers}>
-                            <View style={styles.handle} />
+                            <View style={{ ...styles.handleAura, backgroundColor: this.props.backgroundColor }}>
+                                <View style={styles.handle} />
+                            </View>
                         </View>
                         <View style={[styles.content, { height: Window.height - offsetTop - 7 }]}>
                             {this.props.children}
@@ -94,23 +96,29 @@ let styles = StyleSheet.create({
         zIndex: 20
     },
     draggablePanel: {
-        backgroundColor: 'white',
-        width: '100%',
-        height: '100%'
+        height: '100%',
+        borderRadius: 20,
+        position: 'relative'
     },
     handleContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        height: 30,
+        height: 40,
+        width: '100%',
+        position: 'absolute',
+        top: 0,
+        zIndex: 1
+    },
+    handleAura: {
+        opacity: .9,
+        padding: 10,
+        borderRadius: 50
     },
     handle: {
         width: 50,
         height: 7,
         backgroundColor: 'lightgray',
         borderRadius: 50
-    },
-    content: {
-        padding: 20,
     }
 });
 

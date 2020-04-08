@@ -11,6 +11,7 @@ import { ApplicationContext } from '../ApplicationContext';
 import { ApplicationState } from '../ApplicationState';
 import { SortButton } from '../components/SortButton';
 import { formatMoney } from '../NumberFormat';
+import { ColorScheme } from '../color/ColorScheme';
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = width < 350;
@@ -24,6 +25,7 @@ export default class Settings extends Component<{}, {}, ApplicationState> {
 
     render() {
         const application = this.context;
+        const styles = getStyles(application.colorScheme);
 
         const incomes = application.sortIncomes === 'desc'
             ? application.incomes.slice().sort((a, b) => b.amount - a.amount)
@@ -37,7 +39,7 @@ export default class Settings extends Component<{}, {}, ApplicationState> {
 
         const showSortExpensesButton = this.canBeSorted(application.expenses.map(e => e.amount));
 
-        return <Page>
+        return <Page scheme={application.colorScheme}>
             <KeyboardAvoidingView behavior='padding'>
                 <ScrollView style={styles.pageContainer}>
                     <View style={{ paddingBottom: 130 }}>
@@ -55,12 +57,12 @@ export default class Settings extends Component<{}, {}, ApplicationState> {
                                     <SortButton
                                         onPress={() => application.changeSortIncomes(application.sortIncomes === 'none' ? 'desc' : 'none')}
                                         checked={application.sortIncomes !== 'none'}
+                                        scheme={application.colorScheme}
                                     />
                                 }
                             </View>
 
                             <IncomesList
-                                locale={application.locale}
                                 incomes={incomes}
                                 thereAreNoValuesYetText={application.locale.noIncomesYet}
                                 onRemove={application.removeIncome}
@@ -76,12 +78,12 @@ export default class Settings extends Component<{}, {}, ApplicationState> {
                                     <SortButton
                                         onPress={() => application.changeSortExpenses(application.sortExpenses === 'none' ? 'desc' : 'none')}
                                         checked={application.sortExpenses !== 'none'}
+                                        scheme={application.colorScheme}
                                     />
                                 }
                             </View>
 
                             <IncomesList
-                                locale={application.locale}
                                 incomes={expenses}
                                 thereAreNoValuesYetText={application.locale.noExpensesYet}
                                 onRemove={application.removeExpense}
@@ -97,12 +99,12 @@ export default class Settings extends Component<{}, {}, ApplicationState> {
 
                             <View style={{ ...styles.inlineSettingContainer, marginTop: 40 }}>
                                 <Text style={styles.subheader}>{application.locale.currency}</Text>
-                                <CurrencySelector currency={application.currency} onChange={application.changeCurrency} />
+                                <CurrencySelector currency={application.currency} onChange={application.changeCurrency} scheme={application.colorScheme} />
                             </View>
 
                             <View style={{ ...styles.inlineSettingContainer, marginTop: -20 }}>
                                 <Text style={styles.subheader}>{application.locale.language}</Text>
-                                <LanguageSelector language={application.language} onChange={application.changeLanguage} />
+                                <LanguageSelector language={application.language} onChange={application.changeLanguage} scheme={application.colorScheme} />
                             </View>
 
                             <View style={styles.linksContainer}>
@@ -132,7 +134,7 @@ export default class Settings extends Component<{}, {}, ApplicationState> {
     }
 }
 
-const styles = StyleSheet.create({
+const getStyles = (scheme: ColorScheme) => StyleSheet.create({
     pageContainer: {
         paddingLeft: 24,
         paddingRight: isSmallScreen ? 12 : 24,
@@ -146,10 +148,11 @@ const styles = StyleSheet.create({
         fontSize: 40,
         fontWeight: '300',
         height: 48,
-        marginBottom: 56
+        marginBottom: 56,
+        color: scheme.primaryText
     },
     subheader: {
-        color: 'gray',
+        color: scheme.secondaryText,
         fontSize: 20,
     },
     inlineSettingContainer: {
@@ -161,13 +164,14 @@ const styles = StyleSheet.create({
     },
     budgetPerDayAmount: {
         fontSize: 22,
+        color: scheme.primaryText
     },
     linksContainer: {
         marginTop: 40,
     },
     link: {
         fontSize: 15,
-        color: 'gray',
+        color: scheme.secondaryText,
         textDecorationLine: 'underline',
         paddingTop: 10,
         paddingBottom: 10,
@@ -185,4 +189,4 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 10
     }
-});
+})

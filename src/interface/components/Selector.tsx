@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Text, Animated } from 'react-native';
+import { View, StyleSheet, Text, Animated, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { ButtonWrapper } from './common/ButtonWrapper';
+import { ColorScheme } from '../color/ColorScheme';
 
 type SelectorButton = {
     text: string
@@ -8,7 +9,7 @@ type SelectorButton = {
     selected: boolean
 }
 
-export function Selector({ buttons }: { buttons: SelectorButton[] }) {
+export function Selector({ buttons, scheme }: { buttons: SelectorButton[], scheme: ColorScheme }) {
 
     const [animatedButtons] = React.useState(buttons.map(button => {
         return {
@@ -39,6 +40,7 @@ export function Selector({ buttons }: { buttons: SelectorButton[] }) {
                         containerStyle={getContainerStyle(button)}
                         textStyle={getTextStyle(button)}
                         disabled={button.selected}
+                        scheme={scheme}
                     />
                 )
             }
@@ -49,22 +51,32 @@ export function Selector({ buttons }: { buttons: SelectorButton[] }) {
         return {
             ...styles.icon,
             width: animatedButtons.find(p => p.text === button.text)?.animated,
-            borderColor: button.selected ? 'black' : 'lightgray',
+            borderColor: button.selected ? scheme.primary : scheme.secondaryText,
             borderWidth: button.selected ? 2 : 1,
         }
     }
 
-    function getTextStyle(button: SelectorButton) {
+    function getTextStyle(button: SelectorButton): StyleProp<TextStyle> {
         return {
             ...styles.iconText,
-            color: button.selected ? 'black' : 'darkgray',
+            color: button.selected ? scheme.primary : scheme.secondaryText,
             fontWeight: button.selected ? 'bold' : 'normal',
             fontSize: button.selected ? 16 : 14
         }
     }
 }
 
-function SelectorButton({ text, onPress, disabled, containerStyle, textStyle }: any) {
+
+interface ISelectorButtonProps {
+    text: string
+    onPress: () => void
+    disabled: boolean
+    containerStyle: any
+    textStyle: StyleProp<TextStyle>
+    scheme: ColorScheme
+}
+
+function SelectorButton({ text, onPress, disabled, containerStyle, textStyle, scheme }: ISelectorButtonProps) {
     return <ButtonWrapper
         renderPressed={() => render(true)}
         renderNormal={() => render(false)}
@@ -75,7 +87,7 @@ function SelectorButton({ text, onPress, disabled, containerStyle, textStyle }: 
     function render(isPressed: boolean) {
         return <Animated.View style={{
             ...containerStyle,
-            borderColor: isPressed ? 'black' : containerStyle.borderColor
+            borderColor: isPressed ? scheme.primaryText : containerStyle.borderColor
         }}>
             <Text style={textStyle}>
                 {text}

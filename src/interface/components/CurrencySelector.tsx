@@ -1,8 +1,9 @@
 import React from 'react';
 import { Currency } from '../../domain/repositories/UserPreferencesRepository';
 import { Selector } from './Selector';
+import { ColorScheme } from '../color/ColorScheme';
 
-export default function CurrencySelector({ currency, onChange }: { currency: Currency, onChange: (currency: Currency) => void }) {
+export default function CurrencySelector({ currency, onChange, scheme }: { currency: Currency, onChange: (currency: Currency) => void, scheme: ColorScheme }) {
     const buttons = [
         {
             text: '₽',
@@ -21,5 +22,5 @@ export default function CurrencySelector({ currency, onChange }: { currency: Cur
         },
     ];
 
-    return <Selector buttons={buttons} />
+    return <Selector buttons={buttons} scheme={scheme} />
 }

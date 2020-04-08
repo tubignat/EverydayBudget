@@ -4,12 +4,35 @@ import { View, Text, TextInput, Animated, TouchableWithoutFeedback, StyleSheet }
 import AmountInput from './TextInputWithTemporaryInvalidValue';
 import { TextButton } from './TextButton';
 import { ApplicationContext } from '../ApplicationContext';
+import { ApplicationState } from '../ApplicationState';
+import { ColorScheme } from '../color/ColorScheme';
+import { Expense, ExpenseId } from '../../domain/repositories/ExpensesRepository';
+import { Income, IncomeId } from '../../domain/repositories/IncomesRepository';
 
-export class IncomesList extends Component {
+interface IIncomesListProps {
+    incomes: (Income | Expense)[]
+    thereAreNoValuesYetText: string
+    onRemove: (id: IncomeId | ExpenseId) => void
+    onAmountChanged: (id: IncomeId | ExpenseId, amount: number) => void
+    onDescriptionChanged: (id: IncomeId | ExpenseId, description: string) => void
+    onAdd: () => void
+}
+
+interface IIncomesListState {
+    moveAnim: Animated.Value
+    fontSizeAnim: Animated.Value
+    fadeAnim: Animated.Value
+}
+
+export class IncomesList extends Component<IIncomesListProps, IIncomesListState> {
 
     static contextType = ApplicationContext;
 
-    constructor(props) {
+    context!: ApplicationState;
+    addButtonRef: View | null = null;
+    addButtonRef2: View | null = null;
+
+    constructor(props: IIncomesListProps) {
         super(props);
         this.state = {
             moveAnim: new Animated.Value(0),
@@ -19,7 +42,8 @@ export class IncomesList extends Component {
     }
 
     render() {
-        const { locale } = this.context;
+        const { locale, colorScheme } = this.context;
+        const styles = getStyles(colorScheme);
 
         return <View style={styles.incomesList}>
             {
@@ -34,7 +58,15 @@ export class IncomesList extends Component {
                         {this.props.thereAreNoValuesYetText}
                     </Animated.Text>
                     <View style={{ opacity: this.props.incomes.length === 0 ? 1 : 0 }}>
-                        <TextButton forwardedRef={ref => this.addButonRef = ref} text={locale.add} height={50} fontSize={15} onPress={this.onAdd} />
+                        <TextButton
+                            forwardedRef={ref => this.addButtonRef = ref}
+                            text={locale.add}
+                            height={50}
+                            fontSize={15}
+                            onPress={this.onAdd}
+                            scheme={colorScheme}
+                            disabled={false}
+                        />
                     </View>
                 </Animated.View>
             }
@@ -61,7 +93,15 @@ export class IncomesList extends Component {
                             { scaleX: this.state.fontSizeAnim },
                             { scaleY: this.state.fontSizeAnim }]
                     }}>
-                        <TextButton forwardedRef={ref => this.addButtonRef2 = ref} text={locale.add} height={48} fontSize={18} onPress={this.props.onAdd} />
+                        <TextButton
+                            forwardedRef={ref => this.addButtonRef2 = ref}
+                            text={locale.add}
+                            height={48}
+                            fontSize={18}
+                            onPress={this.props.onAdd}
+                            scheme={colorScheme}
+                            disabled={false}
+                        />
                     </Animated.View>
                 }
             </View>
@@ -70,7 +110,7 @@ export class IncomesList extends Component {
 
     onAdd = () => {
 
-        this.addButonRef.measure((fx, fy, width, height, px) => {
+        this.addButtonRef?.measure((fx, fy, width, height, px) => {
             this.state.moveAnim.setValue(px - 40 - 24);
             this.state.fontSizeAnim.setValue(0.85);
             this.state.fadeAnim.setValue(1);
@@ -88,9 +128,9 @@ export class IncomesList extends Component {
 
     onRemoveAnimationStart = () => {
         if (this.props.incomes.length === 1) {
-            this.addButonRef.measure((fx, fy, width, height, px) => {
+            this.addButtonRef?.measure((fx, fy, width, height, px) => {
 
-                this.addButtonRef2.measure((fx, fy, width, height, px2) => {
+                this.addButtonRef2?.measure((fx, fy, width, height, px2) => {
 
                     const toValue = this.context.language === 'ru' ? px - px2 - 4 : px - px2;
                     Animated
@@ -110,6 +150,8 @@ class IncomeView extends Component {
 
     static contextType = ApplicationContext;
 
+    context !: ApplicationState;
+
     constructor(props) {
         super(props);
 
@@ -125,7 +167,8 @@ class IncomeView extends Component {
     }
 
     render() {
-        const { locale, currency } = this.context;
+        const { locale, currency, colorScheme } = this.context;
+        const styles = getStyles(colorScheme);
 
         return <Animated.View style={{
             ...styles.incomeView,
@@ -149,13 +192,14 @@ class IncomeView extends Component {
                 value={this.props.income.description}
                 selectTextOnFocus
                 placeholder={locale.description}
+                placeholderTextColor={colorScheme.secondaryText}
             />
             <Animated.View style={{
                 ...styles.removeButtonContainer,
                 opacity: this.state.fadeAnim,
                 transform: [{ scaleX: this.state.fadeAnim }, { scaleY: this.state.fadeAnim }]
             }}>
-                <IconButton size={52} innerSize={20} icon='close-circle' color='rgb(255, 69, 58)'
+                <IconButton size={52} innerSize={20} icon='close-circle' color={colorScheme.danger}
                     onPress={this.onRemove} />
             </Animated.View>
         </Animated.View>
@@ -171,8 +215,7 @@ class IncomeView extends Component {
     }
 }
 
-
-const styles = StyleSheet.create({
+const getStyles = (scheme: ColorScheme) => StyleSheet.create({
     incomesList: {
         position: 'relative',
         width: '100%',
@@ -197,13 +240,14 @@ const styles = StyleSheet.create({
         marginTop: 16
     },
     emptyListText: {
-        color: 'gray',
+        color: scheme.secondaryText,
         fontSize: 15,
     },
     incomeViewText: {
         fontSize: 20,
         flexGrow: 2,
         flexShrink: 1,
+        color: scheme.primaryText
     },
     incomeViewAmount: {
         flexDirection: 'row',
@@ -216,6 +260,7 @@ const styles = StyleSheet.create({
     },
     incomeViewAmountText: {
         fontSize: 20,
+        color: scheme.primaryText
     },
     removeButtonContainer: {
     },

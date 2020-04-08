@@ -14,7 +14,7 @@ import { SetUpMonthsRepository } from './src/domain/repositories/SetUpMonthsRepo
 import { EnsureMonthIsSetUpService } from './src/domain/services/EnsureMonthIsSetUpService';
 import { UserPreferencesRepository } from './src/domain/repositories/UserPreferencesRepository';
 import { ApplicationContext } from './src/interface/ApplicationContext';
-import { AppState, AppStateStatus, Image, Animated } from 'react-native';
+import { AppState, AppStateStatus, Image, Animated, View, StyleSheet } from 'react-native';
 import * as Font from 'expo-font';
 
 @observer
@@ -104,7 +104,15 @@ export default class App extends Component<{}, {
         return (
             this.state.isInitialized &&
             <ApplicationContext.Provider value={this.applicationState}>
-                <Swiper loop={false} index={1} bounces={true} scrollEnabled={!this.state.isScrollLocked} showsPagination={!this.state.isScrollLocked}>
+                <Swiper
+                    loop={false}
+                    index={1}
+                    bounces={true}
+                    scrollEnabled={!this.state.isScrollLocked}
+                    showsPagination={!this.state.isScrollLocked}
+                    dotColor={this.applicationState.colorScheme.secondaryText}
+                    activeDotColor={this.applicationState.colorScheme.primary}
+                >
                     <Settings />
                     <Home />
                     <TodaySpendings />
@@ -113,10 +121,14 @@ export default class App extends Component<{}, {
                         onModalClose={() => this.setState({ isScrollLocked: false })}
                     />
                 </Swiper>
+
+                <View style={{
+                    ...styles.background,
+                    backgroundColor: this.applicationState.colorScheme.background
+                }} />
                 <Animated.View style={{
-                    height: '100%', width: '100%', justifyContent: 'center',
-                    alignItems: 'center', position: 'absolute', top: 0,
-                    backgroundColor: 'white',
+                    ...styles.protectingImage,
+                    backgroundColor: this.applicationState.colorScheme.background,
                     opacity: this.state.protectScreenOpacity,
                     display: this.state.protectScreenDisplay ? 'flex' : 'none'
                 }}>
@@ -126,3 +138,23 @@ export default class App extends Component<{}, {
         );
     }
 }
+
+const styles = StyleSheet.create({
+    background: {
+        height: '100%',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        top: 0,
+        zIndex: -1,
+    },
+    protectingImage: {
+        height: '100%',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        top: 0,
+    }
+})

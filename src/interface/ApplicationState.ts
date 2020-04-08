@@ -4,10 +4,12 @@ import { IIncomesRepository, Income, IncomeId } from "../domain/repositories/Inc
 import { BudgetService } from "../domain/services/BudgetService";
 import { observable, computed } from "mobx";
 import { EnsureMonthIsSetUpService } from "../domain/services/EnsureMonthIsSetUpService";
-import { Language, Currency, IUserPreferencesRepository, SortMode } from "../domain/repositories/UserPreferencesRepository";
+import { Language, Currency, IUserPreferencesRepository, SortMode, ColorSchemePreference } from "../domain/repositories/UserPreferencesRepository";
 import * as Localization from 'expo-localization';
 import { enLocale } from "./locale/EnLocale";
 import { ruLocale } from "./locale/RuLocale";
+import { lightColorScheme } from "./color/LightColorScheme";
+import { darkColorScheme } from "./color/DarkColorScheme";
 
 export class ApplicationState {
     private expensesRepository: IExpensesRepository;
@@ -36,6 +38,7 @@ export class ApplicationState {
 
     @observable public language: Language = 'en';
     @observable public currency: Currency = '$';
+    @observable public colorSchemePreference: ColorSchemePreference = 'system';
     @observable public sortExpenses: SortMode = 'none';
     @observable public sortIncomes: SortMode = 'none';
 
@@ -65,6 +68,10 @@ export class ApplicationState {
         return this.language === 'ru' ? ruLocale : enLocale;
     }
 
+    @computed public get colorScheme() {
+        return lightColorScheme;
+    }
+
     @computed public get todaysDelta() {
         return this.budgetPerDay - this.todaysSpendings.map(s => s.amount).reduce((sum, spending) => sum + spending, 0);
     }
@@ -91,6 +98,7 @@ export class ApplicationState {
         this.currency = preferences.currency ?? this.getCurrencyFromSystem();
         this.sortExpenses = preferences.sortExpenses ?? 'none';
         this.sortIncomes = preferences.sortIncomes ?? 'none';
+        this.colorSchemePreference = preferences.colorSchemePreference;
     }
 
     public addSpending = (day: number, amount: number) => {
@@ -143,7 +151,8 @@ export class ApplicationState {
             currency: newCurrency,
             language: this.language,
             sortExpenses: this.sortExpenses,
-            sortIncomes: this.sortIncomes
+            sortIncomes: this.sortIncomes,
+            colorSchemePreference: this.colorSchemePreference,
         });
         this.init();
     }
@@ -153,7 +162,8 @@ export class ApplicationState {
             language: newLanguage,
             currency: this.currency,
             sortExpenses: this.sortExpenses,
-            sortIncomes: this.sortIncomes
+            sortIncomes: this.sortIncomes,
+            colorSchemePreference: this.colorSchemePreference,
         });
         this.init();
     }
@@ -163,6 +173,7 @@ export class ApplicationState {
             language: this.language,
             currency: this.currency,
             sortExpenses: mode,
+            colorSchemePreference: this.colorSchemePreference,
             sortIncomes: this.sortIncomes
         });
         this.init();
@@ -173,6 +184,7 @@ export class ApplicationState {
             language: this.language,
             currency: this.currency,
             sortExpenses: this.sortExpenses,
+            colorSchemePreference: this.colorSchemePreference,
             sortIncomes: mode
         });
         this.init();

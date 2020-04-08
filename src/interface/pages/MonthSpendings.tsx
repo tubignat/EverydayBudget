@@ -10,8 +10,11 @@ import {
 import Page from '../components/Page'
 import { observer } from 'mobx-react';
 import { SpendingId, Spending } from '../../domain/repositories/SpendingsRepository';
-import { DaysSpendingsPanel, TableHeader, TableRow } from '../components/MonthSpendingsTable';
+import { TableHeader, TableRow } from '../components/MonthSpendingsTable';
+import { DaysSpendingsPanel } from '../components/DaySpendingsPanel';
 import { ApplicationContext } from '../ApplicationContext';
+import { ApplicationState } from '../ApplicationState';
+import { ColorScheme } from '../color/ColorScheme';
 
 interface IMonthSpendingsProps {
     onModalOpen: () => void,
@@ -28,6 +31,7 @@ interface IMonthSpendingsState {
 export default class MonthSpendings extends Component<IMonthSpendingsProps, IMonthSpendingsState> {
 
     static contextType = ApplicationContext;
+    context !: ApplicationState;
 
     constructor(props: IMonthSpendingsProps) {
         super(props);
@@ -42,6 +46,8 @@ export default class MonthSpendings extends Component<IMonthSpendingsProps, IMon
         const application = this.context;
         const days = Array.from({ length: application.daysInMonth }, (_, k) => k + 1);
         const budget = this.state.openedDay > 2 ? application.saldos[this.state.openedDay - 2] + application.budgetPerDay : application.budgetPerDay;
+
+        const styles = getStyles(application.colorScheme);
 
         return <View>
             {
@@ -58,7 +64,7 @@ export default class MonthSpendings extends Component<IMonthSpendingsProps, IMon
                     add={(day: number) => application.addSpending(day, 0)}
                 />
             }
-            <Page>
+            <Page scheme={application.colorScheme}>
                 <KeyboardAvoidingView behavior='padding'>
                     <ScrollView style={{ padding: 20, paddingTop: 45 }}>
                         <View style={{ paddingBottom: 120 }}>
@@ -97,10 +103,11 @@ export default class MonthSpendings extends Component<IMonthSpendingsProps, IMon
     }
 }
 
-const styles = StyleSheet.create({
+const getStyles = (scheme: ColorScheme) => StyleSheet.create({
     header: {
         fontSize: 40,
         fontWeight: '300',
-        marginBottom: 40
+        marginBottom: 40,
+        color: scheme.primaryText
     }
 });

@@ -5,6 +5,7 @@ import SpendingsList from '../components/SpendingsList'
 import { observer } from 'mobx-react';
 import { SpendingId } from '../../domain/repositories/SpendingsRepository';
 import { ApplicationContext } from '../ApplicationContext';
+import { ColorScheme } from '../color/ColorScheme';
 
 function TodaySpendings() {
 
@@ -14,8 +15,9 @@ function TodaySpendings() {
     }
 
     const spendings = application.todaysSpendings;
+    const styles = getStyles(application.colorScheme);
 
-    return <Page>
+    return <Page scheme={application.colorScheme}>
         <ScrollView style={styles.container}>
             <Text style={styles.header}>{application.locale.todaysExpenses}</Text>
             {
@@ -33,17 +35,18 @@ function TodaySpendings() {
 
 export default observer(TodaySpendings);
 
-const styles = StyleSheet.create({
+const getStyles = (scheme: ColorScheme) => StyleSheet.create({
     container: {
         padding: 20, paddingTop: 45
     },
     header: {
         fontSize: 40,
         fontWeight: '300',
-        marginBottom: 40
+        marginBottom: 40,
+        color: scheme.primaryText
     },
     emptyListText: {
-        color: 'gray',
+        color: scheme.secondaryText,
         fontSize: 15
     },
     emptyListTextContainer: {
@@ -54,7 +57,7 @@ const styles = StyleSheet.create({
     },
     border: {
         borderBottomWidth: 1,
-        borderColor: 'gray',
+        borderColor: scheme.secondaryText,
         marginLeft: 20,
         marginRight: 20
     },
