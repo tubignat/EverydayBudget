@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, Animated, TouchableWithoutFeedback, TextInput } from 'react-native';
 import { IconButton } from './IconButton';
-import AmountInput from './TextInputWithTemporaryInvalidValue';
+import AmountInput from './AmountInput';
 import { TextButton } from './TextButton';
 import { ApplicationContext } from '../ApplicationContext';
 import { Spending, SpendingId } from '../../domain/repositories/SpendingsRepository';

@@ -14,7 +14,7 @@ export class BudgetService {
     }
 
     getBudgetPerDay = (year: number, month: number) => {
-        const daysInMonth = this.daysInMonth(month, year);
+        const daysInMonth = this.daysInMonth(year, month);
 
         const totalIncome = this.incomesRepository.get(year, month).reduce((sum, income) => sum + income.amount, 0);
         const totalExpense = this.expensesRepository.get(year, month).reduce((sum, expense) => sum + expense.amount, 0);

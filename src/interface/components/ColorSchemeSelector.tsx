@@ -1,8 +1,7 @@
 import React from 'react';
-import { Language, ColorSchemePreference } from '../../domain/repositories/UserPreferencesRepository';
+import { ColorSchemePreference } from '../../domain/repositories/UserPreferencesRepository';
 import { Selector } from './Selector';
 import { ColorScheme } from '../color/ColorScheme';
-import { Alert } from 'react-native';
 
 interface IColorSchemeSelectorProps {
     preference: ColorSchemePreference,

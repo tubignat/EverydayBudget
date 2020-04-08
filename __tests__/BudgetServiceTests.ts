@@ -6,6 +6,17 @@ import { ISpendingsRepository } from "../src/domain/repositories/SpendingsReposi
 const year = 2020;
 const month = 0;
 
+test('getBudgetPerDay should correctly calculate how many days in the current month', () => {
+    const incomes = [29000];
+    const expenses: number[] = [];
+
+    const service = getBudgetService(incomes, expenses, []);
+
+    const budgetPerDay = service.getBudgetPerDay(2020, 1);
+
+    expect(budgetPerDay.toFixed(2)).toBe("1000.00");
+})
+
 test('getBudgetPerDay should calculate budget per day when both incomes and expenses are provided', () => {
     const incomes = [100000, 15000];
     const expenses = [75000, 5000, 10000];

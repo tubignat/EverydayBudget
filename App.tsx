@@ -132,7 +132,7 @@ export default class App extends Component<{}, {
                     opacity: this.state.protectScreenOpacity,
                     display: this.state.protectScreenDisplay ? 'flex' : 'none'
                 }}>
-                    <Image source={require('./assets/icon.png')} style={{ width: 120, height: 120 }} />
+                    <Image source={require('./assets/protection_screen_icon.png')} style={{ width: 120, height: 120 }} />
                 </Animated.View>
             </ApplicationContext.Provider>
         );
