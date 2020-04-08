@@ -1,13 +1,28 @@
 import React from 'react';
-import { Animated, PanResponder, TouchableWithoutFeedback, View, Dimensions, StyleSheet } from 'react-native';
+import { Animated, PanResponder, TouchableWithoutFeedback, View, Dimensions, StyleSheet, PanResponderInstance } from 'react-native';
 
-let Window = Dimensions.get('window');
-class SlidingUpPanel extends React.Component {
-    constructor(props) {
+const Window = Dimensions.get('window');
+
+interface ISlidingUpPanelProps {
+    offsetTop: number
+    backgroundColor: string
+    onClose: () => void
+}
+
+interface ISlidingUpPanelState {
+    pan: Animated.Value
+}
+
+class SlidingUpPanel extends React.Component<ISlidingUpPanelProps, ISlidingUpPanelState> {
+
+    private panResponder: PanResponderInstance;
+
+    constructor(props: ISlidingUpPanelProps) {
         super(props);
         this.state = {
             pan: new Animated.Value(Window.height - 20)
         };
+
         this.panResponder = PanResponder.create({
             onStartShouldSetPanResponder: () => true,
             onPanResponderMove: Animated.event([null, {
@@ -40,7 +55,7 @@ class SlidingUpPanel extends React.Component {
         return (
             <View style={styles.mainContainer}>
 
-                <TouchableWithoutFeedback style={styles.backdropTouchable} onPress={this.close} on>
+                <TouchableWithoutFeedback style={styles.backdropTouchable} onPress={this.close}>
                     <Animated.View style={[styles.backdrop, { opacity: opacity }]} />
                 </TouchableWithoutFeedback>
 
@@ -51,7 +66,7 @@ class SlidingUpPanel extends React.Component {
                                 <View style={styles.handle} />
                             </View>
                         </View>
-                        <View style={[styles.content, { height: Window.height - offsetTop - 7 }]}>
+                        <View style={{ height: Window.height - offsetTop - 7 }}>
                             {this.props.children}
                         </View>
                     </Animated.View>

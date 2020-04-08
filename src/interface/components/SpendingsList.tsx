@@ -69,7 +69,7 @@ class SpendingView extends Component<ISpendingViewProps, ISpendingViewState> {
             opacity: this.state.fadeAnim
         }}>
             <Text style={styles.spendingViewText}>{formatMoney(this.props.amount)} {currency}</Text>
-            <IconButton size={40} innerSize={20} icon={'close-circle'} color={this.props.scheme.danger} onPress={this.onRemove} />
+            <IconButton size={40} innerSize={20} icon={'close-circle'} color={this.props.scheme.danger} onPress={this.onRemove} disabled={false} />
         </Animated.View>
     }
 

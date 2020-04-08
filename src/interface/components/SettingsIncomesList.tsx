@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { IconButton } from './IconButton';
 import { View, Text, TextInput, Animated, TouchableWithoutFeedback, StyleSheet } from 'react-native';
-import AmountInput from './TextInputWithTemporaryInvalidValue';
+import AmountInput from './AmountInput';
 import { TextButton } from './TextButton';
 import { ApplicationContext } from '../ApplicationContext';
 import { ApplicationState } from '../ApplicationState';
@@ -74,7 +74,6 @@ export class IncomesList extends Component<IIncomesListProps, IIncomesListState>
                 {
                     this.props.incomes.map((i) =>
                         <IncomeView
-                            locale={locale}
                             key={i.id}
                             income={i}
                             onRemoveButtonPressed={() => this.props.onRemove(i.id)}
@@ -146,21 +145,33 @@ export class IncomesList extends Component<IIncomesListProps, IIncomesListState>
     }
 }
 
-class IncomeView extends Component {
+interface IIncomeViewProps {
+    income: Income | Expense
+    onAmountChanged: (newAmount: number) => void
+    onDescriptionChanged: (newDescription: string) => void
+    onRemoveAnimationStart: () => void
+    onRemoveButtonPressed: () => void
+}
+
+interface IIncomeViewState {
+    fadeAnim: Animated.Value
+    expandAnim: Animated.Value
+}
+
+class IncomeView extends Component<IIncomeViewProps, IIncomeViewState> {
 
     static contextType = ApplicationContext;
 
     context !: ApplicationState;
+    textInputRef: TextInput | null = null;
 
-    constructor(props) {
+    constructor(props: IIncomeViewProps) {
         super(props);
 
         this.state = {
             fadeAnim: new Animated.Value(0),
             expandAnim: new Animated.Value(0)
         };
-
-        this.textInputRef = React.createRef();
 
         Animated.timing(this.state.fadeAnim, { toValue: 1, duration: 150 }).start();
         Animated.timing(this.state.expandAnim, { toValue: 52, duration: 150 }).start();
@@ -175,13 +186,14 @@ class IncomeView extends Component {
             height: this.state.expandAnim,
             opacity: this.state.fadeAnim
         }}>
-            <TouchableWithoutFeedback onPress={() => this.textInputRef.focus()}>
+            <TouchableWithoutFeedback onPress={() => this.textInputRef?.focus()}>
                 <View style={styles.incomeViewAmount}>
                     <AmountInput
                         forwardedRef={ref => this.textInputRef = ref}
                         style={styles.incomeViewAmountText}
                         value={this.props.income.amount}
                         onChange={(newAmount) => this.props.onAmountChanged(newAmount)}
+                        placeholder={''}
                     />
                     <Text style={styles.incomeViewAmountText}> {currency}</Text>
                 </View>
@@ -200,7 +212,7 @@ class IncomeView extends Component {
                 transform: [{ scaleX: this.state.fadeAnim }, { scaleY: this.state.fadeAnim }]
             }}>
                 <IconButton size={52} innerSize={20} icon='close-circle' color={colorScheme.danger}
-                    onPress={this.onRemove} />
+                    onPress={this.onRemove} disabled={false} />
             </Animated.View>
         </Animated.View>
     }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ButtonWrapper } from './common/ButtonWrapper';
-import { IconOutline } from '@ant-design/icons-react-native';
+import { IconOutline, OutlineGlyphMapType } from '@ant-design/icons-react-native';
 import { View, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -12,8 +12,17 @@ const styles = StyleSheet.create({
     }
 })
 
-export class IconButton extends Component {
-    constructor(props) {
+interface IIconButtonProps {
+    size: number
+    innerSize: number
+    onPress: () => void
+    color: string
+    icon: OutlineGlyphMapType
+    disabled: boolean
+}
+
+export class IconButton extends Component<IIconButtonProps> {
+    constructor(props: IIconButtonProps) {
         super(props);
         this.state = {};
     }

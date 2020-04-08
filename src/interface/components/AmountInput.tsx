@@ -1,10 +1,23 @@
 
 import React, { Component } from 'react';
-import { TextInput } from 'react-native';
+import { TextInput, StyleProp, TextStyle } from 'react-native';
 import { formatMoney } from '../NumberFormat';
 
-class AmountInput extends Component {
-    constructor(props) {
+interface IAmountInputProps {
+    forwardedRef?: React.Ref<TextInput>
+    placeholder: string
+    style: StyleProp<TextStyle>
+    value: number
+    onChange: (value: number) => void
+}
+
+interface IAmountInputState {
+    isTemporaryInvalidValue: boolean
+    temporaryValue: string
+}
+
+class AmountInput extends Component<IAmountInputProps, IAmountInputState> {
+    constructor(props: IAmountInputProps) {
         super(props);
         this.state = {
             isTemporaryInvalidValue: false,
@@ -25,7 +38,7 @@ class AmountInput extends Component {
         />
     }
 
-    handleOnChange = (text) => {
+    handleOnChange = (text: string) => {
         this.setState({ isTemporaryInvalidValue: true, temporaryValue: text });
     }
 
@@ -37,7 +50,7 @@ class AmountInput extends Component {
         this.setState({ isTemporaryInvalidValue: false, temporaryValue: '' })
     }
 
-    parseNumber = (numberString) => {
+    parseNumber = (numberString: string) => {
         return Number(numberString.replace(/\u2009/g, ''))
     }
 }

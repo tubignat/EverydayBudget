@@ -78,7 +78,7 @@ function DayOfMonthSpending({ spending, remove, edit }: IDayOfMonthSpendingProps
                 <Text style={styles.incomeViewAmountText}> {application.currency}</Text>
             </View>
         </TouchableWithoutFeedback>
-        <IconButton size={40} innerSize={18} icon='close-circle' color={application.colorScheme.danger} onPress={onRemove} />
+        <IconButton size={40} innerSize={18} icon='close-circle' color={application.colorScheme.danger} onPress={onRemove} disabled={false} />
     </Animated.View>
 
 

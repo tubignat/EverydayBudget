@@ -109,7 +109,7 @@ export default class Settings extends Component<{}, {}, ApplicationState> {
                             </View>
 
                             <View style={{
-                                ...styles.inlineSettingContainer, marginTop: 24,
+                                ...styles.inlineSettingContainer, marginTop: 32,
                                 flexDirection: isSmallScreen ? 'column' : 'row',
                                 alignItems: isSmallScreen ? 'flex-start' : 'center',
                                 height: isSmallScreen ? 88 : 32
