@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ViewStyle } from 'react-native';
+import { View, ViewStyle, GestureResponderEvent } from 'react-native';
 
 interface IButtonWrapperProps {
     forwardedRef?: React.Ref<View>
@@ -7,7 +7,7 @@ interface IButtonWrapperProps {
     disabled: boolean
     renderPressed: () => JSX.Element
     renderNormal: () => JSX.Element
-    onPress: () => void
+    onPress: (position: { x: number, y: number }) => void
 }
 
 interface IButtonWrapperState {
@@ -35,8 +35,8 @@ export class ButtonWrapper extends Component<IButtonWrapperProps, IButtonWrapper
         </View>
     }
 
-    onRelease = () => {
-        this.props.onPress();
+    onRelease = (event: GestureResponderEvent) => {
+        this.props.onPress({ x: event.nativeEvent.pageX, y: event.nativeEvent.pageY });
         this.setState({ isPressed: false });
     }
 

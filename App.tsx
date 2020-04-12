@@ -113,7 +113,10 @@ export default class App extends Component<{}, {
                     dotColor={this.applicationState.colorScheme.secondaryText}
                     activeDotColor={this.applicationState.colorScheme.primary}
                 >
-                    <Settings />
+                    <Settings
+                        onModalOpen={() => this.setState({ isScrollLocked: true })}
+                        onModalClose={() => this.setState({ isScrollLocked: false })}
+                    />
                     <Home />
                     <TodaySpendings />
                     <MonthSpendings

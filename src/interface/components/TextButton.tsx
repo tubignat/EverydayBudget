@@ -10,7 +10,7 @@ interface ITextButtonProps {
     fontSize: number
     scheme: ColorScheme
     text: string
-    onPress: () => void
+    onPress: (position: { x: number, y: number }) => void
 }
 
 export class TextButton extends Component<ITextButtonProps> {

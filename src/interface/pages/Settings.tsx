@@ -13,16 +13,34 @@ import { SortButton } from '../components/SortButton';
 import { formatMoney } from '../NumberFormat';
 import { ColorScheme } from '../color/ColorScheme';
 import ColorSchemeSelector from '../components/ColorSchemeSelector';
+import { TextButton } from '../components/TextButton';
+import { DatePickerModal } from '../components/DatePickerModal/DatePickerModal';
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = width < 350;
 const isBigScreen = height > 800;
 
 @observer
-export default class Settings extends Component<{}, {}, ApplicationState> {
+export default class Settings extends Component<{
+    onModalOpen: () => void,
+    onModalClose: () => void
+}, {
+    isPickerOpen: boolean,
+    pickerModalOffsetY: number,
+    chosenDay: number
+}> {
 
     static contextType = ApplicationContext;
     context!: ApplicationState;
+
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            isPickerOpen: false,
+            pickerModalOffsetY: 0,
+            chosenDay: 4
+        }
+    }
 
     render() {
         const application = this.context;
@@ -40,101 +58,131 @@ export default class Settings extends Component<{}, {}, ApplicationState> {
 
         const showSortExpensesButton = this.canBeSorted(application.expenses.map(e => e.amount));
 
-        return <Page scheme={application.colorScheme}>
-            <KeyboardAvoidingView behavior='padding'>
-                <ScrollView style={styles.pageContainer}>
-                    <View style={{ paddingBottom: 130 }}>
-                        <Text style={styles.header}>
-                            {application.locale.settingsPageTitle}
-                        </Text>
+        return <View>
+            <DatePickerModal
+                scheme={application.colorScheme}
+                isOpen={this.state.isPickerOpen}
+                expansionPoint={{ x: isBigScreen ? width - 24 - 16 - 82 : width - 24 - 82, y: this.state.pickerModalOffsetY }}
+                chosenDay={this.state.chosenDay}
+                onBackdropClick={() => {
+                    this.setState({ isPickerOpen: false });
+                    this.props.onModalClose();
+                }}
+                onDateClick={day => {
+                    this.setState({ chosenDay: day, isPickerOpen: false });
+                    this.props.onModalClose();
+                }}
+            />
+            <Page scheme={application.colorScheme}>
+                <KeyboardAvoidingView behavior='padding'>
+                    <ScrollView style={styles.pageContainer}>
+                        <View style={{ paddingBottom: 130 }}>
+                            <Text style={styles.header}>
+                                {application.locale.settingsPageTitle}
+                            </Text>
 
-                        <View style={styles.pageContent}>
-                            <View style={styles.listSubheaderContainer}>
-                                <Text style={styles.subheader}>
-                                    {application.locale.incomes}
-                                </Text>
-                                {
-                                    showSortIncomesButton &&
-                                    <SortButton
-                                        onPress={() => application.changeSortIncomes(application.sortIncomes === 'none' ? 'desc' : 'none')}
-                                        checked={application.sortIncomes !== 'none'}
-                                        scheme={application.colorScheme}
-                                    />
-                                }
-                            </View>
+                            <View style={styles.pageContent}>
+                                <View style={styles.listSubheaderContainer}>
+                                    <Text style={styles.subheader}>
+                                        {application.locale.incomes}
+                                    </Text>
+                                    {
+                                        showSortIncomesButton &&
+                                        <SortButton
+                                            onPress={() => application.changeSortIncomes(application.sortIncomes === 'none' ? 'desc' : 'none')}
+                                            checked={application.sortIncomes !== 'none'}
+                                            scheme={application.colorScheme}
+                                        />
+                                    }
+                                </View>
 
-                            <IncomesList
-                                incomes={incomes}
-                                thereAreNoValuesYetText={application.locale.noIncomesYet}
-                                onRemove={application.removeIncome}
-                                onAmountChanged={(id: IncomeId, amount: number) => application.editIncome(id, amount, null)}
-                                onDescriptionChanged={(id: IncomeId, description: string) => application.editIncome(id, null, description)}
-                                onAdd={() => application.addIncome(0, application.locale.newIncome)}
-                            />
-
-                            <View style={styles.listSubheaderContainer}>
-                                <Text style={styles.subheader}>{application.locale.recurringExpenses}</Text>
-                                {
-                                    showSortExpensesButton &&
-                                    <SortButton
-                                        onPress={() => application.changeSortExpenses(application.sortExpenses === 'none' ? 'desc' : 'none')}
-                                        checked={application.sortExpenses !== 'none'}
-                                        scheme={application.colorScheme}
-                                    />
-                                }
-                            </View>
-
-                            <IncomesList
-                                incomes={expenses}
-                                thereAreNoValuesYetText={application.locale.noExpensesYet}
-                                onRemove={application.removeExpense}
-                                onAmountChanged={(id: ExpenseId, amount: number) => application.editExpense(id, amount, null)}
-                                onDescriptionChanged={(id: ExpenseId, description: string) => application.editExpense(id, null, description)}
-                                onAdd={() => application.addExpense(0, application.locale.newExpense)}
-                            />
-
-                            <View style={styles.inlineSettingContainer}>
-                                <Text style={styles.subheader}>{application.locale.budgetPerDay}</Text>
-                                <Text style={styles.budgetPerDayAmount}>{formatMoney(application.budgetPerDay)} {application.currency}</Text>
-                            </View>
-
-                            <View style={{ ...styles.inlineSettingContainer, marginTop: 40 }}>
-                                <Text style={styles.subheader}>{application.locale.currency}</Text>
-                                <CurrencySelector currency={application.currency} onChange={application.changeCurrency} scheme={application.colorScheme} />
-                            </View>
-
-                            <View style={{ ...styles.inlineSettingContainer, marginTop: -20 }}>
-                                <Text style={styles.subheader}>{application.locale.language}</Text>
-                                <LanguageSelector language={application.language} onChange={application.changeLanguage} scheme={application.colorScheme} />
-                            </View>
-
-                            <View style={{
-                                ...styles.inlineSettingContainer, marginTop: 32,
-                                flexDirection: isSmallScreen ? 'column' : 'row',
-                                alignItems: isSmallScreen ? 'flex-start' : 'center',
-                                height: isSmallScreen ? 88 : 32
-                            }}>
-                                <Text style={styles.subheader}>{application.locale.appearance}</Text>
-                                <ColorSchemeSelector
-                                    preference={application.colorSchemePreference}
-                                    onChange={application.changeColorSchemePreference}
-                                    scheme={application.colorScheme}
+                                <IncomesList
+                                    incomes={incomes}
+                                    thereAreNoValuesYetText={application.locale.noIncomesYet}
+                                    onRemove={application.removeIncome}
+                                    onAmountChanged={(id: IncomeId, amount: number) => application.editIncome(id, amount, null)}
+                                    onDescriptionChanged={(id: IncomeId, description: string) => application.editIncome(id, null, description)}
+                                    onAdd={() => application.addIncome(0, application.locale.newIncome)}
                                 />
-                            </View>
 
-                            <View style={styles.linksContainer}>
-                                <Text style={styles.link} onPress={() => Linking.openURL('https://everydaybudget.app')}>
-                                    {application.locale.website}
-                                </Text>
-                                <Text style={styles.link} onPress={() => Linking.openURL('https://everydaybudget.app/policy')}>
-                                    {application.locale.privacyPolicy}
-                                </Text>
+                                <View style={styles.listSubheaderContainer}>
+                                    <Text style={styles.subheader}>{application.locale.recurringExpenses}</Text>
+                                    {
+                                        showSortExpensesButton &&
+                                        <SortButton
+                                            onPress={() => application.changeSortExpenses(application.sortExpenses === 'none' ? 'desc' : 'none')}
+                                            checked={application.sortExpenses !== 'none'}
+                                            scheme={application.colorScheme}
+                                        />
+                                    }
+                                </View>
+
+                                <IncomesList
+                                    incomes={expenses}
+                                    thereAreNoValuesYetText={application.locale.noExpensesYet}
+                                    onRemove={application.removeExpense}
+                                    onAmountChanged={(id: ExpenseId, amount: number) => application.editExpense(id, amount, null)}
+                                    onDescriptionChanged={(id: ExpenseId, description: string) => application.editExpense(id, null, description)}
+                                    onAdd={() => application.addExpense(0, application.locale.newExpense)}
+                                />
+
+                                <View style={styles.inlineSettingContainer}>
+                                    <Text style={styles.subheader}>{application.locale.budgetPerDay}</Text>
+                                    <Text style={styles.budgetPerDayAmount}>{formatMoney(application.budgetPerDay)} {application.currency}</Text>
+                                </View>
+
+                                <View style={styles.inlineSettingContainer}>
+                                    <Text style={styles.subheader}>{application.locale.startOfPeriod}</Text>
+                                    <TextButton
+                                        scheme={application.colorScheme}
+                                        fontSize={20}
+                                        height={22}
+                                        disabled={false}
+                                        text={application.locale.getDateText(this.state.chosenDay, application.month)}
+                                        onPress={(position) => {
+                                            this.setState({ isPickerOpen: true, pickerModalOffsetY: position.y });
+                                            this.props.onModalOpen();
+                                        }}
+                                    />
+                                </View>
+
+                                <View style={{ ...styles.inlineSettingContainer, marginTop: 40 }}>
+                                    <Text style={styles.subheader}>{application.locale.currency}</Text>
+                                    <CurrencySelector currency={application.currency} onChange={application.changeCurrency} scheme={application.colorScheme} />
+                                </View>
+
+                                <View style={{ ...styles.inlineSettingContainer, marginTop: -20 }}>
+                                    <Text style={styles.subheader}>{application.locale.language}</Text>
+                                    <LanguageSelector language={application.language} onChange={application.changeLanguage} scheme={application.colorScheme} />
+                                </View>
+
+                                <View style={{
+                                    ...styles.inlineSettingContainer, marginTop: 32,
+                                    flexDirection: isSmallScreen ? 'column' : 'row',
+                                    alignItems: isSmallScreen ? 'flex-start' : 'center',
+                                    height: isSmallScreen ? 88 : 32
+                                }}>
+                                    <Text style={styles.subheader}>{application.locale.appearance}</Text>
+                                    <ColorSchemeSelector
+                                        preference={application.colorSchemePreference}
+                                        onChange={application.changeColorSchemePreference}
+                                        scheme={application.colorScheme}
+                                    />
+                                </View>
+
+                                <View style={styles.linksContainer}>
+                                    <Text style={styles.link} onPress={() => Linking.openURL('https://everydaybudget.app')}>
+                                        {application.locale.website}
+                                    </Text>
+                                    <Text style={styles.link} onPress={() => Linking.openURL('https://everydaybudget.app/policy')}>
+                                        {application.locale.privacyPolicy}
+                                    </Text>
+                                </View>
                             </View>
                         </View>
-                    </View>
-                </ScrollView>
-            </KeyboardAvoidingView>
-        </Page>
+                    </ScrollView>
+                </KeyboardAvoidingView>
+            </Page></View>
     }
 
     canBeSorted = (amounts: number[]) => {

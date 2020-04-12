@@ -13,12 +13,14 @@ export type Locale = {
     noExpensesYet: string
     add: string
     budgetPerDay: string
+    startOfPeriod: string
     description: string
     language: string
     currency: string
     appearance: string
     website: string
     privacyPolicy: string
+    daysOfWeek: string
 
     todaysExpenses: string
     noExpensesToday: string
@@ -33,4 +35,5 @@ export type Locale = {
 
     getDateText: (day: number, month: number) => string
     getDayOfWeekAbbr: (dayOfWeek: number) => string
+    getMonthName: (month: number) => string
 }

@@ -3,7 +3,7 @@ import { View, StyleSheet, Text } from 'react-native';
 import { ButtonWrapper } from './common/ButtonWrapper';
 import { ColorScheme } from '../color/ColorScheme';
 
-export function SortButton({ onPress, checked, scheme }: { onPress: () => void, checked: boolean, scheme: ColorScheme }) {
+export function SortButton({ onPress, checked, scheme }: { onPress: (position: { x: number, y: number }) => void, checked: boolean, scheme: ColorScheme }) {
 
     const styles = getStyles(scheme);
 

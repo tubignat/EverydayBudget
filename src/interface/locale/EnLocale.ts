@@ -14,12 +14,14 @@ export const enLocale: Locale = {
     newExpense: 'New expense',
     noExpensesYet: 'No expenses yet. ',
     budgetPerDay: 'Budget per day',
+    startOfPeriod: 'Period starts',
     description: 'Description...',
     language: 'Language',
     currency: 'Currency',
     appearance: 'Appearance',
     website: 'Website',
     privacyPolicy: 'Privacy policy',
+    daysOfWeek: 'MTWTFSS',
 
     todaysExpenses: 'Today\'s spending',
     noExpensesToday: 'No spending today',
@@ -47,7 +49,9 @@ export const enLocale: Locale = {
         return `${months[month]} ${day}th`
     },
 
-    getDayOfWeekAbbr: (dayOfWeek: number) => daysOfWeekAbbr[dayOfWeek]
+    getDayOfWeekAbbr: (dayOfWeek: number) => daysOfWeekAbbr[dayOfWeek],
+
+    getMonthName: (month: number) => months[month]
 }
 
 const months: { [month: number]: string } = {

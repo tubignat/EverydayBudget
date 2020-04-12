@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     statusBar: {
         position: 'absolute',
         width: '100%',
-        zIndex: 2,
+        zIndex: 1,
         opacity: .9,
         height: isBigScreen ? 40 : 20
     }
