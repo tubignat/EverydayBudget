@@ -81,6 +81,7 @@ export default class App extends Component<{}, {
             incomesRepository,
             expensesRepository,
             spendingsRepository,
+            setUpMonthsRepository,
             userPreferencesRepository,
             ensureMonthIsSetUpService,
             budgetService);

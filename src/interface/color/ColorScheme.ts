@@ -3,6 +3,7 @@ export type ColorScheme = {
     lightBackground: string;
     primaryText: string;
     secondaryText: string;
+    barelyVisible: string;
     primary: string;
     danger: string;
     success: string;

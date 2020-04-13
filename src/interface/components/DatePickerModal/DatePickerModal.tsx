@@ -48,6 +48,7 @@ export function DatePickerModal(props: IDatePickerModalProps) {
                 month={application.month}
                 day={application.day}
                 chosenDay={props.chosenDay}
+                until={application.day}
                 cellSize={isBigScreen ? 40 : 35}
                 fontSize={isBigScreen ? 20 : 18}
                 onPress={props.onDateClick}

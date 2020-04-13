@@ -13,7 +13,7 @@ export class EnsureMonthIsSetUpService {
         this.setUpMonthsRepository = setUpMonthsRepository;
     }
 
-    ensureMonthIsSetUp = (year: number, month: number) => {
+    ensureMonthIsSetUp = (year: number, month: number, day: number) => {
         const incomes = this.incomesRepository.get(year, month);
         const expenses = this.expensesRepository.get(year, month);
 
@@ -28,7 +28,15 @@ export class EnsureMonthIsSetUpService {
             const previousMonthExpenses = this.expensesRepository.get(previousYear, previousMonth);
             this.expensesRepository.addMany(year, month, previousMonthExpenses);
 
-            this.setUpMonthsRepository.markMonthAsSetUp(year, month);
+            const startOfPeriod = this.setUpMonthsRepository.isMonthSetUp(previousYear, previousMonth) ? 1 : day;
+
+            this.setUpMonthsRepository.markMonthAsSetUp(year, month, startOfPeriod);
+        }
+
+        const monthSetUp = this.setUpMonthsRepository.getMonthSetUp(year, month);
+
+        if (monthSetUp && monthSetUp.startOfPeriod > day) {
+            this.setUpMonthsRepository.editMonthSetUp(year, month, day);
         }
     }
 

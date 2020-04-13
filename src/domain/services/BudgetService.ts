@@ -22,14 +22,14 @@ export class BudgetService {
         return (totalIncome - totalExpense) / daysInMonth;
     }
 
-    getSaldos = (budgetPerDay: number, year: number, month: number) => {
+    getSaldos = (budgetPerDay: number, year: number, month: number, startOfPeriod: number) => {
         const daysInMonth = this.daysInMonth(year, month);
         const spendings = this.spendingRepository.get(year, month);
-        const monthSpendings = spendings.filter(s => s.year === year && s.month === month).sort((a, b) => a.day - b.day);
+        const monthSpendings = spendings.filter(s => s.year === year && s.month === month && s.day >= startOfPeriod).sort((a, b) => a.day - b.day);
 
         let saldos = [];
 
-        let dayIterator = 0;
+        let dayIterator = startOfPeriod - 1;
         let spendingsIterator = 0;
 
         saldos[dayIterator] = budgetPerDay;

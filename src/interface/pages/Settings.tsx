@@ -26,8 +26,7 @@ export default class Settings extends Component<{
     onModalClose: () => void
 }, {
     isPickerOpen: boolean,
-    pickerModalOffsetY: number,
-    chosenDay: number
+    pickerModalOffsetY: number
 }> {
 
     static contextType = ApplicationContext;
@@ -37,8 +36,7 @@ export default class Settings extends Component<{
         super(props);
         this.state = {
             isPickerOpen: false,
-            pickerModalOffsetY: 0,
-            chosenDay: 4
+            pickerModalOffsetY: 0
         }
     }
 
@@ -63,14 +61,16 @@ export default class Settings extends Component<{
                 scheme={application.colorScheme}
                 isOpen={this.state.isPickerOpen}
                 expansionPoint={{ x: isBigScreen ? width - 24 - 16 - 82 : width - 24 - 82, y: this.state.pickerModalOffsetY }}
-                chosenDay={this.state.chosenDay}
+                chosenDay={application.startOfPeriod}
                 onBackdropClick={() => {
                     this.setState({ isPickerOpen: false });
                     this.props.onModalClose();
                 }}
                 onDateClick={day => {
-                    this.setState({ chosenDay: day, isPickerOpen: false });
-                    this.props.onModalClose();
+                    this.setState({ isPickerOpen: false }, () => {
+                        application.changeStartOfPeriod(day);
+                        this.props.onModalClose();
+                    });
                 }}
             />
             <Page scheme={application.colorScheme}>
@@ -138,7 +138,7 @@ export default class Settings extends Component<{
                                         fontSize={20}
                                         height={22}
                                         disabled={false}
-                                        text={application.locale.getDateText(this.state.chosenDay, application.month)}
+                                        text={application.locale.getDateText(application.startOfPeriod, application.month)}
                                         onPress={(position) => {
                                             this.setState({ isPickerOpen: true, pickerModalOffsetY: position.y });
                                             this.props.onModalOpen();

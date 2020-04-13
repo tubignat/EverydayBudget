@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ViewStyle, GestureResponderEvent } from 'react-native';
+import { View, ViewStyle, GestureResponderEvent, TouchableWithoutFeedback } from 'react-native';
 
 interface IButtonWrapperProps {
     forwardedRef?: React.Ref<View>
@@ -21,18 +21,18 @@ export class ButtonWrapper extends Component<IButtonWrapperProps, IButtonWrapper
     }
 
     render() {
-        return <View
-            ref={this.props.forwardedRef}
-            onStartShouldSetResponder={() => !this.props.disabled}
-            onResponderGrant={this.onGrant}
-            onResponderRelease={this.onRelease}
-            onResponderTerminate={this.onTerminate}
-            style={this.props.style}
+        return <TouchableWithoutFeedback
+            onPressIn={this.onGrant}
+            onPress={this.onRelease}
+            onPressOut={this.onTerminate}
+            disabled={this.props.disabled}
         >
-            {
-                this.state.isPressed ? this.props.renderPressed() : this.props.renderNormal()
-            }
-        </View>
+            <View ref={this.props.forwardedRef} style={this.props.style} >
+                {
+                    this.state.isPressed ? this.props.renderPressed() : this.props.renderNormal()
+                }
+            </View>
+        </TouchableWithoutFeedback>
     }
 
     onRelease = (event: GestureResponderEvent) => {

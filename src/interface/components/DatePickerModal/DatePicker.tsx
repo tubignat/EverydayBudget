@@ -9,6 +9,7 @@ interface IDatePickerProps {
     month: number
     day: number
     chosenDay: number
+    until: number
     cellSize: number
     fontSize: number
     scheme: ColorScheme
@@ -49,12 +50,12 @@ function DatePickerHeader(props: { scheme: ColorScheme, cellSize: number, fontSi
 }
 
 function DatePickerDaysOfMonth(props: {
-    scheme: ColorScheme, cellSize: number, fontSize: number, year: number, month: number, day: number, chosenDay: number,
+    scheme: ColorScheme, cellSize: number, fontSize: number, year: number, month: number, day: number, chosenDay: number, until: number,
     onPress: (day: number) => void
 }) {
     const styles = getStyles(props.scheme, props.cellSize, props.fontSize);
 
-    const daysOfMonthArray = getDaysOfMonthArray(props.year, props.month);
+    const daysOfMonthArray = getDaysOfMonthArray(props.year, props.month).filter(row => row[0] <= props.until);
     return <View>
         {
             daysOfMonthArray.map(renderArrayRow)
@@ -78,10 +79,11 @@ function DatePickerDaysOfMonth(props: {
                         text={day === 0 ? '' : day.toString()}
                         size={props.cellSize}
                         fontSize={props.fontSize}
-                        textColor={textColor}
+                        textColor={day > props.until ? props.scheme.barelyVisible : textColor}
                         backgroundColor={props.scheme.primary}
                         isChosen={day === props.chosenDay}
                         onPress={() => props.onPress(day)}
+                        disabled={day === 0 || day > props.until}
                     />
                 })
             }
@@ -90,13 +92,23 @@ function DatePickerDaysOfMonth(props: {
 }
 
 function getDaysOfMonthArray(year: number, month: number) {
-    return [
-        [0, 0, 1, 2, 3, 4, 5],
-        [6, 7, 8, 9, 10, 11, 12],
-        [13, 14, 15, 16, 17, 18, 19],
-        [20, 21, 22, 23, 24, 25, 26],
-        [27, 28, 29, 30, 0, 0, 0]
-    ]
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDayOfWeek = new Date(year, month, 1).getDay();
+
+    let result = Array.from({ length: daysInMonth }, (_, k) => k + 1)
+
+    result = Array.from({ length: firstDayOfWeek - 1 }, _ => 0).concat(result);
+
+    const len = 7 - result.length % 7;
+    result = result.concat(Array.from({ length: len === 7 ? 0 : len }, _ => 0))
+
+    const daysOfMonthArray: number[][] = [];
+
+    for (let i = 0; i < result.length / 7; i++) {
+        daysOfMonthArray.push(result.slice(i * 7, i * 7 + 7))
+    }
+
+    return daysOfMonthArray;
 }
 
 const getStyles = (scheme: ColorScheme, cellSize: number, fontSize: number) => StyleSheet.create({

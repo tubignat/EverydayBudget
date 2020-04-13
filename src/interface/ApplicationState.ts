@@ -11,11 +11,13 @@ import { ruLocale } from "./locale/RuLocale";
 import { lightColorScheme } from "./color/LightColorScheme";
 import { darkColorScheme } from "./color/DarkColorScheme";
 import { Appearance } from 'react-native-appearance';
+import { ISetUpMonthsRepository } from "../domain/repositories/SetUpMonthsRepository";
 
 export class ApplicationState {
     private expensesRepository: IExpensesRepository;
     private spendingRepository: ISpendingsRepository;
     private incomesRepository: IIncomesRepository;
+    private setUpMonthRepository: ISetUpMonthsRepository;
     private userPreferencesRepository: IUserPreferencesRepository;
 
     private ensureMonthIsSetUpService: EnsureMonthIsSetUpService;
@@ -25,6 +27,7 @@ export class ApplicationState {
         incomesRepository: IIncomesRepository,
         expensesRepository: IExpensesRepository,
         spendingRepository: ISpendingsRepository,
+        setUpMonthRepository: ISetUpMonthsRepository,
         userPreferencesRepository: IUserPreferencesRepository,
         ensureMonthIsSetUpService: EnsureMonthIsSetUpService,
         budgetService: BudgetService
@@ -32,6 +35,7 @@ export class ApplicationState {
         this.incomesRepository = incomesRepository;
         this.expensesRepository = expensesRepository;
         this.spendingRepository = spendingRepository;
+        this.setUpMonthRepository = setUpMonthRepository;
         this.userPreferencesRepository = userPreferencesRepository;
         this.ensureMonthIsSetUpService = ensureMonthIsSetUpService;
         this.budgetService = budgetService;
@@ -42,6 +46,8 @@ export class ApplicationState {
     @observable public colorSchemePreference: ColorSchemePreference = 'auto';
     @observable public sortExpenses: SortMode = 'none';
     @observable public sortIncomes: SortMode = 'none';
+
+    @observable public startOfPeriod: number = 1;
 
     @observable public incomes: Income[] = [];
     @observable public expenses: Expense[] = [];
@@ -96,7 +102,9 @@ export class ApplicationState {
         this.month = date.getMonth();
         this.day = date.getDate();
 
-        this.ensureMonthIsSetUpService.ensureMonthIsSetUp(this.year, this.month);
+        this.ensureMonthIsSetUpService.ensureMonthIsSetUp(this.year, this.month, this.day);
+
+        this.startOfPeriod = this.setUpMonthRepository.getMonthSetUp(this.year, this.month)?.startOfPeriod ?? 1;
 
         this.incomes = this.incomesRepository.get(this.year, this.month);
         this.expenses = this.expensesRepository.get(this.year, this.month);
@@ -104,7 +112,7 @@ export class ApplicationState {
 
         this.budgetPerDay = this.budgetService.getBudgetPerDay(this.year, this.month);
 
-        this.saldos = this.budgetService.getSaldos(this.budgetPerDay, this.year, this.month);
+        this.saldos = this.budgetService.getSaldos(this.budgetPerDay, this.year, this.month, this.startOfPeriod);
 
         const preferences = this.userPreferencesRepository.get();
         this.language = preferences.language ?? this.getLanguageFromSystem();
@@ -211,6 +219,11 @@ export class ApplicationState {
             colorSchemePreference: preference,
             sortIncomes: this.sortIncomes
         });
+        this.init();
+    }
+
+    public changeStartOfPeriod = (startOfPeriod: number) => {
+        this.setUpMonthRepository.editMonthSetUp(this.year, this.month, startOfPeriod);
         this.init();
     }
 

@@ -44,8 +44,10 @@ export default class MonthSpendings extends Component<IMonthSpendingsProps, IMon
 
     render() {
         const application = this.context;
-        const days = Array.from({ length: application.daysInMonth }, (_, k) => k + 1);
-        const budget = this.state.openedDay > 2 ? application.saldos[this.state.openedDay - 2] + application.budgetPerDay : application.budgetPerDay;
+        const days = Array.from({ length: application.daysInMonth - application.startOfPeriod + 1 }, (_, k) => k + 1 + application.startOfPeriod - 1);
+        const budget = this.state.openedDay === application.startOfPeriod
+            ? application.budgetPerDay
+            : application.saldos[this.state.openedDay - 2] + application.budgetPerDay
 
         const styles = getStyles(application.colorScheme);
 

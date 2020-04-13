@@ -11,6 +11,7 @@ interface IDatePickerDayButtonProps {
     textColor: string
     backgroundColor: string
     isChosen: boolean
+    disabled: boolean
 }
 
 export function DatePickerDayButton(props: IDatePickerDayButtonProps) {
@@ -51,7 +52,7 @@ export function DatePickerDayButton(props: IDatePickerDayButtonProps) {
     }
 
     return <ButtonWrapper
-        disabled={!props.text}
+        disabled={props.disabled}
         onPress={props.onPress}
         renderNormal={renderNormal}
         renderPressed={renderPressed}
