@@ -131,14 +131,14 @@ export default class Settings extends Component<{
                                     <Text style={styles.budgetPerDayAmount}>{formatMoney(application.budgetPerDay)} {application.currency}</Text>
                                 </View>
 
-                                <View style={styles.inlineSettingContainer}>
+                                <View style={{ ...styles.inlineSettingContainer, marginTop: -8 }}>
                                     <Text style={styles.subheader}>{application.locale.startOfPeriod}</Text>
                                     <TextButton
                                         scheme={application.colorScheme}
                                         fontSize={20}
                                         height={22}
                                         disabled={false}
-                                        text={application.locale.getDateText(application.startOfPeriod, application.month)}
+                                        text={application.locale.getStartOfPeriodDateText(application.startOfPeriod, application.month)}
                                         onPress={(position) => {
                                             this.setState({ isPickerOpen: true, pickerModalOffsetY: position.y });
                                             this.props.onModalOpen();

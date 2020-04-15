@@ -50,7 +50,7 @@ test('getBudgetPerDay should return a negative number when expenses are bigger t
 test('getSaldos should return zeros when budgetPerDay is zero and now spendings added', () => {
     const service = getBudgetService([], [], []);
 
-    const saldos = service.getSaldos(0, year, month);
+    const saldos = service.getSaldos(0, year, month, 1);
 
     expect(saldos).toStrictEqual(new Array(31).fill(0));
 })
@@ -67,7 +67,7 @@ test('getSaldos should return correct saldos', () => {
 
     const service = getBudgetService([], [], spendings);
 
-    const saldos = service.getSaldos(500, year, month);
+    const saldos = service.getSaldos(500, year, month, 1);
 
     const expected = [
         50, 150, 550, 1000, 1300, 1800, 2300, 2800, 3300, 3800,

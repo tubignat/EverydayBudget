@@ -36,4 +36,5 @@ export type Locale = {
     getDateText: (day: number, month: number) => string
     getDayOfWeekAbbr: (dayOfWeek: number) => string
     getMonthName: (month: number) => string
+    getStartOfPeriodDateText: (day: number, month: number) => string
 }

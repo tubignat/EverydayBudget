@@ -14,7 +14,7 @@ export const ruLocale: Locale = {
     newExpense: 'Новый расход',
     noExpensesYet: 'Пока расходов нет. ',
     budgetPerDay: 'Бюджет на день',
-    startOfPeriod: 'Начало периода',
+    startOfPeriod: 'Начать этот месяц',
     description: 'Описание...',
     language: 'Язык',
     currency: 'Валюта',
@@ -40,7 +40,9 @@ export const ruLocale: Locale = {
 
     getDayOfWeekAbbr: (dayOfWeek: number) => daysOfWeekAbbr[dayOfWeek],
 
-    getMonthName: (month: number) => monthNames[month]
+    getMonthName: (month: number) => monthNames[month],
+
+    getStartOfPeriodDateText: (day: number, month: number) => `${day} ${ruMonths[month]}`
 }
 
 const monthNames: { [month: number]: string } = {

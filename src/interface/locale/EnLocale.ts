@@ -14,7 +14,7 @@ export const enLocale: Locale = {
     newExpense: 'New expense',
     noExpensesYet: 'No expenses yet. ',
     budgetPerDay: 'Budget per day',
-    startOfPeriod: 'Period starts',
+    startOfPeriod: 'Start this month',
     description: 'Description...',
     language: 'Language',
     currency: 'Currency',
@@ -36,22 +36,31 @@ export const enLocale: Locale = {
     add: 'Add    ',
 
     getDateText: (day: number, month: number) => {
-        if (day === 1) {
-            return `${months[month]} 1st`
-        }
-        if (day === 2) {
-            return `${months[month]} 2nd`
-        }
-        if (day === 3) {
-            return `${months[month]} 3rd`
-        }
-
-        return `${months[month]} ${day}th`
+        const suffix = getDateSuffix(day);
+        return `${months[month]} ${day}${suffix}`
     },
 
     getDayOfWeekAbbr: (dayOfWeek: number) => daysOfWeekAbbr[dayOfWeek],
 
-    getMonthName: (month: number) => months[month]
+    getMonthName: (month: number) => months[month],
+
+    getStartOfPeriodDateText: (day: number, month: number) => {
+        const suffix = getDateSuffix(day);
+        return `on ${months[month].toLowerCase()} ${day}${suffix}`
+    }
+}
+
+const getDateSuffix = (date: number) => {
+    switch (date) {
+        case 1:
+            return 'st'
+        case 2:
+            return 'nd'
+        case 3:
+            return 'rd'
+        default:
+            return 'th'
+    }
 }
 
 const months: { [month: number]: string } = {

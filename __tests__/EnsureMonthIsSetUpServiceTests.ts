@@ -33,7 +33,7 @@ test('ensureMonthIsSetUp should not fill incomes and expenses if month is set up
 
     const service = new EnsureMonthIsSetUpService(incomesRepository, expensesRepository, setUpMonthsRepository)
 
-    service.ensureMonthIsSetUp(2020, 1)
+    service.ensureMonthIsSetUp(2020, 1, 1)
 
     expect(incomesRepository.incomes).toStrictEqual([
         { id: 0, description: '', amount: 10000, year: 2020, month: 0 },
@@ -54,7 +54,7 @@ test('ensureMonthIsSetUp should not fill when there are incomes or expenses in c
 
     const service = new EnsureMonthIsSetUpService(incomesRepository, expensesRepository, setUpMonthsRepository)
 
-    service.ensureMonthIsSetUp(2020, 1)
+    service.ensureMonthIsSetUp(2020, 1, 1)
 
     expect(incomesRepository.incomes).toStrictEqual([
         { id: 0, description: '', amount: 10000, year: 2020, month: 0 },
@@ -77,7 +77,7 @@ test('ensureMonthIsSetUp should fill from previous year if current month is janu
 
     const service = new EnsureMonthIsSetUpService(incomesRepository, expensesRepository, setUpMonthsRepository)
 
-    service.ensureMonthIsSetUp(2020, 0)
+    service.ensureMonthIsSetUp(2020, 0, 1)
 
     expect(incomesRepository.incomes).toStrictEqual([
         { id: 0, description: '', amount: 10000, year: 2019, month: 11 },
@@ -150,6 +150,16 @@ class SetUpMonthsRepositoryStub implements ISetUpMonthsRepository {
     constructor(isMonthSetUp: boolean) {
         this.isMonthSetUpField = isMonthSetUp;
     }
+
+    editMonthSetUp = (year: number, month: number, startOfPeriod: number) => undefined;
+
+    getMonthSetUp = (year: number, month: number) => {
+        return {
+            startOfPeriod: 1,
+            year: year,
+            month: month
+        }
+    };
 
     markMonthAsSetUp = (year: number, month: number) => {
         this.markedYear = year;
