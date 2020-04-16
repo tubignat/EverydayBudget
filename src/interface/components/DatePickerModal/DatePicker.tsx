@@ -58,13 +58,13 @@ function DatePickerDaysOfMonth(props: {
     const daysOfMonthArray = getDaysOfMonthArray(props.year, props.month).filter(row => row[0] <= props.until);
     return <View>
         {
-            daysOfMonthArray.map(renderArrayRow)
+            daysOfMonthArray.map((row: number[], i: number) => renderArrayRow(i, row))
         }
     </View>
 
 
-    function renderArrayRow(row: number[]) {
-        return <View style={styles.row}>
+    function renderArrayRow(key: number, row: number[]) {
+        return <View style={styles.row} key={key}>
             {
                 row.map((day, i) => {
 
@@ -76,6 +76,7 @@ function DatePickerDaysOfMonth(props: {
 
 
                     return <DatePickerDayButton
+                        key={i}
                         text={day === 0 ? '' : day.toString()}
                         size={props.cellSize}
                         fontSize={props.fontSize}
