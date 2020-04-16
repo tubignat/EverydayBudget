@@ -2,8 +2,8 @@
   "expoServerPort": 19000,
   "expoServerNgrokUrl": "https://gj-gsj.tubignat.spendingstracker.exp.direct",
   "packagerNgrokUrl": "https://packager.gj-gsj.tubignat.spendingstracker.exp.direct",
-  "ngrokPid": 4386,
+  "ngrokPid": 9055,
   "devToolsPort": 19002,
   "packagerPort": 19001,
-  "packagerPid": 4369
+  "packagerPid": 9046
 }
