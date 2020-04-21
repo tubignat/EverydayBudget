@@ -9,10 +9,12 @@ export type Spending = {
     year: number;
     month: number;
     day: number;
+    hour: number | null;
+    minute: number | null;
 }
 
 export interface ISpendingsRepository {
-    add: (year: number, month: number, day: number, description: string | null, amount: number) => void;
+    add: (year: number, month: number, day: number, description: string | null, amount: number, hour: number | null, minute: number | null) => void;
     edit: (id: SpendingId, description: string | null, amount: number) => void;
     remove: (id: SpendingId) => void;
     get: (year: number, month: number) => Spending[];
@@ -33,7 +35,7 @@ export class SpendingsRepository implements ISpendingsRepository {
         })
         .catch(error => console.log(error));
 
-    add = (year: number, month: number, day: number, description: string | null, amount: number) => {
+    add = (year: number, month: number, day: number, description: string | null, amount: number, hour: number | null, minute: number | null) => {
         this.spendingIdSeq++;
         this.spendings.push({
             id: this.spendingIdSeq,
@@ -41,7 +43,9 @@ export class SpendingsRepository implements ISpendingsRepository {
             description: description,
             year: year,
             month: month,
-            day: day
+            day: day,
+            hour: hour,
+            minute: minute
         });
 
         AsyncStorage

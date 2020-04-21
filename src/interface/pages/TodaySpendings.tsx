@@ -1,11 +1,14 @@
 import React from 'react';
 import { ScrollView, View, Text, Dimensions, StyleSheet } from 'react-native';
-import Page from '../components/Page'
-import SpendingsList from '../components/SpendingsList'
+import { Page } from '../components/Page'
+import { SpendingsList } from '../components/SpendingsList/SpendingsList'
 import { observer } from 'mobx-react';
-import { SpendingId } from '../../domain/repositories/SpendingsRepository';
 import { ApplicationContext } from '../ApplicationContext';
 import { ColorScheme } from '../color/ColorScheme';
+
+const { width, height } = Dimensions.get('window');
+const isSmallScreen = width < 350;
+const isBigScreen = height > 800;
 
 function TodaySpendings() {
 
@@ -18,17 +21,24 @@ function TodaySpendings() {
     const styles = getStyles(application.colorScheme);
 
     return <Page scheme={application.colorScheme}>
-        <ScrollView style={styles.container}>
-            <Text style={styles.header}>{application.locale.todaysExpenses}</Text>
-            {
-                spendings.length > 0 && <SpendingsList spendings={spendings} remove={(id: SpendingId) => application.removeSpending(id)} />
-            }
-            {
-                spendings.length == 0 &&
-                <View style={styles.emptyListTextContainer}>
-                    <Text style={styles.emptyListText}>{application.locale.noExpensesToday}</Text>
-                </View>
-            }
+        <ScrollView>
+            <View style={styles.container}>
+                <Text style={styles.header}>{application.locale.todaysExpenses}</Text>
+                {
+                    spendings.length > 0 && <SpendingsList
+                        spendings={spendings}
+                        scheme={application.colorScheme}
+                        currency={application.currency}
+                        remove={id => application.removeSpending(id)}
+                    />
+                }
+                {
+                    spendings.length == 0 &&
+                    <View style={styles.emptyListTextContainer}>
+                        <Text style={styles.emptyListText}>{application.locale.noExpensesToday}</Text>
+                    </View>
+                }
+            </View>
         </ScrollView>
     </Page>
 }
@@ -37,13 +47,15 @@ export default observer(TodaySpendings);
 
 const getStyles = (scheme: ColorScheme) => StyleSheet.create({
     container: {
-        padding: 20, paddingTop: 45
+        padding: 24,
+        paddingTop: isBigScreen ? 64 : 48,
+        paddingBottom: 72
     },
     header: {
         fontSize: 40,
-        fontWeight: '300',
-        marginBottom: 40,
-        color: scheme.primaryText
+        marginBottom: 64,
+        color: scheme.primaryText,
+        fontWeight: 'bold'
     },
     emptyListText: {
         color: scheme.secondaryText,

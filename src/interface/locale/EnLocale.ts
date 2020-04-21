@@ -23,7 +23,7 @@ export const enLocale: Locale = {
     privacyPolicy: 'Privacy policy',
     daysOfWeek: 'MTWTFSS',
 
-    todaysExpenses: 'Today\'s spending',
+    todaysExpenses: 'Today',
     noExpensesToday: 'No spending today',
     totalExpensesToday: 'total',
 

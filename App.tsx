@@ -9,13 +9,14 @@ import { IncomesRepository } from './src/domain/repositories/IncomesRepository';
 import { ExpensesRepository } from './src/domain/repositories/ExpensesRepository';
 import { BudgetService } from './src/domain/services/BudgetService';
 import { ApplicationState } from './src/interface/ApplicationState';
-import MonthSpendings from './src/interface/pages/MonthSpendings';
+import { MonthSpendings } from './src/interface/pages/MonthSpendings';
 import { SetUpMonthsRepository } from './src/domain/repositories/SetUpMonthsRepository';
 import { EnsureMonthIsSetUpService } from './src/domain/services/EnsureMonthIsSetUpService';
 import { UserPreferencesRepository } from './src/domain/repositories/UserPreferencesRepository';
 import { ApplicationContext } from './src/interface/ApplicationContext';
 import { AppState, AppStateStatus, Image, Animated, View, StyleSheet } from 'react-native';
 import * as Font from 'expo-font';
+import { ModalStack } from './src/interface/components/ModalStack';
 
 @observer
 export default class App extends Component<{}, {
@@ -105,26 +106,25 @@ export default class App extends Component<{}, {
         return (
             this.state.isInitialized &&
             <ApplicationContext.Provider value={this.applicationState}>
-                <Swiper
-                    loop={false}
-                    index={1}
-                    bounces={true}
-                    scrollEnabled={!this.state.isScrollLocked}
-                    showsPagination={!this.state.isScrollLocked}
-                    dotColor={this.applicationState.colorScheme.secondaryText}
-                    activeDotColor={this.applicationState.colorScheme.primary}
-                >
-                    <Settings
-                        onModalOpen={() => this.setState({ isScrollLocked: true })}
-                        onModalClose={() => this.setState({ isScrollLocked: false })}
-                    />
-                    <Home />
-                    <TodaySpendings />
-                    <MonthSpendings
-                        onModalOpen={() => this.setState({ isScrollLocked: true })}
-                        onModalClose={() => this.setState({ isScrollLocked: false })}
-                    />
-                </Swiper>
+                <ModalStack colorScheme={this.applicationState.colorScheme}>
+                    <Swiper
+                        loop={false}
+                        index={1}
+                        bounces={true}
+                        scrollEnabled={!this.state.isScrollLocked}
+                        showsPagination={!this.state.isScrollLocked}
+                        dotColor={this.applicationState.colorScheme.secondaryText}
+                        activeDotColor={this.applicationState.colorScheme.primary}
+                    >
+                        <Settings
+                            onModalOpen={() => this.setState({ isScrollLocked: true })}
+                            onModalClose={() => this.setState({ isScrollLocked: false })}
+                        />
+                        <Home />
+                        <TodaySpendings />
+                        <MonthSpendings />
+                    </Swiper>
+                </ModalStack>
 
                 <View style={{
                     ...styles.background,

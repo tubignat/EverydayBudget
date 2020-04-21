@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, Dimensions, StyleSheet } from 'react-native';
 import { KeyBoard } from '../components/keyboard/Keyboard';
 import { AddSpendingButton } from '../components/AddSpendingButton';
-import Page from '../components/Page'
+import { Page } from '../components/Page'
 import { observer } from 'mobx-react';
 import { ApplicationContext } from '../ApplicationContext';
 import { ApplicationState } from '../ApplicationState';
@@ -23,6 +23,8 @@ interface IHomeState {
 export default class Home extends Component<{}, IHomeState> {
 
     static contextType = ApplicationContext;
+
+    context !: ApplicationState;
 
     constructor(props: {}) {
         super(props);
@@ -111,7 +113,8 @@ export default class Home extends Component<{}, IHomeState> {
         const kopecks = Number(this.state.newTransactionKopecks.join(''));
         const amount = this.state.newTransactionRubles + (kopecks / 100);
 
-        this.context.addSpending(this.context.day, amount);
+        const date = new Date();
+        this.context.addSpending(this.context.day, amount, date.getHours(), date.getMinutes());
 
         this.setState({ newTransactionRubles: 0, isKopeckMode: false, newTransactionKopecks: [] });
     }

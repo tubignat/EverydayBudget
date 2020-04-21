@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ScrollView, View, Text, StyleSheet, KeyboardAvoidingView, Linking, Dimensions } from 'react-native';
-import Page from '../components/Page'
+import { Page } from '../components/Page'
 import { observer } from 'mobx-react';
 import { IncomesList } from '../components/SettingsIncomesList';
 import { IncomeId } from '../../domain/repositories/IncomesRepository';
@@ -201,7 +201,7 @@ const getStyles = (scheme: ColorScheme) => StyleSheet.create({
     pageContainer: {
         paddingLeft: 24,
         paddingRight: isSmallScreen ? 12 : 24,
-        paddingVertical: isBigScreen ? 64 : 32,
+        paddingVertical: isBigScreen ? 64 : 48,
     },
     pageContent: {
         paddingLeft: isSmallScreen ? 0 : 16,

@@ -23,7 +23,7 @@ export const ruLocale: Locale = {
     privacyPolicy: 'Политика конфиденциальности',
     daysOfWeek: 'ПВСЧПСВ',
 
-    todaysExpenses: 'Траты за сегодня',
+    todaysExpenses: 'Сегодня',
     noExpensesToday: 'За сегодня трат пока нет',
     totalExpensesToday: 'потрачено',
 

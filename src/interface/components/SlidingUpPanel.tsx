@@ -1,16 +1,23 @@
 import React from 'react';
-import { Animated, PanResponder, TouchableWithoutFeedback, View, Dimensions, StyleSheet, PanResponderInstance } from 'react-native';
+import { Animated, PanResponder, TouchableWithoutFeedback, View, Dimensions, StyleSheet, PanResponderInstance, ScrollView, GestureResponderEvent } from 'react-native';
+import { ModalStackState } from '../ModalStackState';
+import { ColorScheme } from '../color/ColorScheme';
 
 const Window = Dimensions.get('window');
 
+const isSmallScreen = Window.width < 350;
+const isBigScreen = Window.height > 800;
+
 interface ISlidingUpPanelProps {
     offsetTop: number
-    backgroundColor: string
+    colorScheme: ColorScheme
     onClose: () => void
 }
 
 interface ISlidingUpPanelState {
     pan: Animated.Value
+    scroll: number
+    scrollContentOffset: number
 }
 
 class SlidingUpPanel extends React.Component<ISlidingUpPanelProps, ISlidingUpPanelState> {
@@ -20,23 +27,70 @@ class SlidingUpPanel extends React.Component<ISlidingUpPanelProps, ISlidingUpPan
     constructor(props: ISlidingUpPanelProps) {
         super(props);
         this.state = {
-            pan: new Animated.Value(Window.height - 20)
+            pan: new Animated.Value(Window.height - 20),
+            scroll: 0,
+            scrollContentOffset: 0
         };
 
         this.panResponder = PanResponder.create({
-            onStartShouldSetPanResponder: () => true,
+            onStartShouldSetPanResponder: () => {
+                return true;
+            },
             onPanResponderMove: Animated.event([null, {
                 dy: this.state.pan
             }]),
             onPanResponderRelease: (e, gesture) => {
-                if (gesture.vy <= 0)
+                const threshold = gesture.dy > Window.height / 4 ? 0 : 1;
+                if (gesture.vy <= threshold)
                     Animated.spring(this.state.pan, { toValue: 0 }).start();
                 else
                     this.close();
             }
         });
 
-        Animated.spring(this.state.pan, { toValue: 0 }).start();
+        Animated.spring(this.state.pan, { toValue: 0, bounciness: 0 }).start();
+    }
+
+    componentDidMount() {
+        const offsetTop = this.props.offsetTop;
+        const height = Window.height - offsetTop;
+
+        const mainViewScale = this.state.pan.interpolate({
+            inputRange: [0, height, height + 200],
+            outputRange: [0.925, 1, 1]
+        })
+
+        const translateY = mainViewScale.interpolate({
+            inputRange: [0.925, 1],
+            outputRange: [isBigScreen ? 30 : 15, 0]
+        });
+
+        const borderRadius = mainViewScale.interpolate({
+            inputRange: [0.925, 1],
+            outputRange: [20, 0]
+        });
+
+        const background = mainViewScale.interpolate({
+            inputRange: [0.925, 1],
+            outputRange: [this.props.colorScheme.lightBackground, this.props.colorScheme.background]
+        });
+
+        const contentOpacity = mainViewScale.interpolate({
+            inputRange: [0.925, 0.94, 1],
+            outputRange: [0, 1, 1]
+        })
+
+        ModalStackState.setMainViewStyle({
+            transform: [{ scale: mainViewScale }, { translateY: translateY }],
+            borderRadius: borderRadius,
+            backgroundColor: background
+        }, {
+            opacity: contentOpacity
+        });
+    }
+
+    componentWillUnmount() {
+        ModalStackState.setMainViewStyle({}, {});
     }
 
     render() {
@@ -45,12 +99,39 @@ class SlidingUpPanel extends React.Component<ISlidingUpPanelProps, ISlidingUpPan
 
         const top = this.state.pan.interpolate({
             inputRange: [-200, -100, -50, 0, height / 2, height],
-            outputRange: [-50, -40, -25, 0, height / 2, height]
+            outputRange: [-15, -15, -10, 0, height / 2, height]
         });
         const opacity = top.interpolate({
             inputRange: [0, height / 2, height],
-            outputRange: [0.5, 0.25, 0]
+            outputRange: [0, 0, 0]
         });
+
+        let previousY = Window.height;
+        let previousTimestamp = 0;
+
+        const scrollViewResponders = {
+            ...this.panResponder.panHandlers,
+            onStartShouldSetPanResponder: () => {
+                return false;
+            },
+            onMoveShouldSetResponder: (event: GestureResponderEvent) => {
+                const result = event.nativeEvent.touches[0];
+
+                if (result.timestamp - previousTimestamp > 50) {
+                    previousY = result.pageY;
+                    previousTimestamp = result.timestamp;
+                    return false;
+                }
+
+                if (this.state.scroll <= 0 && result.pageY > previousY) {
+                    return true;
+                }
+
+                previousTimestamp = result.timestamp;
+                previousY = result.pageY;
+                return false
+            }
+        };
 
         return (
             <View style={styles.mainContainer}>
@@ -60,14 +141,21 @@ class SlidingUpPanel extends React.Component<ISlidingUpPanelProps, ISlidingUpPan
                 </TouchableWithoutFeedback>
 
                 <View style={[styles.container, { top: this.props.offsetTop }]}>
-                    <Animated.View style={[{ top: top, backgroundColor: this.props.backgroundColor }, styles.draggablePanel]} >
+                    <Animated.View style={[{ top: top, backgroundColor: this.props.colorScheme.background }, styles.draggablePanel]} >
                         <View style={styles.handleContainer} {...this.panResponder.panHandlers}>
-                            <View style={{ ...styles.handleAura, backgroundColor: this.props.backgroundColor }}>
+                            <View style={{ ...styles.handleAura, backgroundColor: this.props.colorScheme.background }}>
                                 <View style={styles.handle} />
                             </View>
                         </View>
-                        <View style={{ height: Window.height - offsetTop - 7 }}>
-                            {this.props.children}
+                        <View style={{ height: Window.height - offsetTop - 7 }} {...scrollViewResponders}>
+                            <ScrollView
+                                showsVerticalScrollIndicator={false}
+                                style={{ paddingHorizontal: 20, paddingVertical: 40 }}
+                                onScroll={event => this.setState({ scroll: event.nativeEvent.contentOffset.y })}
+                                scrollEventThrottle={16}
+                            >
+                                {this.props.children}
+                            </ScrollView>
                         </View>
                     </Animated.View>
                 </View>

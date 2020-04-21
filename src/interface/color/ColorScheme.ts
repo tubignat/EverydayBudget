@@ -1,6 +1,8 @@
 export type ColorScheme = {
     background: string;
     lightBackground: string;
+    pickerModalBackground: string;
+    plateBackground: string;
     primaryText: string;
     secondaryText: string;
     barelyVisible: string;

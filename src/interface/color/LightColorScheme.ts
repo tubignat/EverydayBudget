@@ -2,7 +2,9 @@ import { ColorScheme } from './ColorScheme'
 
 export const lightColorScheme: ColorScheme = {
     background: 'white',
-    lightBackground: 'white',
+    pickerModalBackground: 'white',
+    lightBackground: 'rgb(209, 209, 214)',
+    plateBackground: 'rgb(242, 242, 247)',
     primaryText: 'black',
     primary: 'rgb(0, 122, 255)',
     secondaryText: 'gray',

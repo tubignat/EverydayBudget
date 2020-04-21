@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useContext, useEffect } from 'react';
 import {
     View,
     Text,
@@ -6,10 +6,47 @@ import {
     TouchableWithoutFeedback,
 } from 'react-native';
 
-import { ApplicationContext } from '../ApplicationContext';
-import { formatMoney } from '../NumberFormat';
-import { ColorScheme } from '../color/ColorScheme';
-import { ApplicationState } from '../ApplicationState';
+import { ApplicationContext } from '../../ApplicationContext';
+import { formatMoney } from '../../NumberFormat';
+import { ColorScheme } from '../../color/ColorScheme';
+import { ApplicationState } from '../../ApplicationState';
+import { DaysSpendingsPanel } from '../DaySpendingsPanel';
+import { ModalStackState } from '../../ModalStackState';
+
+export function MonthSpendingsTable() {
+
+    const application = useContext(ApplicationContext);
+    if (!application) {
+        return null;
+    }
+
+    const { daysInMonth, startOfPeriod, month, year, saldos, day } = application;
+
+    const days = Array.from({ length: daysInMonth - startOfPeriod + 1 }, (_, k) => k + 1 + startOfPeriod - 1);
+
+    return <View>
+        <TableHeader />
+        {
+            days.map(d => <TableRow
+                key={d}
+                day={d}
+                month={month}
+                year={year}
+                saldo={saldos[d - 1]}
+                onClick={() => onClick(d)}
+                isToday={d === day}
+            />)
+        }
+    </View>
+
+    function onClick(day: number) {
+        ModalStackState.open((id, onClose) => renderPanel(id, onClose, day));
+    }
+
+    function renderPanel(id: number, onClose: () => void, openedDay: number) {
+        return <DaysSpendingsPanel key={id} onClose={onClose} openedDay={openedDay} />
+    }
+}
 
 export function TableHeader() {
     const application = React.useContext(ApplicationContext);

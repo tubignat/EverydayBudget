@@ -122,8 +122,8 @@ export class ApplicationState {
         this.colorSchemePreference = preferences.colorSchemePreference ?? 'auto';
     }
 
-    public addSpending = (day: number, amount: number) => {
-        this.spendingRepository.add(this.year, this.month, day, null, amount);
+    public addSpending = (day: number, amount: number, hour: number | null, minute: number | null) => {
+        this.spendingRepository.add(this.year, this.month, day, null, amount, hour, minute);
         this.init();
     }
 

@@ -12,69 +12,72 @@ import DayOfMonthSpendingsList from './DayOfMonthSpendingsList';
 import { TextButton } from './TextButton';
 import { ApplicationContext } from '../ApplicationContext';
 import { formatMoney } from '../NumberFormat';
-import { Spending, SpendingId } from '../../domain/repositories/SpendingsRepository';
 import { ColorScheme } from '../color/ColorScheme';
+import { observer } from 'mobx-react';
 
-const Window = Dimensions.get('window')
+const { width, height } = Dimensions.get('window');
+const isSmallScreen = width < 350;
+const isBigScreen = height > 800;
 
 interface IDaysSpendingsPanel {
-    closePanel: () => void
-    month: number
-    day: number
-    budget: number
-    saldo: number,
-    spendings: Spending[],
-    remove: (id: SpendingId) => void,
-    edit: (id: SpendingId, amount: number) => void,
-    add: (day: number) => void
+    onClose: () => void
+    openedDay: number
 }
 
-export function DaysSpendingsPanel(props: IDaysSpendingsPanel) {
+export const DaysSpendingsPanel = observer((props: IDaysSpendingsPanel) => {
     const application = React.useContext(ApplicationContext);
     if (!application) {
         return null;
     }
 
-    const { closePanel, day, month, budget, saldo, spendings, remove, edit, add } = props;
+    const { onClose: closePanel, openedDay } = props;
     const { locale, currency, colorScheme } = application;
+
+    const budget = openedDay === application.startOfPeriod
+        ? application.budgetPerDay
+        : application.saldos[openedDay - 2] + application.budgetPerDay;
+
+    const saldo = application.saldos[openedDay - 1];
+    const spendings = application.spendings.filter(s => s.day === openedDay);
+    const remove = application.removeSpending;
+    const edit = application.editSpending;
+    const add = () => application.addSpending(openedDay, 0, null, null);
 
     const styles = getStyles(colorScheme);
 
-    return <SlidingUpPanel onClose={closePanel} offsetTop={Window.height / 4} backgroundColor={colorScheme.lightBackground}>
-        <ScrollView showsVerticalScrollIndicator={false} style={{ paddingHorizontal: 20, paddingVertical: 40 }}>
-            <View style={styles.daySpendingHeader}>
-                <Text style={styles.daySpendingDateText}>{locale.getDateText(day, month)}</Text>
+    return <SlidingUpPanel onClose={closePanel} offsetTop={isBigScreen ? 75 : 50} colorScheme={application.colorScheme}>
+        <View style={styles.daySpendingHeader}>
+            <Text style={styles.daySpendingDateText}>{locale.getDateText(openedDay, application.month)}</Text>
+        </View>
+        <View style={styles.daySpendingBudgetContainer}>
+            <Text style={styles.daySpendingBudgetLabel}>{locale.budget}</Text>
+            <Text style={{
+                ...styles.daySpendingBudgetText,
+                color: budget > 0 ? colorScheme.primaryText : colorScheme.danger
+            }}>
+                {formatMoney(budget)} {currency}
+            </Text>
+        </View>
+        <View style={styles.daySpendingBudgetContainer}>
+            <Text style={styles.daySpendingBudgetLabel}>{locale.saldos}</Text>
+            <Text style={{
+                ...styles.daySpendingBudgetText,
+                color: saldo > 0 ? colorScheme.primaryText : colorScheme.danger
+            }}>{formatMoney(saldo)} {currency}</Text>
+        </View>
+        {
+            spendings.length > 0 &&
+            <DayOfMonthSpendingsList spendings={spendings} remove={remove} edit={edit} add={add} />
+        }
+        {
+            spendings.length === 0 &&
+            <View style={styles.emptyListTextContainer}>
+                <Text style={styles.emptyListText}>{locale.noSpendingForThisDay}</Text>
+                <TextButton text={locale.add} height={50} fontSize={15} onPress={add} scheme={colorScheme} disabled={false} />
             </View>
-            <View style={styles.daySpendingBudgetContainer}>
-                <Text style={styles.daySpendingBudgetLabel}>{locale.budget}</Text>
-                <Text style={{
-                    ...styles.daySpendingBudgetText,
-                    color: budget > 0 ? colorScheme.primaryText : colorScheme.danger
-                }}>
-                    {formatMoney(budget)} {currency}
-                </Text>
-            </View>
-            <View style={styles.daySpendingBudgetContainer}>
-                <Text style={styles.daySpendingBudgetLabel}>{locale.saldos}</Text>
-                <Text style={{
-                    ...styles.daySpendingBudgetText,
-                    color: saldo > 0 ? colorScheme.primaryText : colorScheme.danger
-                }}>{formatMoney(saldo)} {currency}</Text>
-            </View>
-            {
-                spendings.length > 0 &&
-                <DayOfMonthSpendingsList spendings={spendings} remove={remove} edit={edit} add={() => add(day)} />
-            }
-            {
-                spendings.length === 0 &&
-                <View style={styles.emptyListTextContainer}>
-                    <Text style={styles.emptyListText}>{locale.noSpendingForThisDay}</Text>
-                    <TextButton text={locale.add} height={50} fontSize={15} onPress={() => add(day)} scheme={colorScheme} disabled={false} />
-                </View>
-            }
-        </ScrollView>
+        }
     </SlidingUpPanel>
-}
+});
 
 const getStyles = (scheme: ColorScheme) => StyleSheet.create({
     emptyListTextContainer: {

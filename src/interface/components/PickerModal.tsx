@@ -115,7 +115,7 @@ const getStyles = (scheme: ColorScheme) => StyleSheet.create({
         height: '100%',
     },
     container: {
-        backgroundColor: scheme.lightBackground,
+        backgroundColor: scheme.pickerModalBackground,
         borderRadius: 30,
         overflow: 'hidden',
     }
