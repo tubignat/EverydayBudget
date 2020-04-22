@@ -43,7 +43,7 @@ export default class Home extends Component<{}, IHomeState> {
 
         return <Page scheme={colorScheme}>
             {
-                isBigScreen && <View style={styles.todaysBudgetContainer}>
+                isBigScreen && <View style={styles.headerContainer}>
                     <Text style={styles.header}>
                         {locale.homePageTitle}
                     </Text>
@@ -126,8 +126,8 @@ const getStyles = (scheme: ColorScheme) => StyleSheet.create({
         marginBottom: 10,
     },
     header: {
-        fontSize: 40,
-        fontWeight: '300',
+        fontSize: 36,
+        fontWeight: 'bold',
         marginBottom: 40,
         color: scheme.primaryText
     },
@@ -173,9 +173,9 @@ const getStyles = (scheme: ColorScheme) => StyleSheet.create({
         paddingRight: isSmallScreen ? 0 : 15,
         paddingLeft: isSmallScreen ? 0 : 15
     },
-    todaysBudgetContainer: {
-        paddingTop: isSmallScreen ? 30 : 45,
-        padding: isSmallScreen ? 15 : 20,
+    headerContainer: {
+        paddingLeft: 24,
+        paddingTop: 72,
         height: '100%',
     },
     delta: {

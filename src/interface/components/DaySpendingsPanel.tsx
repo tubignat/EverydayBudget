@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     ScrollView,
     View,
@@ -8,12 +8,11 @@ import {
 } from 'react-native';
 
 import SlidingUpPanel from './SlidingUpPanel';
-import DayOfMonthSpendingsList from './DayOfMonthSpendingsList';
 import { TextButton } from './TextButton';
 import { ApplicationContext } from '../ApplicationContext';
-import { formatMoney } from '../NumberFormat';
 import { ColorScheme } from '../color/ColorScheme';
 import { observer } from 'mobx-react';
+import { SpendingsList } from './SpendingsList/SpendingsList';
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = width < 350;
@@ -30,14 +29,12 @@ export const DaysSpendingsPanel = observer((props: IDaysSpendingsPanel) => {
         return null;
     }
 
+    const [isFirstRender, setIsFirstRender] = useState(true);
+    useEffect(() => setIsFirstRender(false), []);
+
     const { onClose: closePanel, openedDay } = props;
     const { locale, currency, colorScheme } = application;
-
-    const budget = openedDay === application.startOfPeriod
-        ? application.budgetPerDay
-        : application.saldos[openedDay - 2] + application.budgetPerDay;
-
-    const saldo = application.saldos[openedDay - 1];
+    const dayOfWeek = new Date(application.year, application.month, openedDay).getDay();
     const spendings = application.spendings.filter(s => s.day === openedDay);
     const remove = application.removeSpending;
     const edit = application.editSpending;
@@ -46,36 +43,42 @@ export const DaysSpendingsPanel = observer((props: IDaysSpendingsPanel) => {
     const styles = getStyles(colorScheme);
 
     return <SlidingUpPanel onClose={closePanel} offsetTop={isBigScreen ? 75 : 50} colorScheme={application.colorScheme}>
-        <View style={styles.daySpendingHeader}>
-            <Text style={styles.daySpendingDateText}>{locale.getDateText(openedDay, application.month)}</Text>
-        </View>
-        <View style={styles.daySpendingBudgetContainer}>
-            <Text style={styles.daySpendingBudgetLabel}>{locale.budget}</Text>
-            <Text style={{
-                ...styles.daySpendingBudgetText,
-                color: budget > 0 ? colorScheme.primaryText : colorScheme.danger
-            }}>
-                {formatMoney(budget)} {currency}
-            </Text>
-        </View>
-        <View style={styles.daySpendingBudgetContainer}>
-            <Text style={styles.daySpendingBudgetLabel}>{locale.saldos}</Text>
-            <Text style={{
-                ...styles.daySpendingBudgetText,
-                color: saldo > 0 ? colorScheme.primaryText : colorScheme.danger
-            }}>{formatMoney(saldo)} {currency}</Text>
-        </View>
-        {
-            spendings.length > 0 &&
-            <DayOfMonthSpendingsList spendings={spendings} remove={remove} edit={edit} add={add} />
-        }
-        {
-            spendings.length === 0 &&
-            <View style={styles.emptyListTextContainer}>
-                <Text style={styles.emptyListText}>{locale.noSpendingForThisDay}</Text>
-                <TextButton text={locale.add} height={50} fontSize={15} onPress={add} scheme={colorScheme} disabled={false} />
+        <View style={{ paddingBottom: 200 }}>
+            <View style={styles.daySpendingHeader}>
+                <Text style={styles.daySpendingDateText}>{locale.getDateText(openedDay, application.month)}</Text>
+                <Text style={styles.dayOfWeekText}>{locale.getDayOfWeek(dayOfWeek)}</Text>
             </View>
-        }
+            {
+                spendings.length > 0 &&
+                <SpendingsList
+                    spendings={spendings}
+                    remove={remove}
+                    scheme={colorScheme}
+                    currency={currency}
+                    shouldPlayEnterAnimation={!isFirstRender}
+                />
+            }
+            {
+                spendings.length > 0 && <View style={styles.addButtonContainer}>
+                    <TextButton
+                        text={locale.add}
+                        height={40}
+                        width={'100%'}
+                        fontSize={locale.add.length > 5 ? 20 : 24}
+                        onPress={add}
+                        scheme={colorScheme}
+                        disabled={false}
+                    />
+                </View>
+            }
+            {
+                spendings.length === 0 &&
+                <View style={styles.emptyListTextContainer}>
+                    <Text style={styles.emptyListText}>{locale.noSpendingForThisDay}</Text>
+                    <TextButton text={locale.add} height={50} fontSize={15} onPress={add} scheme={colorScheme} disabled={false} />
+                </View>
+            }
+        </View>
     </SlidingUpPanel>
 });
 
@@ -93,13 +96,20 @@ const getStyles = (scheme: ColorScheme) => StyleSheet.create({
     },
     daySpendingHeader: {
         justifyContent: 'space-between',
-        alignItems: 'flex-start',
-        marginBottom: 20,
-        marginLeft: 20,
+        alignItems: 'center',
+        marginTop: 24,
+        marginBottom: 48,
     },
     daySpendingDateText: {
-        fontSize: 30,
+        fontSize: 36,
+        fontWeight: 'bold',
         color: scheme.primaryText
+    },
+    dayOfWeekText: {
+        fontSize: 20,
+        color: scheme.alternativeSecondaryText,
+        fontWeight: 'bold',
+        marginTop: 8
     },
     daySpendingBudgetContainer: {
         flexDirection: 'row',
@@ -114,5 +124,10 @@ const getStyles = (scheme: ColorScheme) => StyleSheet.create({
         fontSize: 16,
         width: 80,
         color: scheme.primaryText
+    },
+    addButtonContainer: {
+        marginTop: 20,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });

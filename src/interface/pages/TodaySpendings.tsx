@@ -30,6 +30,7 @@ function TodaySpendings() {
                         scheme={application.colorScheme}
                         currency={application.currency}
                         remove={id => application.removeSpending(id)}
+                        shouldPlayEnterAnimation={false}
                     />
                 }
                 {
@@ -47,12 +48,12 @@ export default observer(TodaySpendings);
 
 const getStyles = (scheme: ColorScheme) => StyleSheet.create({
     container: {
-        padding: 24,
-        paddingTop: isBigScreen ? 64 : 48,
+        paddingHorizontal: isSmallScreen ? 16 : 24,
+        paddingTop: isBigScreen ? 72 : 48,
         paddingBottom: 72
     },
     header: {
-        fontSize: 40,
+        fontSize: 36,
         marginBottom: 64,
         color: scheme.primaryText,
         fontWeight: 'bold'

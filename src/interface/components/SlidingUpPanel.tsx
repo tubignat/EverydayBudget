@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, PanResponder, TouchableWithoutFeedback, View, Dimensions, StyleSheet, PanResponderInstance, ScrollView, GestureResponderEvent } from 'react-native';
+import { Animated, PanResponder, TouchableWithoutFeedback, TouchableOpacity, View, Dimensions, StyleSheet, PanResponderInstance, ScrollView, GestureResponderEvent } from 'react-native';
 import { ModalStackState } from '../ModalStackState';
 import { ColorScheme } from '../color/ColorScheme';
 
@@ -154,7 +154,9 @@ class SlidingUpPanel extends React.Component<ISlidingUpPanelProps, ISlidingUpPan
                                 onScroll={event => this.setState({ scroll: event.nativeEvent.contentOffset.y })}
                                 scrollEventThrottle={16}
                             >
-                                {this.props.children}
+                                <View onStartShouldSetResponder={() => true}>
+                                    {this.props.children}
+                                </View>
                             </ScrollView>
                         </View>
                     </Animated.View>
@@ -213,13 +215,13 @@ let styles = StyleSheet.create({
         zIndex: 1
     },
     handleAura: {
-        opacity: .9,
+        opacity: .95,
         height: '100%',
+        width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
-        borderBottomLeftRadius: 50,
-        borderBottomRightRadius: 50,
-        paddingHorizontal: 10
+        borderTopLeftRadius: 50,
+        borderTopRightRadius: 50,
     },
     handle: {
         width: 50,

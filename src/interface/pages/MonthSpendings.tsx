@@ -4,7 +4,8 @@ import {
     View,
     Text,
     StyleSheet,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Dimensions
 } from 'react-native';
 
 import { Page } from '../components/Page'
@@ -12,6 +13,10 @@ import { observer } from 'mobx-react';
 import { ApplicationContext } from '../ApplicationContext';
 import { ColorScheme } from '../color/ColorScheme';
 import { MonthSpendingsTable } from '../components/MonthSpendingsTable/MonthSpendingsTable';
+
+const { width, height } = Dimensions.get('window');
+const isSmallScreen = width < 350;
+const isBigScreen = height > 800;
 
 export const MonthSpendings = observer(() => {
     const application = useContext(ApplicationContext);
@@ -23,9 +28,9 @@ export const MonthSpendings = observer(() => {
 
     return <Page scheme={application.colorScheme}>
         <KeyboardAvoidingView behavior='padding'>
-            <ScrollView style={{ padding: 20, paddingTop: 45 }}>
+            <ScrollView style={styles.pageContent}>
                 <View style={{ paddingBottom: 120 }}>
-                    <Text style={styles.header}>{application.locale.statisticsPageTitle}</Text>
+                    <Text style={styles.header}>{application.locale.getMonthName(application.month)}</Text>
                     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', width: 230 }}>
                     </View>
                     <View style={{ marginTop: 20 }}>
@@ -38,9 +43,13 @@ export const MonthSpendings = observer(() => {
 })
 
 const getStyles = (scheme: ColorScheme) => StyleSheet.create({
+    pageContent: {
+        paddingHorizontal: 24,
+        paddingVertical: isBigScreen ? 72 : 48,
+    },
     header: {
-        fontSize: 40,
-        fontWeight: '300',
+        fontSize: 36,
+        fontWeight: 'bold',
         marginBottom: 40,
         color: scheme.primaryText
     }

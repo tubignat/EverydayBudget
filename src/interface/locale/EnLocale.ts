@@ -33,12 +33,14 @@ export const enLocale: Locale = {
     budget: 'Budget',
     saldos: 'Remained',
     noSpendingForThisDay: 'No spending that day. ',
-    add: 'Add    ',
+    add: 'Add',
 
     getDateText: (day: number, month: number) => {
         const suffix = getDateSuffix(day);
         return `${months[month]} ${day}${suffix}`
     },
+
+    getDayOfWeek: (dayOfWeek: number) => daysOfWeek[dayOfWeek],
 
     getDayOfWeekAbbr: (dayOfWeek: number) => daysOfWeekAbbr[dayOfWeek],
 
@@ -68,6 +70,10 @@ const months: { [month: number]: string } = {
     6: 'July', 7: 'August', 8: 'September', 9: 'October', 10: 'November', 11: 'December',
 }
 
-const daysOfWeekAbbr: { [month: number]: string } = {
+const daysOfWeek: { [dayOfWeek: number]: string } = {
+    0: 'Sunday', 1: 'Monday', 2: 'Tuesday', 3: 'Wednesday', 4: 'Thursday', 5: 'Friday', 6: 'Saturday'
+}
+
+const daysOfWeekAbbr: { [dayOfWeek: number]: string } = {
     0: 'su', 1: 'mo', 2: 'tu', 3: 'we', 4: 'th', 5: 'fr', 6: 'sa'
 }

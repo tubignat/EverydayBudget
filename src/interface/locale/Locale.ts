@@ -34,6 +34,7 @@ export type Locale = {
     noSpendingForThisDay: string
 
     getDateText: (day: number, month: number) => string
+    getDayOfWeek: (dayOfWeek: number) => string
     getDayOfWeekAbbr: (dayOfWeek: number) => string
     getMonthName: (month: number) => string
     getStartOfPeriodDateText: (day: number, month: number) => string

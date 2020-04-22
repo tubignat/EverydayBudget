@@ -38,6 +38,8 @@ export const ruLocale: Locale = {
 
     getDateText: (day: number, month: number) => `${day} ${ruMonths[month]}`,
 
+    getDayOfWeek: (dayOfWeek: number) => daysOfWeek[dayOfWeek],
+
     getDayOfWeekAbbr: (dayOfWeek: number) => daysOfWeekAbbr[dayOfWeek],
 
     getMonthName: (month: number) => monthNames[month],
@@ -55,6 +57,10 @@ const ruMonths: { [month: number]: string } = {
     6: 'июля', 7: 'августа', 8: 'сентября', 9: 'октября', 10: 'ноября', 11: 'декабря',
 }
 
-const daysOfWeekAbbr: { [month: number]: string } = {
+const daysOfWeek: { [dayOfWeek: number]: string } = {
+    0: 'Воскресенье', 1: 'Понедельник', 2: 'Вторник', 3: 'Среда', 4: 'Четверг', 5: 'Пятница', 6: 'Суббота'
+}
+
+const daysOfWeekAbbr: { [dayOfWeek: number]: string } = {
     0: 'вс', 1: 'пн', 2: 'вт', 3: 'ср', 4: 'чт', 5: 'пт', 6: 'сб'
 }

@@ -201,18 +201,18 @@ const getStyles = (scheme: ColorScheme) => StyleSheet.create({
     pageContainer: {
         paddingLeft: 24,
         paddingRight: isSmallScreen ? 12 : 24,
-        paddingVertical: isBigScreen ? 64 : 48,
+        paddingVertical: isBigScreen ? 72 : 48,
     },
     pageContent: {
         paddingLeft: isSmallScreen ? 0 : 16,
         paddingRight: isBigScreen ? 16 : 0,
     },
     header: {
-        fontSize: 40,
-        fontWeight: '300',
+        fontSize: 36,
+        fontWeight: 'bold',
         height: 48,
-        marginBottom: 56,
-        color: scheme.primaryText
+        marginBottom: 48,
+        color: scheme.primaryText,
     },
     subheader: {
         color: scheme.secondaryText,

@@ -5,30 +5,43 @@ import { formatMoney } from '../../NumberFormat';
 import { Spending, SpendingId } from '../../../domain/repositories/SpendingsRepository';
 import { ColorScheme } from '../../color/ColorScheme';
 import { Currency } from '../../../domain/repositories/UserPreferencesRepository';
+import { observer } from 'mobx-react';
+
+const { width, height } = Dimensions.get('window');
+const isSmallScreen = width < 350;
+const isBigScreen = height > 800;
 
 interface ISpendingsListProps {
     spendings: Spending[]
     remove: (id: SpendingId) => void
     scheme: ColorScheme
     currency: Currency
+    shouldPlayEnterAnimation: boolean
 }
 
-export function SpendingsList(props: ISpendingsListProps) {
+export const SpendingsList = observer((props: ISpendingsListProps) => {
 
     return <View>
         {
             props.spendings.map(s =>
-                <SpendingView key={s.id} spending={s} onRemovePressed={() => props.remove(s.id)} {...props} />
+                <SpendingView
+                    key={s.id}
+                    spending={s}
+                    onRemovePressed={() => props.remove(s.id)}
+                    shouldPlayEnterAnimation={props.shouldPlayEnterAnimation}
+                    {...props}
+                />
             )
         }
     </View>
-}
+});
 
 interface ISpendingView {
     spending: Spending
     onRemovePressed: () => void
     scheme: ColorScheme
     currency: Currency
+    shouldPlayEnterAnimation: boolean
 }
 
 function SpendingView(props: ISpendingView) {
@@ -42,7 +55,7 @@ function SpendingView(props: ISpendingView) {
 
     const marginBottom = scale.interpolate({
         inputRange: [0, 1],
-        outputRange: [0, 16]
+        outputRange: [0, isSmallScreen ? 12 : 16]
     })
 
     const opacity = scale.interpolate({
@@ -74,7 +87,7 @@ function SpendingView(props: ISpendingView) {
                 </View>
                 <View style={styles.categoryContainer}>
                     <View style={{ ...styles.categoryColor, backgroundColor: '#AAAAAA' }} />
-                    <Text style={styles.categoryText}>Без категории</Text>
+                    <Text style={styles.categoryText} numberOfLines={1}>Без категории</Text>
                 </View>
             </View>
         </Animated.View>
@@ -100,6 +113,10 @@ function SpendingView(props: ISpendingView) {
     }
 
     function getScaleAnimatedValue() {
+        if (!props.shouldPlayEnterAnimation) {
+            return new Animated.Value(1);
+        }
+
         const value = new Animated.Value(0);
         Animated.spring(value, { toValue: 1 }).start();
 
@@ -122,10 +139,11 @@ const getStyles = (scheme: ColorScheme) => StyleSheet.create({
     rightCell: {
         padding: 10,
         alignItems: 'flex-end',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        width: '50%'
     },
     amount: {
-        fontSize: 30,
+        fontSize: isSmallScreen ? 24 : 30,
         marginBottom: 8,
         height: 30,
         color: scheme.primaryText
@@ -148,7 +166,7 @@ const getStyles = (scheme: ColorScheme) => StyleSheet.create({
         marginTop: 2
     },
     categoryText: {
-        fontSize: 16,
+        fontSize: isSmallScreen ? 12 : 16,
         color: scheme.secondaryText
     }
 });

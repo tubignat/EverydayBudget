@@ -5,6 +5,7 @@ export type ColorScheme = {
     plateBackground: string;
     primaryText: string;
     secondaryText: string;
+    alternativeSecondaryText: string;
     barelyVisible: string;
     primary: string;
     danger: string;
