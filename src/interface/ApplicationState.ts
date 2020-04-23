@@ -115,6 +115,7 @@ export class ApplicationState {
         this.saldos = this.budgetService.getSaldos(this.budgetPerDay, this.year, this.month, this.startOfPeriod);
 
         const preferences = this.userPreferencesRepository.get();
+
         this.language = preferences.language ?? this.getLanguageFromSystem();
         this.currency = preferences.currency ?? this.getCurrencyFromSystem();
         this.sortExpenses = preferences.sortExpenses ?? 'none';

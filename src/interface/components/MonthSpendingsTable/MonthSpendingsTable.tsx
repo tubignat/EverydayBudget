@@ -12,8 +12,9 @@ import { ColorScheme } from '../../color/ColorScheme';
 import { ApplicationState } from '../../ApplicationState';
 import { DaysSpendingsPanel } from '../DaySpendingsPanel';
 import { ModalStackState } from '../../ModalStackState';
+import { observer } from 'mobx-react';
 
-export function MonthSpendingsTable() {
+export const MonthSpendingsTable = observer(() => {
 
     const application = useContext(ApplicationContext);
     if (!application) {
@@ -46,7 +47,7 @@ export function MonthSpendingsTable() {
     function renderPanel(id: number, onClose: () => void, openedDay: number) {
         return <DaysSpendingsPanel key={id} onClose={onClose} openedDay={openedDay} />
     }
-}
+});
 
 export function TableHeader() {
     const application = React.useContext(ApplicationContext);

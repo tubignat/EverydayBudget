@@ -17,6 +17,7 @@ interface ISpendingsListProps {
     scheme: ColorScheme
     currency: Currency
     shouldPlayEnterAnimation: boolean
+    onRemoveAnimationStart?: () => void
 }
 
 export const SpendingsList = observer((props: ISpendingsListProps) => {
@@ -42,6 +43,7 @@ interface ISpendingView {
     scheme: ColorScheme
     currency: Currency
     shouldPlayEnterAnimation: boolean
+    onRemoveAnimationStart?: () => void
 }
 
 function SpendingView(props: ISpendingView) {
@@ -59,8 +61,8 @@ function SpendingView(props: ISpendingView) {
     })
 
     const opacity = scale.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0.2, 1]
+        inputRange: [0, .5, 1],
+        outputRange: [0, 0, 1]
     })
 
     const styles = getStyles(props.scheme)
@@ -109,6 +111,7 @@ function SpendingView(props: ISpendingView) {
     }
 
     function onRemovePressedWrapper() {
+        props.onRemoveAnimationStart && props.onRemoveAnimationStart();
         Animated.timing(scale, { toValue: 0, duration: 200 }).start(props.onRemovePressed);
     }
 

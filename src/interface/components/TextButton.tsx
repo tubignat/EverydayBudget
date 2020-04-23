@@ -5,6 +5,7 @@ import { ColorScheme } from '../color/ColorScheme';
 
 interface ITextButtonProps {
     forwardedRef?: React.Ref<View>
+    forwardedTextRef?: React.Ref<View>
     height: number
     width?: number | string
     disabled: boolean
@@ -32,9 +33,13 @@ export class TextButton extends Component<ITextButtonProps> {
     }
 
     renderNormal = () => {
-        return <Text style={{ fontSize: this.props.fontSize, color: this.props.scheme.primary }}>{this.props.text}</Text>;
+        return <Text ref={this.props.forwardedTextRef} style={{ fontSize: this.props.fontSize, color: this.props.scheme.primary }}>
+            {this.props.text}
+        </Text>;
     }
     renderPressed = () => {
-        return <Text style={{ fontSize: this.props.fontSize, color: this.props.scheme.primaryText }}>{this.props.text}</Text>;
+        return <Text ref={this.props.forwardedTextRef} style={{ fontSize: this.props.fontSize, color: this.props.scheme.primaryText }}>
+            {this.props.text}
+        </Text>;
     }
 }
