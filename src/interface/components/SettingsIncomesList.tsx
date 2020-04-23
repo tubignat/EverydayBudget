@@ -163,7 +163,6 @@ class IncomeView extends Component<IIncomeViewProps, IIncomeViewState> {
     static contextType = ApplicationContext;
 
     context !: ApplicationState;
-    textInputRef: TextInput | null = null;
 
     constructor(props: IIncomeViewProps) {
         super(props);
@@ -186,18 +185,19 @@ class IncomeView extends Component<IIncomeViewProps, IIncomeViewState> {
             height: this.state.expandAnim,
             opacity: this.state.fadeAnim
         }}>
-            <TouchableWithoutFeedback onPress={() => this.textInputRef?.focus()}>
-                <View style={styles.incomeViewAmount}>
-                    <AmountInput
-                        forwardedRef={ref => this.textInputRef = ref}
-                        style={styles.incomeViewAmountText}
-                        value={this.props.income.amount}
-                        onChange={(newAmount) => this.props.onAmountChanged(newAmount)}
-                        placeholder={''}
-                    />
-                    <Text style={styles.incomeViewAmountText}> {currency}</Text>
-                </View>
-            </TouchableWithoutFeedback>
+            <View style={{ marginRight: 16 }}>
+                <AmountInput
+                    color={colorScheme.primaryText}
+                    value={this.props.income.amount}
+                    maxValue={999999}
+                    onChange={(newAmount) => this.props.onAmountChanged(newAmount)}
+                    placeholder={''}
+                    currency={currency}
+                    fontSize={20}
+                    width={96}
+                    height='100%'
+                />
+            </View>
             <TextInput
                 style={styles.incomeViewText}
                 onChangeText={this.props.onDescriptionChanged}
@@ -255,25 +255,12 @@ const getStyles = (scheme: ColorScheme) => StyleSheet.create({
         color: scheme.secondaryText,
         fontSize: 15,
     },
+    removeButtonContainer: {
+    },
     incomeViewText: {
         fontSize: 20,
         flexGrow: 2,
         flexShrink: 1,
         color: scheme.primaryText
-    },
-    incomeViewAmount: {
-        flexDirection: 'row',
-        alignSelf: 'center',
-        alignItems: 'center',
-        height: '100%',
-        justifyContent: 'flex-end',
-        width: 96,
-        marginRight: 16
-    },
-    incomeViewAmountText: {
-        fontSize: 20,
-        color: scheme.primaryText
-    },
-    removeButtonContainer: {
     },
 });

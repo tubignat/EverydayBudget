@@ -96,6 +96,7 @@ export const DaysSpendingsPanel = observer((props: IDaysSpendingsPanel) => {
                     <SpendingsList
                         spendings={spendings}
                         remove={onRemove}
+                        edit={edit}
                         scheme={colorScheme}
                         currency={currency}
                         shouldPlayEnterAnimation={!isFirstRender}

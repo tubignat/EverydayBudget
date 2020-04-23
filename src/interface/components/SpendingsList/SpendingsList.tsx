@@ -6,6 +6,7 @@ import { Spending, SpendingId } from '../../../domain/repositories/SpendingsRepo
 import { ColorScheme } from '../../color/ColorScheme';
 import { Currency } from '../../../domain/repositories/UserPreferencesRepository';
 import { observer } from 'mobx-react';
+import AmountInput from '../AmountInput';
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = width < 350;
@@ -14,6 +15,7 @@ const isBigScreen = height > 800;
 interface ISpendingsListProps {
     spendings: Spending[]
     remove: (id: SpendingId) => void
+    edit: (id: SpendingId, amount: number) => void
     scheme: ColorScheme
     currency: Currency
     shouldPlayEnterAnimation: boolean
@@ -29,6 +31,7 @@ export const SpendingsList = observer((props: ISpendingsListProps) => {
                     key={s.id}
                     spending={s}
                     onRemovePressed={() => props.remove(s.id)}
+                    onEdit={amount => props.edit(s.id, amount)}
                     shouldPlayEnterAnimation={props.shouldPlayEnterAnimation}
                     {...props}
                 />
@@ -40,6 +43,7 @@ export const SpendingsList = observer((props: ISpendingsListProps) => {
 interface ISpendingView {
     spending: Spending
     onRemovePressed: () => void
+    onEdit: (amount: number) => void
     scheme: ColorScheme
     currency: Currency
     shouldPlayEnterAnimation: boolean
@@ -72,7 +76,18 @@ function SpendingView(props: ISpendingView) {
         <Animated.View style={{ ...styles.spendingView, transform: [{ scale: scale }] }}>
 
             <View style={styles.leftCell}>
-                <Text style={styles.amount}>{formatMoney(props.spending.amount)} {props.currency}</Text>
+                <View style={styles.amount}>
+                    <AmountInput
+                        color={props.scheme.primaryText}
+                        value={props.spending.amount}
+                        maxValue={999999}
+                        onChange={props.onEdit}
+                        placeholder=''
+                        currency={props.currency}
+                        fontSize={isSmallScreen ? 24 : 30}
+                        height={36}
+                    />
+                </View>
                 <Text style={styles.time}>{getTimeString()}</Text>
             </View>
 
@@ -137,19 +152,22 @@ const getStyles = (scheme: ColorScheme) => StyleSheet.create({
     },
     leftCell: {
         paddingLeft: 20,
-        paddingVertical: 18
+        paddingVertical: 18,
+        flexGrow: 1,
+        flexShrink: 1,
+        alignItems: 'flex-start',
+        width: '50%',
     },
     rightCell: {
         padding: 10,
         alignItems: 'flex-end',
         justifyContent: 'space-between',
-        width: '50%'
+        width: '50%',
+        flexGrow: 1,
+        flexShrink: 1
     },
     amount: {
-        fontSize: isSmallScreen ? 24 : 30,
         marginBottom: 8,
-        height: 30,
-        color: scheme.primaryText
     },
     time: {
         fontSize: 16,

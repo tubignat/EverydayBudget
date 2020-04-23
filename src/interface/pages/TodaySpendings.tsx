@@ -29,7 +29,8 @@ function TodaySpendings() {
                         spendings={spendings}
                         scheme={application.colorScheme}
                         currency={application.currency}
-                        remove={id => application.removeSpending(id)}
+                        remove={application.removeSpending}
+                        edit={application.editSpending}
                         shouldPlayEnterAnimation={false}
                     />
                 }
