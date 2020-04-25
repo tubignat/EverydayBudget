@@ -1,26 +1,29 @@
 import React, { Component } from 'react';
 import Swiper from 'react-native-swiper';
-import Home from './src/interface/pages/Home';
-import Settings from './src/interface/pages/Settings';
-import TodaySpendings from './src/interface/pages/TodaySpendings';
+import Home from './src/interface/components/Home/Home';
+import Settings from './src/interface/components/Settings/Settings';
+import TodaySpendings from './src/interface/components/TodaySpendings/TodaySpendings';
 import { SpendingsRepository } from './src/domain/repositories/SpendingsRepository';
 import { observer } from 'mobx-react';
 import { IncomesRepository } from './src/domain/repositories/IncomesRepository';
 import { ExpensesRepository } from './src/domain/repositories/ExpensesRepository';
 import { BudgetService } from './src/domain/services/BudgetService';
 import { ApplicationState } from './src/interface/ApplicationState';
-import { MonthSpendings } from './src/interface/pages/MonthSpendings';
+import { MonthSpendings } from './src/interface/components/MonthSpendings/MonthSpendings';
 import { SetUpMonthsRepository } from './src/domain/repositories/SetUpMonthsRepository';
 import { EnsureMonthIsSetUpService } from './src/domain/services/EnsureMonthIsSetUpService';
 import { UserPreferencesRepository } from './src/domain/repositories/UserPreferencesRepository';
 import { ApplicationContext } from './src/interface/ApplicationContext';
 import { AppState, AppStateStatus, Image, Animated, View, StyleSheet } from 'react-native';
 import * as Font from 'expo-font';
-import { ModalStack } from './src/interface/components/ModalStack';
+import { ModalStack } from './src/interface/components/common/ModalStack';
 
 @observer
 export default class App extends Component<{}, {
-    isScrollLocked: boolean, isInitialized: boolean, appState: AppStateStatus, protectScreenOpacity: Animated.Value, protectScreenDisplay: boolean
+    isInitialized: boolean,
+    appState: AppStateStatus,
+    protectScreenOpacity: Animated.Value,
+    protectScreenDisplay: boolean
 }> {
 
     private applicationState: ApplicationState | undefined;
@@ -28,13 +31,11 @@ export default class App extends Component<{}, {
     constructor(props: {}) {
         super(props);
         this.state = {
-            isScrollLocked: false,
             isInitialized: false,
             appState: AppState.currentState,
             protectScreenOpacity: new Animated.Value(0),
             protectScreenDisplay: false
         };
-
     }
 
     componentDidMount() {
@@ -111,15 +112,10 @@ export default class App extends Component<{}, {
                         loop={false}
                         index={1}
                         bounces={true}
-                        scrollEnabled={!this.state.isScrollLocked}
-                        showsPagination={!this.state.isScrollLocked}
                         dotColor={this.applicationState.colorScheme.secondaryText}
                         activeDotColor={this.applicationState.colorScheme.primary}
                     >
-                        <Settings
-                            onModalOpen={() => this.setState({ isScrollLocked: true })}
-                            onModalClose={() => this.setState({ isScrollLocked: false })}
-                        />
+                        <Settings />
                         <Home />
                         <TodaySpendings />
                         <MonthSpendings />

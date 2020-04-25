@@ -1,14 +1,12 @@
 import { observable, action, computed } from "mobx";
 
-type RenderModal = (id: number, onClose: () => void) => JSX.Element
+type RenderModal = (onClose: () => void) => JSX.Element
 
 class ModalStackStateImpl {
 
     @action public open(render: RenderModal) {
         const id = Date.now();
-        this.modals.set(
-            id,
-            () => render(id, () => this.close(id))
+        this.modals.set(id, () => render(() => this.close(id))
         );
     }
 
@@ -20,7 +18,6 @@ class ModalStackStateImpl {
     @action private close(id: number) {
         if (!this.modals.has(id)) {
             return;
-            // throw Error(`No modal with id ${id}`);
         }
 
         this.modals.delete(id);
