@@ -12,6 +12,7 @@ export type Locale = {
     newExpense: string
     noExpensesYet: string
     add: string
+    cancel: string
     budgetPerDay: string
     startOfPeriod: string
     description: string
@@ -21,6 +22,12 @@ export type Locale = {
     website: string
     privacyPolicy: string
     daysOfWeek: string
+    categories: string
+    configureCategories: string
+    categoriesAdditionalText: string
+    categoryName: string
+    categoryColor: string
+    newCategoryName: string
 
     todaysExpenses: string
     noExpensesToday: string

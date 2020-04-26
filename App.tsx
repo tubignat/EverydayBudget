@@ -17,6 +17,8 @@ import { ApplicationContext } from './src/interface/ApplicationContext';
 import { AppState, AppStateStatus, Image, Animated, View, StyleSheet } from 'react-native';
 import * as Font from 'expo-font';
 import { ModalStack } from './src/interface/components/common/ModalStack';
+import { CategoryColorsRepository } from './src/domain/repositories/CategoryColorsRepository';
+import { CategoriesRepository } from './src/domain/repositories/CategoriesRepository';
 
 @observer
 export default class App extends Component<{}, {
@@ -70,7 +72,9 @@ export default class App extends Component<{}, {
             'antoutline': require('./node_modules/@ant-design/icons-react-native/fonts/antoutline.ttf')
         });
 
-        const spendingsRepository = new SpendingsRepository();
+        const colorsRepository = new CategoryColorsRepository();
+        const categoriesRepository = new CategoriesRepository(colorsRepository);
+        const spendingsRepository = new SpendingsRepository(categoriesRepository);
         const incomesRepository = new IncomesRepository();
         const expensesRepository = new ExpensesRepository();
         const setUpMonthsRepository = new SetUpMonthsRepository();
@@ -85,9 +89,12 @@ export default class App extends Component<{}, {
             spendingsRepository,
             setUpMonthsRepository,
             userPreferencesRepository,
+            categoriesRepository,
+            colorsRepository,
             ensureMonthIsSetUpService,
             budgetService);
 
+        await categoriesRepository.init();
         await spendingsRepository.init();
         await incomesRepository.init();
         await expensesRepository.init();

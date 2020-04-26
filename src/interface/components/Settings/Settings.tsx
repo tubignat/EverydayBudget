@@ -8,6 +8,7 @@ import { StartOfPeriodSettings } from './StartOfPeriodSettings/StartOfPeriodSett
 import { BudgetSettings } from './BudgetSettings/BudgetSettings';
 import { UserPreferencesSettings } from './UserPreferencesSettings/UserPreferencesSettings';
 import { FooterLinks } from './FooterLinks/FooterLinks';
+import { CategoriesSettings } from './CategoriesSettings/CategoriesSettings';
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = width < 350;
@@ -29,6 +30,7 @@ const Settings = observer(() => {
                     <View style={styles.pageContent}>
                         <BudgetSettings />
                         <StartOfPeriodSettings />
+                        <CategoriesSettings />
                         <UserPreferencesSettings />
                         <FooterLinks />
                     </View>

@@ -22,6 +22,12 @@ export const ruLocale: Locale = {
     website: 'Веб-сайт',
     privacyPolicy: 'Политика конфиденциальности',
     daysOfWeek: 'ПВСЧПСВ',
+    categories: 'Категории',
+    configureCategories: 'настроить',
+    categoriesAdditionalText: 'Список категорий',
+    categoryColor: 'Цвет категории',
+    categoryName: 'Название',
+    newCategoryName: 'Новая категория',
 
     todaysExpenses: 'Сегодня',
     noExpensesToday: 'За сегодня трат пока нет',
@@ -35,6 +41,7 @@ export const ruLocale: Locale = {
     noSpendingForThisDay: 'За этот день трат нет. ',
 
     add: 'Добавить',
+    cancel: 'Отменить',
 
     getDateText: (day: number, month: number) => `${day} ${ruMonths[month]}`,
 

@@ -22,6 +22,12 @@ export const enLocale: Locale = {
     website: 'Website',
     privacyPolicy: 'Privacy policy',
     daysOfWeek: 'MTWTFSS',
+    categories: 'Categories',
+    configureCategories: 'configure',
+    categoriesAdditionalText: 'Categories list',
+    categoryColor: 'Color',
+    categoryName: 'Name',
+    newCategoryName: 'New category',
 
     todaysExpenses: 'Today',
     noExpensesToday: 'No spending today',
@@ -34,6 +40,7 @@ export const enLocale: Locale = {
     saldos: 'Remained',
     noSpendingForThisDay: 'No spending that day. ',
     add: 'Add',
+    cancel: 'Cancel',
 
     getDateText: (day: number, month: number) => {
         const suffix = getDateSuffix(day);

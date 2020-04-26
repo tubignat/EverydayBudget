@@ -50,9 +50,8 @@ const getStyles = (scheme: ColorScheme) => StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 40,
+        marginBottom: 20,
         height: 32,
-        marginTop: -8
     },
     subheader: {
         color: scheme.secondaryText,

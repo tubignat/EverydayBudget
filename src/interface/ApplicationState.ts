@@ -1,5 +1,5 @@
 import { IExpensesRepository, Expense, ExpenseId } from "../domain/repositories/ExpensesRepository";
-import { ISpendingsRepository, Spending, SpendingId } from "../domain/repositories/SpendingsRepository";
+import { ISpendingsRepository } from "../domain/repositories/SpendingsRepository";
 import { IIncomesRepository, Income, IncomeId } from "../domain/repositories/IncomesRepository";
 import { BudgetService } from "../domain/services/BudgetService";
 import { observable, computed } from "mobx";
@@ -12,6 +12,11 @@ import { lightColorScheme } from "./color/LightColorScheme";
 import { darkColorScheme } from "./color/DarkColorScheme";
 import { Appearance } from 'react-native-appearance';
 import { ISetUpMonthsRepository } from "../domain/repositories/SetUpMonthsRepository";
+import { Spending, SpendingId } from "../domain/entities/Spending";
+import { Category } from "../domain/entities/Category";
+import { CategoryColor } from "../domain/entities/CategoryColor";
+import { ICategoriesRepository } from "../domain/repositories/CategoriesRepository";
+import { ICategoryColorsRepository } from "../domain/repositories/CategoryColorsRepository";
 
 export class ApplicationState {
     private expensesRepository: IExpensesRepository;
@@ -19,6 +24,8 @@ export class ApplicationState {
     private incomesRepository: IIncomesRepository;
     private setUpMonthRepository: ISetUpMonthsRepository;
     private userPreferencesRepository: IUserPreferencesRepository;
+    private categoriesRepository: ICategoriesRepository;
+    private categoryColorsRepository: ICategoryColorsRepository;
 
     private ensureMonthIsSetUpService: EnsureMonthIsSetUpService;
     private budgetService: BudgetService;
@@ -29,6 +36,8 @@ export class ApplicationState {
         spendingRepository: ISpendingsRepository,
         setUpMonthRepository: ISetUpMonthsRepository,
         userPreferencesRepository: IUserPreferencesRepository,
+        categoriesRepository: ICategoriesRepository,
+        categoryColorsRepository: ICategoryColorsRepository,
         ensureMonthIsSetUpService: EnsureMonthIsSetUpService,
         budgetService: BudgetService
     ) {
@@ -39,6 +48,8 @@ export class ApplicationState {
         this.userPreferencesRepository = userPreferencesRepository;
         this.ensureMonthIsSetUpService = ensureMonthIsSetUpService;
         this.budgetService = budgetService;
+        this.categoriesRepository = categoriesRepository;
+        this.categoryColorsRepository = categoryColorsRepository;
     }
 
     @observable public language: Language = 'en';
@@ -54,6 +65,8 @@ export class ApplicationState {
     @observable public spendings: Spending[] = [];
     @observable public budgetPerDay: number = 0;
     @observable public saldos: number[] = [];
+    @observable public categories: Category[] = [];
+    @observable public categoryColors: CategoryColor[] = [];
 
     @observable public year: number = 0;
     @observable public month: number = 0;
@@ -110,6 +123,9 @@ export class ApplicationState {
         this.expenses = this.expensesRepository.get(this.year, this.month);
         this.spendings = this.spendingRepository.get(this.year, this.month);
 
+        this.categories = this.categoriesRepository.get();
+        this.categoryColors = this.categoryColorsRepository.get();
+
         this.budgetPerDay = this.budgetService.getBudgetPerDay(this.year, this.month);
 
         this.saldos = this.budgetService.getSaldos(this.budgetPerDay, this.year, this.month, this.startOfPeriod);
@@ -124,12 +140,12 @@ export class ApplicationState {
     }
 
     public addSpending = (day: number, amount: number, hour: number | null, minute: number | null) => {
-        this.spendingRepository.add(this.year, this.month, day, null, amount, hour, minute);
+        this.spendingRepository.add(this.year, this.month, day, null, amount, hour, minute, null);
         this.init();
     }
 
     public editSpending = (id: SpendingId, amount: number) => {
-        this.spendingRepository.edit(id, null, amount);
+        this.spendingRepository.edit(id, null, amount, null);
         this.init();
     }
 
@@ -225,6 +241,11 @@ export class ApplicationState {
 
     public changeStartOfPeriod = (startOfPeriod: number) => {
         this.setUpMonthRepository.editMonthSetUp(this.year, this.month, startOfPeriod);
+        this.init();
+    }
+
+    public addCategory = (name: string, color: CategoryColor) => {
+        this.categoriesRepository.add(name, color);
         this.init();
     }
 

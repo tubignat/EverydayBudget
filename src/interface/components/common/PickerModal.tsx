@@ -20,10 +20,6 @@ export function PickerModal(props: IPickerModalProps) {
     const [scale] = useState(new Animated.Value(0));
 
     useEffect(open, []);
-    useEffect(setMainViewStyle, []);
-    useEffect(() => {
-        return clearMainViewStyle;
-    }, [])
 
     const styles = getStyles(props.scheme, scale, props.width, props.expansionPoint);
 
@@ -48,29 +44,6 @@ export function PickerModal(props: IPickerModalProps) {
     function close() {
         props.onCloseAnimationStart();
         Animated.timing(scale, { toValue: 0, duration: 300 }).start(props.onClose);
-    }
-
-    function setMainViewStyle() {
-        const mainViewScale = scale.interpolate({
-            inputRange: [0, 1],
-            outputRange: [1, 0.95]
-        });
-
-        const borderRadius = scale.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, 20]
-        })
-
-        const mainViewStyle = {
-            transform: [{ scale: mainViewScale }],
-            borderRadius: borderRadius
-        };
-
-        ModalStackState.setMainViewStyle(mainViewStyle, {});
-    }
-
-    function clearMainViewStyle() {
-        ModalStackState.setMainViewStyle({}, {});
     }
 }
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Animated, View, Text, StyleSheet, Dimensions } from 'react-native';
 import { IconButton } from '../common/IconButton';
-import { Spending, SpendingId } from '../../../domain/repositories/SpendingsRepository';
+import { Spending, SpendingId } from '../../../domain/entities/Spending';
 import { ColorScheme } from '../../color/ColorScheme';
 import { Currency } from '../../../domain/repositories/UserPreferencesRepository';
 import { observer } from 'mobx-react';
