@@ -12,5 +12,8 @@ export const lightColorScheme: ColorScheme = {
     barelyVisible: 'rgb(232, 232, 237)',
     danger: 'rgb(255, 69, 58)',
     success: 'rgb(52, 199, 89)',
-    inactive: 'lightgray'
+    inactive: 'lightgray',
+    buttonBackground: 'white',
+    buttonBorder: 'rgb(229, 229, 234)',
+    keyboardPlateBackground: 'rgb(242, 242, 247)'
 }

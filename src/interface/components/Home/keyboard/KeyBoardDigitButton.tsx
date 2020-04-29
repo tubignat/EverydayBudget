@@ -1,31 +1,41 @@
-import React, { Component } from 'react';
-import { ButtonWrapper } from '../../common/ButtonWrapper';
-import { keyButtonStyle, Key } from './keyboardCommon';
-import { View, Text, StyleSheet } from 'react-native';
+import React from 'react';
+import { Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { ColorScheme } from '../../../color/ColorScheme';
 interface IKeyBoardDigitButtonProps {
-    digit: Key
+    text: string
     onPress: () => void
     color: string
+    fontSize: number
+    height: number
+    scheme: ColorScheme
+    disabled: boolean
 }
 
-export class KeyBoardDigitButton extends Component<IKeyBoardDigitButtonProps> {
-    render() {
-        return <ButtonWrapper
-            renderNormal={this.renderNormal}
-            renderPressed={this.renderPressed}
-            onPress={this.props.onPress}
-            disabled={false}
-        />
-    }
+export function KeyBoardButton(props: IKeyBoardDigitButtonProps) {
+    const styles = getStyles(props);
 
-    renderNormal = () => {
-        return <View style={keyButtonStyle}>
-            <Text style={{ fontSize: 40, color: this.props.color }}>{this.props.digit}</Text>
-        </View>;
-    }
-    renderPressed = () => {
-        return <View style={{ ...keyButtonStyle, backgroundColor: this.props.color }}>
-            <Text style={{ color: 'white', fontSize: 40 }}>{this.props.digit}</Text>
-        </View>;
-    }
+    return <TouchableOpacity style={styles.button} onPress={props.onPress} disabled={props.disabled}>
+        <Text style={styles.text}>
+            {props.text}
+        </Text>
+    </TouchableOpacity>
 }
+
+const getStyles = (props: IKeyBoardDigitButtonProps) => StyleSheet.create({
+    button: {
+        height: props.height,
+        backgroundColor: props.scheme.buttonBackground,
+        borderWidth: 1,
+        borderColor: props.scheme.buttonBorder,
+        width: '33%',
+        marginLeft: 4,
+        marginBottom: 4,
+        borderRadius: 8,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    text: {
+        fontSize: props.fontSize,
+        color: props.color
+    }
+})

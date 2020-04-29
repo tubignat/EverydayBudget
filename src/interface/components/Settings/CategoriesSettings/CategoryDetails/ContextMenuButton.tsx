@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableHighlight, View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { ColorScheme } from '../../../../color/ColorScheme';
 
 interface IContextMenuButtonProps {
@@ -12,20 +12,23 @@ interface IContextMenuButtonProps {
 export function ContextMenuButton(props: IContextMenuButtonProps) {
     const styles = getStyles(props.scheme, props.color);
 
-    return <TouchableOpacity style={styles.container} onPress={props.onPress} activeOpacity={.5}>
+    return <TouchableOpacity style={styles.container} onPress={props.onPress} activeOpacity={.7}>
         <Text style={styles.text}>{props.text}</Text>
     </TouchableOpacity>
 }
 
 const getStyles = (scheme: ColorScheme, textColor: string) => StyleSheet.create({
     container: {
-        height: 60,
+        height: 56,
         marginTop: 12,
         width: '100%',
-        borderRadius: 16,
+        borderTopLeftRadius: 16,
+        borderTopRightRadius: 16,
+        borderBottomLeftRadius: 16,
+        borderBottomRightRadius: 16,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: scheme.background
+        backgroundColor: scheme.pickerModalBackground
     },
     text: {
         fontSize: 20,

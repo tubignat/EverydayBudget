@@ -32,6 +32,7 @@ function TodaySpendings() {
                         remove={application.removeSpending}
                         edit={application.editSpending}
                         shouldPlayEnterAnimation={false}
+                        shouldFocusAddedSpending={false}
                     />
                 }
                 {

@@ -5,6 +5,7 @@ export const ruLocale: Locale = {
     today: 'сегодня',
     todaysLimit: 'Баланс',
     addExpense: 'Добавить трату',
+    erase: 'Стереть',
 
     settingsPageTitle: 'Настройки',
     incomes: 'Доходы',
@@ -25,7 +26,7 @@ export const ruLocale: Locale = {
     categories: 'Категории',
     configureCategories: 'настроить',
     categoriesAdditionalText: 'Список категорий',
-    categoryColor: 'Цвет категории',
+    categoryColor: 'Цвет',
     categoryName: 'Название',
     newCategoryName: 'Новая категория',
 
@@ -42,6 +43,9 @@ export const ruLocale: Locale = {
 
     add: 'Добавить',
     cancel: 'Отменить',
+    close: 'Закрыть',
+    remove: 'Удалить',
+    save: 'Сохранить',
 
     getDateText: (day: number, month: number) => `${day} ${ruMonths[month]}`,
 

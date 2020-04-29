@@ -7,6 +7,9 @@ import { ColorScheme } from '../../../color/ColorScheme';
 import { ModalStackState } from "../../../ModalStackState";
 import SlidingUpPanel from "../../common/SlidingUpPanel";
 import { AddCategoryModal } from "./CategoryDetails/AddCategoryModal";
+import { CategoriesList } from "./CategoriesList";
+import { Category } from "../../../../domain/entities/Category";
+import { EditCategoryModal } from "./CategoryDetails/EditCategoryModal";
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = width < 350;
@@ -19,20 +22,26 @@ export const CategoriesSettingsPanel = observer(({ onClose }: { onClose: () => v
     }
 
     const openAddCategoryModal = () => ModalStackState.open(onClose => <AddCategoryModal key='addCategoryModal' onClose={onClose} />)
+    const openEditCategoryModal = (category: Category) => ModalStackState.open(
+        onClose => <EditCategoryModal key='editCategoryModal' onClose={onClose} category={category} />
+    )
 
     const styles = getStyles(application.colorScheme);
     const offset = isBigScreen ? 75 : 50;
 
     return <SlidingUpPanel colorScheme={application.colorScheme} offsetTop={offset} onClose={onClose}>
-        <View style={{ paddingBottom: 70 }}>
+        <View style={{ paddingBottom: 70, marginHorizontal: isSmallScreen ? -8 : 0 }}>
 
             <View style={styles.headerContainer}>
                 <Text style={styles.header}>{application.locale.categories}</Text>
                 <Text style={styles.additionalText}>{application.locale.categoriesAdditionalText}</Text>
             </View>
-            {
-                application.categories.map(category => <Text style={{ color: category.color.color }}>{category.name}</Text>)
-            }
+
+            <CategoriesList
+                scheme={application.colorScheme}
+                categories={application.categories}
+                onPress={openEditCategoryModal}
+            />
 
             <View style={styles.addButtonContainer}>
                 <TextButton

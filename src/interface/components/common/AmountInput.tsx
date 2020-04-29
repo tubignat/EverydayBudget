@@ -14,6 +14,7 @@ interface IAmountInputProps {
     width?: number | string
     height?: number | string
     onChange: (value: number) => void
+    setRef?: (ref: TextInput | null) => void
 }
 
 interface IAmountInputState {
@@ -38,7 +39,10 @@ class AmountInput extends Component<IAmountInputProps, IAmountInputState> {
         return <TouchableWithoutFeedback onPress={() => this.textInputRef?.focus()}>
             <View style={{ ...styles.incomeViewAmount, width: this.props.width, height: this.props.height }}>
                 <TextInput
-                    ref={ref => this.textInputRef = ref}
+                    ref={ref => {
+                        this.textInputRef = ref;
+                        this.props.setRef?.(ref);
+                    }}
                     placeholder={this.props.placeholder}
                     selectTextOnFocus
                     style={{ fontSize: this.props.fontSize, color: this.props.color }}

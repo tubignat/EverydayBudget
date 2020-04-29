@@ -3,6 +3,7 @@ export type Locale = {
     today: string
     todaysLimit: string
     addExpense: string
+    erase: string
 
     settingsPageTitle: string
     incomes: string
@@ -12,7 +13,10 @@ export type Locale = {
     newExpense: string
     noExpensesYet: string
     add: string
+    close: string
     cancel: string
+    remove: string
+    save: string
     budgetPerDay: string
     startOfPeriod: string
     description: string

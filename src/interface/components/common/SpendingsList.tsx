@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Animated, View, Text, StyleSheet, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Animated, View, Text, StyleSheet, Dimensions, TextInput } from 'react-native';
 import { IconButton } from '../common/IconButton';
 import { Spending, SpendingId } from '../../../domain/entities/Spending';
 import { ColorScheme } from '../../color/ColorScheme';
@@ -18,6 +18,7 @@ interface ISpendingsListProps {
     scheme: ColorScheme
     currency: Currency
     shouldPlayEnterAnimation: boolean
+    shouldFocusAddedSpending: boolean
     onRemoveAnimationStart?: () => void
 }
 
@@ -46,12 +47,16 @@ interface ISpendingView {
     scheme: ColorScheme
     currency: Currency
     shouldPlayEnterAnimation: boolean
+    shouldFocusAddedSpending: boolean
     onRemoveAnimationStart?: () => void
 }
 
 function SpendingView(props: ISpendingView) {
 
-    const [scale] = useState(getScaleAnimatedValue())
+    const [scale] = useState(props.shouldPlayEnterAnimation ? new Animated.Value(0) : new Animated.Value(1));
+
+    const [amountInputRef, setAmountInputRef] = useState<TextInput | null>(null);
+    useEffect(open, [amountInputRef]);
 
     const height = scale.interpolate({
         inputRange: [0, 1],
@@ -85,6 +90,7 @@ function SpendingView(props: ISpendingView) {
                         currency={props.currency}
                         fontSize={isSmallScreen ? 24 : 30}
                         height={36}
+                        setRef={ref => setAmountInputRef(ref)}
                     />
                 </View>
                 <Text style={styles.time}>{getTimeString()}</Text>
@@ -129,15 +135,12 @@ function SpendingView(props: ISpendingView) {
         Animated.timing(scale, { toValue: 0, duration: 200 }).start(props.onRemovePressed);
     }
 
-    function getScaleAnimatedValue() {
-        if (!props.shouldPlayEnterAnimation) {
-            return new Animated.Value(1);
-        }
-
-        const value = new Animated.Value(0);
-        Animated.spring(value, { toValue: 1 }).start();
-
-        return value;
+    function open() {
+        Animated
+            .spring(scale, { toValue: 1, restDisplacementThreshold: .01, restSpeedThreshold: .01 })
+            .start(() => { }
+                // props.shouldFocusAddedSpending && amountInputRef?.focus()
+            );
     }
 }
 

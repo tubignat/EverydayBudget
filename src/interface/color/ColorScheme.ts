@@ -11,4 +11,7 @@ export type ColorScheme = {
     danger: string;
     success: string;
     inactive: string;
+    buttonBackground: string;
+    buttonBorder: string;
+    keyboardPlateBackground: string;
 }

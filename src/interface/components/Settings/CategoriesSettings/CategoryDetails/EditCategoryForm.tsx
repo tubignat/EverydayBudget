@@ -17,7 +17,7 @@ interface IEditCategoryFormProps {
 
 export function EditCategoryForm(props: IEditCategoryFormProps) {
     const styles = getStyles(props.scheme);
-    return <View style={styles.container}>
+    return <View>
         <Text style={styles.label}>{props.locale.categoryName}</Text>
         <TextInput style={styles.nameInput} value={props.name} onChangeText={props.onNameChange} selectTextOnFocus={true} />
 
@@ -27,11 +27,6 @@ export function EditCategoryForm(props: IEditCategoryFormProps) {
 }
 
 const getStyles = (scheme: ColorScheme) => StyleSheet.create({
-    container: {
-        backgroundColor: scheme.background,
-        padding: 32,
-        borderRadius: 16
-    },
     label: {
         fontSize: 16,
         color: scheme.secondaryText,

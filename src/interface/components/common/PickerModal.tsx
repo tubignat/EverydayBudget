@@ -38,7 +38,7 @@ export function PickerModal(props: IPickerModalProps) {
 
     function open() {
         props.onOpenAnimationStart();
-        Animated.spring(scale, { toValue: 1, bounciness: 0 }).start();
+        Animated.spring(scale, { toValue: 1 }).start();
     }
 
     function close() {

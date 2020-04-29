@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Swiper from 'react-native-swiper';
-import Home from './src/interface/components/Home/Home';
+import { Home } from './src/interface/components/Home/Home';
 import Settings from './src/interface/components/Settings/Settings';
 import TodaySpendings from './src/interface/components/TodaySpendings/TodaySpendings';
 import { SpendingsRepository } from './src/domain/repositories/SpendingsRepository';

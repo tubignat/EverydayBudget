@@ -7,6 +7,7 @@ export interface ICategoriesRepository {
     get: () => Category[]
     add: (name: string, color: CategoryColor) => void
     edit: (id: number, name: string, color: CategoryColor) => void
+    remove: (id: number) => void
 }
 
 export class CategoriesRepository implements ICategoriesRepository {
@@ -56,6 +57,15 @@ export class CategoriesRepository implements ICategoriesRepository {
             name: name,
             colorId: color.id
         };
+
+        AsyncStorage
+            .setItem(this.storageKey, JSON.stringify(this.categoryDTOs))
+            .catch(error => console.error(error));
+    }
+
+    remove = (id: number) => {
+        const index = this.categoryDTOs.findIndex(i => i.id === id);
+        this.categoryDTOs.splice(index, 1);
 
         AsyncStorage
             .setItem(this.storageKey, JSON.stringify(this.categoryDTOs))

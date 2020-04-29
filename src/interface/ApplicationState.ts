@@ -249,6 +249,16 @@ export class ApplicationState {
         this.init();
     }
 
+    public removeCategory = (category: Category) => {
+        this.categoriesRepository.remove(category.id);
+        this.init();
+    }
+
+    public editCategory = (category: Category, name: string, color: CategoryColor) => {
+        this.categoriesRepository.edit(category.id, name, color);
+        this.init();
+    }
+
     private getLanguageFromSystem = (): Language => {
         const ruLocaleRegex = /^ru-\w\w$/
         return ruLocaleRegex.test(Localization.locale) ? 'ru' : 'en'

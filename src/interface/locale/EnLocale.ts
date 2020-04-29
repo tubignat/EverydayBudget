@@ -5,6 +5,7 @@ export const enLocale: Locale = {
     today: 'today',
     todaysLimit: 'Balance',
     addExpense: 'Enter new expense',
+    erase: 'Erase',
 
     settingsPageTitle: 'Settings',
     incomes: 'Incomes',
@@ -41,6 +42,9 @@ export const enLocale: Locale = {
     noSpendingForThisDay: 'No spending that day. ',
     add: 'Add',
     cancel: 'Cancel',
+    close: 'Close',
+    save: 'Save',
+    remove: 'Remove',
 
     getDateText: (day: number, month: number) => {
         const suffix = getDateSuffix(day);

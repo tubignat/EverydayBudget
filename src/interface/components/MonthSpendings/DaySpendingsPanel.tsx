@@ -100,6 +100,7 @@ export const DaysSpendingsPanel = observer((props: IDaysSpendingsPanel) => {
                         scheme={colorScheme}
                         currency={currency}
                         shouldPlayEnterAnimation={!isFirstRender}
+                        shouldFocusAddedSpending={!isFirstRender}
                         onRemoveAnimationStart={onRemoveAnimationStart}
                     />
                 }

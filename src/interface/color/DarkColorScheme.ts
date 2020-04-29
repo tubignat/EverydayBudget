@@ -12,5 +12,8 @@ export const darkColorScheme: ColorScheme = {
     barelyVisible: 'rgb(58, 58, 60)',
     danger: 'rgb(255, 69, 58)',
     success: 'rgb(48, 209, 88)',
-    inactive: 'rgb(142, 142, 147)'
+    inactive: 'rgb(142, 142, 147)',
+    buttonBackground: 'rgb(72, 72, 74)',
+    buttonBorder: 'rgb(44, 44, 46)',
+    keyboardPlateBackground: 'rgb(44, 44, 46)'
 }
