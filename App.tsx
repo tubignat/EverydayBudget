@@ -12,6 +12,7 @@ import { ApplicationState } from './src/interface/ApplicationState';
 import { MonthSpendings } from './src/interface/components/MonthSpendings/MonthSpendings';
 import { SetUpMonthsRepository } from './src/domain/repositories/SetUpMonthsRepository';
 import { EnsureMonthIsSetUpService } from './src/domain/services/EnsureMonthIsSetUpService';
+import { DefaultCategoriesService } from './src/domain/services/DefaultCategoriesService';
 import { UserPreferencesRepository } from './src/domain/repositories/UserPreferencesRepository';
 import { ApplicationContext } from './src/interface/ApplicationContext';
 import { AppState, AppStateStatus, Image, Animated, View, StyleSheet } from 'react-native';
@@ -19,6 +20,7 @@ import * as Font from 'expo-font';
 import { ModalStack } from './src/interface/components/common/ModalStack';
 import { CategoryColorsRepository } from './src/domain/repositories/CategoryColorsRepository';
 import { CategoriesRepository } from './src/domain/repositories/CategoriesRepository';
+import { FirstTimeInitRepository } from './src/domain/repositories/FirstTimeInitRepository';
 
 @observer
 export default class App extends Component<{}, {
@@ -79,9 +81,11 @@ export default class App extends Component<{}, {
         const expensesRepository = new ExpensesRepository();
         const setUpMonthsRepository = new SetUpMonthsRepository();
         const userPreferencesRepository = new UserPreferencesRepository();
+        const firstTimeInitRepository = new FirstTimeInitRepository();
 
         const ensureMonthIsSetUpService = new EnsureMonthIsSetUpService(incomesRepository, expensesRepository, setUpMonthsRepository);
         const budgetService = new BudgetService(incomesRepository, expensesRepository, spendingsRepository);
+        const defaultCategoriesService = new DefaultCategoriesService(firstTimeInitRepository, categoriesRepository, colorsRepository);
 
         this.applicationState = new ApplicationState(
             incomesRepository,
@@ -92,7 +96,9 @@ export default class App extends Component<{}, {
             categoriesRepository,
             colorsRepository,
             ensureMonthIsSetUpService,
-            budgetService);
+            budgetService,
+            defaultCategoriesService
+        );
 
         await categoriesRepository.init();
         await spendingsRepository.init();
@@ -100,6 +106,7 @@ export default class App extends Component<{}, {
         await expensesRepository.init();
         await setUpMonthsRepository.init();
         await userPreferencesRepository.init();
+        await firstTimeInitRepository.init();
 
         this.applicationState.init();
 

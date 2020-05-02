@@ -17,6 +17,7 @@ export interface ISpendingsRepository {
     edit: (id: SpendingId, description: string | null, amount: number, category: Category | null) => void;
     remove: (id: SpendingId) => void;
     get: (year: number, month: number) => Spending[];
+    getAll: () => Spending[];
 }
 
 export class SpendingsRepository implements ISpendingsRepository {
@@ -109,6 +110,24 @@ export class SpendingsRepository implements ISpendingsRepository {
                 }
             })
     };
+
+    getAll = () => {
+        const categories = this.categoriesRepository.get();
+
+        return this.spendingDTOs.map(dto => {
+            return {
+                id: dto.id,
+                amount: dto.amount,
+                description: dto.description,
+                year: dto.year,
+                month: dto.month,
+                day: dto.day,
+                hour: dto.hour,
+                minute: dto.minute,
+                category: categories.find(category => category.id === dto.categoryId) ?? null
+            }
+        })
+    }
 }
 
 type SpendingDTO = {

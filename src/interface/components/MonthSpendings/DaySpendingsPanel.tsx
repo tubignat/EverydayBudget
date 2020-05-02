@@ -13,7 +13,7 @@ import { TextButton } from '../common/TextButton';
 import { ApplicationContext } from '../../ApplicationContext';
 import { ColorScheme } from '../../color/ColorScheme';
 import { observer } from 'mobx-react';
-import { SpendingsList } from '../common/SpendingsList';
+import { SpendingsList } from '../common/Spendings/SpendingsList';
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = width < 350;
@@ -39,7 +39,7 @@ export const DaysSpendingsPanel = observer((props: IDaysSpendingsPanel) => {
     const spendings = application.spendings.filter(s => s.day === openedDay);
     const remove = application.removeSpending;
     const edit = application.editSpending;
-    const add = () => application.addSpending(openedDay, 0, null, null);
+    const add = () => application.addSpending(openedDay, 0, null, null, null);
 
     const [isAddButtonVisible, setIsAddButtonVisible] = useState(spendings.length > 0);
     const [isEmptyListTextVisible, setIsEmptyListTextVisible] = useState(spendings.length === 0);
@@ -102,6 +102,7 @@ export const DaysSpendingsPanel = observer((props: IDaysSpendingsPanel) => {
                         shouldPlayEnterAnimation={!isFirstRender}
                         shouldFocusAddedSpending={!isFirstRender}
                         onRemoveAnimationStart={onRemoveAnimationStart}
+                        locale={application.locale}
                     />
                 }
 

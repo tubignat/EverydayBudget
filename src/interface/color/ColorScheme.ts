@@ -13,5 +13,6 @@ export type ColorScheme = {
     inactive: string;
     buttonBackground: string;
     buttonBorder: string;
+    buttonBackgroundPressed: string;
     keyboardPlateBackground: string;
 }

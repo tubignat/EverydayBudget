@@ -7,7 +7,7 @@ import { ColorScheme } from '../../../color/ColorScheme';
 import { ModalStackState } from "../../../ModalStackState";
 import SlidingUpPanel from "../../common/SlidingUpPanel";
 import { AddCategoryModal } from "./CategoryDetails/AddCategoryModal";
-import { CategoriesList } from "./CategoriesList";
+import { CategoriesList } from "../../common/CategoriesList";
 import { Category } from "../../../../domain/entities/Category";
 import { EditCategoryModal } from "./CategoryDetails/EditCategoryModal";
 
@@ -22,9 +22,15 @@ export const CategoriesSettingsPanel = observer(({ onClose }: { onClose: () => v
     }
 
     const openAddCategoryModal = () => ModalStackState.open(onClose => <AddCategoryModal key='addCategoryModal' onClose={onClose} />)
-    const openEditCategoryModal = (category: Category) => ModalStackState.open(
-        onClose => <EditCategoryModal key='editCategoryModal' onClose={onClose} category={category} />
-    )
+    const openEditCategoryModal = (category: Category | null) => {
+        if (category === null) {
+            throw new Error('Category cannot be null');
+        }
+
+        ModalStackState.open(
+            onClose => <EditCategoryModal key='editCategoryModal' onClose={onClose} categoryId={category.id} />
+        )
+    }
 
     const styles = getStyles(application.colorScheme);
     const offset = isBigScreen ? 75 : 50;
@@ -41,6 +47,7 @@ export const CategoriesSettingsPanel = observer(({ onClose }: { onClose: () => v
                 scheme={application.colorScheme}
                 categories={application.categories}
                 onPress={openEditCategoryModal}
+                locale={application.locale}
             />
 
             <View style={styles.addButtonContainer}>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, View, Text, Dimensions, StyleSheet } from 'react-native';
 import { Page } from '../common/Page'
-import { SpendingsList } from '../common/SpendingsList'
+import { SpendingsList } from '../common/Spendings/SpendingsList'
 import { observer } from 'mobx-react';
 import { ApplicationContext } from '../../ApplicationContext';
 import { ColorScheme } from '../../color/ColorScheme';
@@ -28,6 +28,7 @@ function TodaySpendings() {
                     spendings.length > 0 && <SpendingsList
                         spendings={spendings}
                         scheme={application.colorScheme}
+                        locale={application.locale}
                         currency={application.currency}
                         remove={application.removeSpending}
                         edit={application.editSpending}

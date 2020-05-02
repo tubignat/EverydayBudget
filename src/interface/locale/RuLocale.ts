@@ -29,6 +29,8 @@ export const ruLocale: Locale = {
     categoryColor: 'Цвет',
     categoryName: 'Название',
     newCategoryName: 'Новая категория',
+    removeCategoryQuestion: 'Удалить категорию?',
+    removeCategoryDialogMessage: 'Все траты по этой категории будут помечены как "Без категории"',
 
     todaysExpenses: 'Сегодня',
     noExpensesToday: 'За сегодня трат пока нет',
@@ -47,6 +49,8 @@ export const ruLocale: Locale = {
     remove: 'Удалить',
     save: 'Сохранить',
 
+    noCategory: 'Без категории',
+
     getDateText: (day: number, month: number) => `${day} ${ruMonths[month]}`,
 
     getDayOfWeek: (dayOfWeek: number) => daysOfWeek[dayOfWeek],
@@ -55,7 +59,18 @@ export const ruLocale: Locale = {
 
     getMonthName: (month: number) => monthNames[month],
 
-    getStartOfPeriodDateText: (day: number, month: number) => `${day} ${ruMonths[month]}`
+    getStartOfPeriodDateText: (day: number, month: number) => `${day} ${ruMonths[month]}`,
+
+    lunchCategory: 'Бизнес-ланч',
+    groceriesCategory: 'Продукты',
+    householdCategory: 'Дом, ремонт',
+    transportationCategory: 'Транспорт',
+    clothingCategory: 'Одежда',
+    entertainmentCategory: 'Развлечения',
+    restaurantsCategory: 'Рестораны и бары',
+    sportCategory: 'Спорт',
+    healthCategory: 'Здоровье',
+    otherCategory: 'Другое',
 }
 
 const monthNames: { [month: number]: string } = {

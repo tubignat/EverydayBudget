@@ -10,7 +10,7 @@ export type UserPreferences = {
     language: Language | null,
     colorSchemePreference: ColorSchemePreference,
     sortExpenses: SortMode | null,
-    sortIncomes: SortMode | null
+    sortIncomes: SortMode | null,
 }
 
 export interface IUserPreferencesRepository {

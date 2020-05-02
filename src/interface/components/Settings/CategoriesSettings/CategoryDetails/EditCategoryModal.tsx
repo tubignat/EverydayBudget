@@ -1,33 +1,39 @@
 import React, { useContext, useState } from 'react';
 import { EditCategoryForm } from './EditCategoryForm';
 import { ApplicationContext } from '../../../../ApplicationContext';
-import { Category } from '../../../../../domain/entities/Category';
 import { ModalWithContextMenu } from './ModalWithContextMenu';
+import { observer } from 'mobx-react';
+import { Alert } from 'react-native';
 
 interface IEditCategoryModalProps {
     onClose: () => void
-    category: Category
+    categoryId: number
 }
 
-export function EditCategoryModal(props: IEditCategoryModalProps) {
+export const EditCategoryModal = observer((props: IEditCategoryModalProps) => {
     const application = useContext(ApplicationContext);
     if (!application) {
         return null;
     }
 
-    const [name, setName] = useState(props.category.name);
-    const [color, setColor] = useState(props.category.color);
+    const category = application.categories.find(c => c.id === props.categoryId);
+    if (!category) {
+        throw new Error('Category not found');
+    }
 
     const buttons = [
         {
-            text: application.locale.save,
-            color: application.colorScheme.primary,
-            onPress: () => application.editCategory(props.category, name, color)
-        },
-        {
             text: application.locale.remove,
             color: application.colorScheme.danger,
-            onPress: () => application.removeCategory(props.category)
+            onPress: () => {
+                Alert.alert(
+                    application.locale.removeCategoryQuestion,
+                    application.locale.removeCategoryDialogMessage,
+                    [
+                        { text: application.locale.remove, onPress: () => application.removeCategory(category), style: 'destructive' },
+                        { text: application.locale.cancel, onPress: () => { }, style: 'cancel' },
+                    ])
+            }
         }
     ]
 
@@ -35,11 +41,11 @@ export function EditCategoryModal(props: IEditCategoryModalProps) {
         <EditCategoryForm
             scheme={application.colorScheme}
             locale={application.locale}
-            name={name}
-            onNameChange={setName}
-            color={color}
-            onColorChange={setColor}
+            name={category.name}
+            onNameChange={newName => application.editCategory(category, newName, category.color)}
+            color={category.color}
+            onColorChange={newColor => application.editCategory(category, category.name, newColor)}
             allColors={application.categoryColors}
         />
     </ModalWithContextMenu>
-}
+})

@@ -4,6 +4,7 @@ import { IIncomesRepository, Income, IncomeId } from "../domain/repositories/Inc
 import { BudgetService } from "../domain/services/BudgetService";
 import { observable, computed } from "mobx";
 import { EnsureMonthIsSetUpService } from "../domain/services/EnsureMonthIsSetUpService";
+import { DefaultCategoriesService } from "../domain/services/DefaultCategoriesService";
 import { Language, Currency, IUserPreferencesRepository, SortMode, ColorSchemePreference } from "../domain/repositories/UserPreferencesRepository";
 import * as Localization from 'expo-localization';
 import { enLocale } from "./locale/EnLocale";
@@ -29,6 +30,7 @@ export class ApplicationState {
 
     private ensureMonthIsSetUpService: EnsureMonthIsSetUpService;
     private budgetService: BudgetService;
+    private defaultCategoriesService: DefaultCategoriesService;
 
     constructor(
         incomesRepository: IIncomesRepository,
@@ -39,7 +41,8 @@ export class ApplicationState {
         categoriesRepository: ICategoriesRepository,
         categoryColorsRepository: ICategoryColorsRepository,
         ensureMonthIsSetUpService: EnsureMonthIsSetUpService,
-        budgetService: BudgetService
+        budgetService: BudgetService,
+        defaultCategoriesService: DefaultCategoriesService
     ) {
         this.incomesRepository = incomesRepository;
         this.expensesRepository = expensesRepository;
@@ -50,6 +53,7 @@ export class ApplicationState {
         this.budgetService = budgetService;
         this.categoriesRepository = categoriesRepository;
         this.categoryColorsRepository = categoryColorsRepository;
+        this.defaultCategoriesService = defaultCategoriesService;
     }
 
     @observable public language: Language = 'en';
@@ -108,6 +112,23 @@ export class ApplicationState {
         return this.budgetPerDay - this.todaysSpendings.map(s => s.amount).reduce((sum, spending) => sum + spending, 0);
     }
 
+    @computed public get sortedCategories() {
+        const recentSpendings = this.spendingRepository.getAll().slice(0, 50);
+        const categoriesByFrequency = [null, ...this.categories]
+            .map(category => {
+                return {
+                    category: category,
+                    occurences: category !== null
+                        ? recentSpendings.filter(s => s.category?.id === category.id).length
+                        : recentSpendings.filter(s => s.category === null).length
+                }
+            })
+            .sort((a, b) => b.occurences - a.occurences)
+            .map(c => c.category);
+
+        return categoriesByFrequency;
+    }
+
     public init = () => {
         const date = new Date();
 
@@ -123,9 +144,6 @@ export class ApplicationState {
         this.expenses = this.expensesRepository.get(this.year, this.month);
         this.spendings = this.spendingRepository.get(this.year, this.month);
 
-        this.categories = this.categoriesRepository.get();
-        this.categoryColors = this.categoryColorsRepository.get();
-
         this.budgetPerDay = this.budgetService.getBudgetPerDay(this.year, this.month);
 
         this.saldos = this.budgetService.getSaldos(this.budgetPerDay, this.year, this.month, this.startOfPeriod);
@@ -137,15 +155,20 @@ export class ApplicationState {
         this.sortExpenses = preferences.sortExpenses ?? 'none';
         this.sortIncomes = preferences.sortIncomes ?? 'none';
         this.colorSchemePreference = preferences.colorSchemePreference ?? 'auto';
+
+        this.defaultCategoriesService.ensureCategoriesAreSetUp(this.locale);
+
+        this.categories = this.categoriesRepository.get();
+        this.categoryColors = this.categoryColorsRepository.get();
     }
 
-    public addSpending = (day: number, amount: number, hour: number | null, minute: number | null) => {
-        this.spendingRepository.add(this.year, this.month, day, null, amount, hour, minute, null);
+    public addSpending = (day: number, amount: number, hour: number | null, minute: number | null, category: Category | null) => {
+        this.spendingRepository.add(this.year, this.month, day, null, amount, hour, minute, category);
         this.init();
     }
 
-    public editSpending = (id: SpendingId, amount: number) => {
-        this.spendingRepository.edit(id, null, amount, null);
+    public editSpending = (id: SpendingId, amount: number, category: Category | null) => {
+        this.spendingRepository.edit(id, null, amount, category);
         this.init();
     }
 
@@ -251,6 +274,13 @@ export class ApplicationState {
 
     public removeCategory = (category: Category) => {
         this.categoriesRepository.remove(category.id);
+        this.spendingRepository
+            .getAll()
+            .filter(spending => spending.category?.id === category.id)
+            .forEach(spending => {
+                this.spendingRepository.edit(spending.id, null, spending.amount, null);
+            })
+
         this.init();
     }
 

@@ -15,5 +15,6 @@ export const lightColorScheme: ColorScheme = {
     inactive: 'lightgray',
     buttonBackground: 'white',
     buttonBorder: 'rgb(229, 229, 234)',
+    buttonBackgroundPressed: 'rgb(199, 199, 204)',
     keyboardPlateBackground: 'rgb(242, 242, 247)'
 }

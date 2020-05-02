@@ -29,6 +29,8 @@ export const enLocale: Locale = {
     categoryColor: 'Color',
     categoryName: 'Name',
     newCategoryName: 'New category',
+    removeCategoryQuestion: 'Remove this category?',
+    removeCategoryDialogMessage: 'Expenses with this category label will be labeled as "No category"',
 
     todaysExpenses: 'Today',
     noExpensesToday: 'No spending today',
@@ -46,6 +48,8 @@ export const enLocale: Locale = {
     save: 'Save',
     remove: 'Remove',
 
+    noCategory: 'No category',
+
     getDateText: (day: number, month: number) => {
         const suffix = getDateSuffix(day);
         return `${months[month]} ${day}${suffix}`
@@ -60,7 +64,18 @@ export const enLocale: Locale = {
     getStartOfPeriodDateText: (day: number, month: number) => {
         const suffix = getDateSuffix(day);
         return `on ${months[month].toLowerCase()} ${day}${suffix}`
-    }
+    },
+
+    lunchCategory: 'Lunch',
+    groceriesCategory: 'Groceries',
+    householdCategory: 'Household',
+    transportationCategory: 'Transportation',
+    clothingCategory: 'Clothing',
+    entertainmentCategory: 'Entertainment',
+    restaurantsCategory: 'Restaurants',
+    sportCategory: 'Sport',
+    healthCategory: 'Health',
+    otherCategory: 'Other',
 }
 
 const getDateSuffix = (date: number) => {

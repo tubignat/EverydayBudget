@@ -1,26 +1,29 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
-import { Category } from '../../../../domain/entities/Category';
-import { ColorScheme } from '../../../color/ColorScheme';
+import { Category } from '../../../domain/entities/Category';
+import { ColorScheme } from '../../color/ColorScheme';
+import { Locale } from '../../locale/Locale';
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = width < 350;
 const isBigScreen = height > 800;
 
 interface ICategoriesListProps {
-    categories: Category[]
+    categories: (Category | null)[]
     scheme: ColorScheme
-    onPress: (category: Category) => void
+    locale: Locale
+    onPress: (category: Category | null) => void
 }
 
 export function CategoriesList(props: ICategoriesListProps) {
-    const styles = getListStyles(props.scheme);
+    const styles = getListStyles();
     return <View style={styles.list}>
         {
             props.categories.map(category =>
                 <CategoriesListItem
-                    key={category.id}
+                    key={category ? category.id : -1}
                     scheme={props.scheme}
+                    locale={props.locale}
                     category={category}
                     onPress={() => props.onPress(category)}
                 />
@@ -29,7 +32,7 @@ export function CategoriesList(props: ICategoriesListProps) {
     </View>
 }
 
-const getListStyles = (scheme: ColorScheme) => StyleSheet.create({
+const getListStyles = () => StyleSheet.create({
     list: {
         flexDirection: 'row',
         flexWrap: 'wrap',
@@ -40,17 +43,21 @@ const getListStyles = (scheme: ColorScheme) => StyleSheet.create({
 
 interface ICategoriesListItemProps {
     scheme: ColorScheme
-    category: Category
+    locale: Locale
+    category: Category | null
     onPress: () => void
 }
 
 function CategoriesListItem(props: ICategoriesListItemProps) {
-    const styles = getItemStyles(props.scheme, props.category.color.color);
+    const color = props.category?.color.color ?? props.scheme.inactive;
+    const name = props.category?.name ?? props.locale.noCategory;
+
+    const styles = getItemStyles(props.scheme, color);
 
     return <TouchableOpacity style={styles.item} onPress={props.onPress} activeOpacity={.5}>
         <View style={styles.color} />
         <View style={styles.nameContainer}>
-            <Text style={styles.name} numberOfLines={1}>{props.category.name}</Text>
+            <Text style={styles.name} numberOfLines={1}>{name}</Text>
         </View>
     </TouchableOpacity>
 }

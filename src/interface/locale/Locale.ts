@@ -32,6 +32,8 @@ export type Locale = {
     categoryName: string
     categoryColor: string
     newCategoryName: string
+    removeCategoryQuestion: string
+    removeCategoryDialogMessage: string
 
     todaysExpenses: string
     noExpensesToday: string
@@ -43,10 +45,22 @@ export type Locale = {
     budget: string
     saldos: string
     noSpendingForThisDay: string
+    noCategory: string
 
     getDateText: (day: number, month: number) => string
     getDayOfWeek: (dayOfWeek: number) => string
     getDayOfWeekAbbr: (dayOfWeek: number) => string
     getMonthName: (month: number) => string
     getStartOfPeriodDateText: (day: number, month: number) => string
+
+    lunchCategory: string
+    groceriesCategory: string
+    householdCategory: string
+    transportationCategory: string
+    clothingCategory: string
+    entertainmentCategory: string
+    restaurantsCategory: string
+    sportCategory: string
+    healthCategory: string
+    otherCategory: string
 }

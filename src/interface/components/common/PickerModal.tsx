@@ -1,8 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { View, Animated, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import { ColorScheme } from '../../color/ColorScheme';
-import { ModalStackState } from '../../ModalStackState';
 
 interface IPickerModalProps {
     scheme: ColorScheme
@@ -43,7 +41,7 @@ export function PickerModal(props: IPickerModalProps) {
 
     function close() {
         props.onCloseAnimationStart();
-        Animated.timing(scale, { toValue: 0, duration: 300 }).start(props.onClose);
+        Animated.timing(scale, { toValue: 0, duration: 250 }).start(props.onClose);
     }
 }
 
@@ -64,7 +62,7 @@ function getStyles(
     })
 
     const opacity = scale.interpolate({
-        inputRange: [0, .2, 1],
+        inputRange: [0, .3, 1],
         outputRange: [0, 1, 1]
     })
 
@@ -76,7 +74,7 @@ function getStyles(
             height: '100%',
             justifyContent: 'center',
             alignContent: 'center',
-            zIndex: 1,
+            zIndex: 20,
             backgroundColor: scale.interpolate({
                 inputRange: [0, 1],
                 outputRange: ['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, .6)']
@@ -100,7 +98,7 @@ function getStyles(
         },
         container: {
             backgroundColor: scheme.pickerModalBackground,
-            borderRadius: 30,
+            borderRadius: 20,
             overflow: 'hidden',
             left: window.width / 2 - width / 2,
             width: width,

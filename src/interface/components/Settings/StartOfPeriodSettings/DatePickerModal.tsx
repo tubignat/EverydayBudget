@@ -29,7 +29,7 @@ export function DatePickerModal(props: IDatePickerModalProps) {
         expansionPoint={props.expansionPoint}
         renderContent={renderContent}
         onClose={props.onClose}
-        onOpenAnimationStart={() => Animated.spring(anim, { toValue: 1, bounciness: 0 }).start()}
+        onOpenAnimationStart={() => Animated.spring(anim, { toValue: 1 }).start()}
         onCloseAnimationStart={() => Animated.timing(anim, { toValue: 0, duration: 300 }).start()}
     />
 
@@ -69,7 +69,7 @@ const getStyles = (scheme: ColorScheme, anim: Animated.Value) => {
 
     const opacity = anim.interpolate({
         inputRange: [0, .25, 1],
-        outputRange: [0, 0, 1]
+        outputRange: [0, 1, 1]
     })
 
     const fontWeight: 'bold' = 'bold';
