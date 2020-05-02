@@ -46,6 +46,7 @@ export type Locale = {
     saldos: string
     noSpendingForThisDay: string
     noCategory: string
+    category: string
 
     getDateText: (day: number, month: number) => string
     getDayOfWeek: (dayOfWeek: number) => string
@@ -63,4 +64,6 @@ export type Locale = {
     sportCategory: string
     healthCategory: string
     otherCategory: string
+
+    websiteURL: string
 }

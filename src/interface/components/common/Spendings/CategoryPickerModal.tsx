@@ -1,9 +1,10 @@
 import React, { useContext, useState } from 'react';
-import { View, Dimensions, Animated, StyleSheet, ScrollView } from 'react-native';
+import { View, Dimensions, Animated, StyleSheet, ScrollView, Text } from 'react-native';
 import { PickerModal } from '../PickerModal';
 import { ApplicationContext } from '../../../ApplicationContext';
 import { Spending } from '../../../../domain/entities/Spending';
 import { CategoriesList } from '../CategoriesList';
+import { ColorScheme } from '../../../color/ColorScheme';
 
 const window = Dimensions.get('window');
 const isSmallScreen = window.width < 350;
@@ -22,6 +23,7 @@ export function CategoryPickerModal(props: ICategoryPickerModalProps) {
     }
 
     const [anim] = useState(new Animated.Value(0));
+    const styles = getStyles(application.colorScheme);
 
     return <PickerModal
         scheme={application.colorScheme}
@@ -57,6 +59,7 @@ export function CategoryPickerModal(props: ICategoryPickerModalProps) {
         return <Animated.View style={animatedStyle}>
             <ScrollView style={styles.modalContent}>
                 <View style={{ paddingBottom: 24 }}>
+                    <Text style={styles.header}>{application.locale.category}</Text>
                     <CategoriesList
                         categories={[null, ...application.categories]}
                         scheme={application.colorScheme}
@@ -72,11 +75,19 @@ export function CategoryPickerModal(props: ICategoryPickerModalProps) {
     }
 }
 
-const styles = StyleSheet.create({
+const getStyles = (scheme: ColorScheme) => StyleSheet.create({
     modalContent: {
         padding: 12,
         paddingTop: 24,
         minHeight: 200,
         maxHeight: 320,
+    },
+    header: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: scheme.primaryText,
+        marginBottom: 40,
+        marginLeft: 12,
+        marginTop: 12
     }
 })

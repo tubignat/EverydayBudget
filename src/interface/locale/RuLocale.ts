@@ -50,6 +50,7 @@ export const ruLocale: Locale = {
     save: 'Сохранить',
 
     noCategory: 'Без категории',
+    category: 'Категория',
 
     getDateText: (day: number, month: number) => `${day} ${ruMonths[month]}`,
 
@@ -61,7 +62,7 @@ export const ruLocale: Locale = {
 
     getStartOfPeriodDateText: (day: number, month: number) => `${day} ${ruMonths[month]}`,
 
-    lunchCategory: 'Бизнес-ланч',
+    lunchCategory: 'Обед',
     groceriesCategory: 'Продукты',
     householdCategory: 'Дом, ремонт',
     transportationCategory: 'Транспорт',
@@ -71,6 +72,8 @@ export const ruLocale: Locale = {
     sportCategory: 'Спорт',
     healthCategory: 'Здоровье',
     otherCategory: 'Другое',
+
+    websiteURL: 'https://everydaybudget.app/ru'
 }
 
 const monthNames: { [month: number]: string } = {

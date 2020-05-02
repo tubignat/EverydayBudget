@@ -16,7 +16,7 @@ const isBigScreen = height > 800;
 interface ISpendingView {
     spending: Spending
     onRemovePressed: () => void
-    onEdit: (amount: number) => void
+    onAmountEdit: (amount: number) => void
     scheme: ColorScheme
     locale: Locale
     currency: Currency
@@ -46,7 +46,7 @@ export function SpendingView(props: ISpendingView) {
                         color={props.scheme.primaryText}
                         value={props.spending.amount}
                         maxValue={999999}
-                        onChange={props.onEdit}
+                        onChange={props.onAmountEdit}
                         placeholder=''
                         currency={props.currency}
                         fontSize={isSmallScreen ? 24 : 30}

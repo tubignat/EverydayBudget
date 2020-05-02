@@ -12,7 +12,7 @@ export function FooterLinks() {
     const styles = getStyles(application.colorScheme);
 
     return <View style={styles.linksContainer}>
-        <Text style={styles.link} onPress={() => Linking.openURL('https://everydaybudget.app')}>
+        <Text style={styles.link} onPress={() => Linking.openURL(application.locale.websiteURL)}>
             {application.locale.website}
         </Text>
         <Text style={styles.link} onPress={() => Linking.openURL('https://everydaybudget.app/policy')}>

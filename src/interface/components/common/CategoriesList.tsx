@@ -64,8 +64,7 @@ function CategoriesListItem(props: ICategoriesListItemProps) {
 
 const getItemStyles = (scheme: ColorScheme, color: string) => StyleSheet.create({
     item: {
-        paddingHorizontal: isSmallScreen ? 18 : 20,
-        paddingVertical: 16,
+        padding: 16,
         borderRadius: 16,
         backgroundColor: scheme.plateBackground,
         justifyContent: 'flex-start',
@@ -75,8 +74,8 @@ const getItemStyles = (scheme: ColorScheme, color: string) => StyleSheet.create(
         marginBottom: 12,
     },
     color: {
-        width: isSmallScreen ? 12 : 14,
-        height: isSmallScreen ? 12 : 14,
+        width: isSmallScreen ? 12 : 12,
+        height: isSmallScreen ? 12 : 12,
         borderRadius: 8,
         backgroundColor: color,
         marginRight: isSmallScreen ? 10 : 12,
@@ -84,7 +83,7 @@ const getItemStyles = (scheme: ColorScheme, color: string) => StyleSheet.create(
     nameContainer: {
     },
     name: {
-        fontSize: isBigScreen ? 20 : 16,
+        fontSize: 16,
         color: scheme.primaryText,
     }
 })

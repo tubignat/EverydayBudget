@@ -29,7 +29,7 @@ export const SpendingsList = observer((props: ISpendingsListProps) => {
                     key={s.id}
                     spending={s}
                     onRemovePressed={() => props.remove(s.id)}
-                    onEdit={amount => props.edit(s.id, amount, null)}
+                    onAmountEdit={amount => props.edit(s.id, amount, s.category)}
                     shouldPlayEnterAnimation={props.shouldPlayEnterAnimation}
                     {...props}
                 />

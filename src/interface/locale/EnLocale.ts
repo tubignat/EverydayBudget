@@ -49,6 +49,7 @@ export const enLocale: Locale = {
     remove: 'Remove',
 
     noCategory: 'No category',
+    category: 'Category',
 
     getDateText: (day: number, month: number) => {
         const suffix = getDateSuffix(day);
@@ -76,6 +77,8 @@ export const enLocale: Locale = {
     sportCategory: 'Sport',
     healthCategory: 'Health',
     otherCategory: 'Other',
+
+    websiteURL: 'https://everydaybudget.app/en'
 }
 
 const getDateSuffix = (date: number) => {
