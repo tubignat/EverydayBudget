@@ -21,6 +21,7 @@ import { ModalStack } from './src/interface/components/common/ModalStack';
 import { CategoryColorsRepository } from './src/domain/repositories/CategoryColorsRepository';
 import { CategoriesRepository } from './src/domain/repositories/CategoriesRepository';
 import { FirstTimeInitRepository } from './src/domain/repositories/FirstTimeInitRepository';
+import { TestDataProvider } from './src/testData/TestDataProvider';
 
 @observer
 export default class App extends Component<{}, {
