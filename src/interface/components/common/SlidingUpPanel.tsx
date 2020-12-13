@@ -1,7 +1,18 @@
 import React from 'react';
-import { Animated, PanResponder, TouchableWithoutFeedback, TouchableOpacity, View, Dimensions, StyleSheet, PanResponderInstance, ScrollView, GestureResponderEvent } from 'react-native';
-import { ModalStackState } from '../../ModalStackState';
-import { ColorScheme } from '../../color/ColorScheme';
+import {
+    Animated,
+    PanResponder,
+    TouchableWithoutFeedback,
+    TouchableOpacity,
+    View,
+    Dimensions,
+    StyleSheet,
+    PanResponderInstance,
+    ScrollView,
+    GestureResponderEvent
+} from 'react-native';
+import {ModalStackState} from '../../ModalStackState';
+import {ColorScheme} from '../../color/ColorScheme';
 
 const Window = Dimensions.get('window');
 
@@ -38,17 +49,17 @@ class SlidingUpPanel extends React.Component<ISlidingUpPanelProps, ISlidingUpPan
             },
             onPanResponderMove: Animated.event([null, {
                 dy: this.state.pan
-            }]),
+            }], {useNativeDriver: false}),
             onPanResponderRelease: (e, gesture) => {
                 const threshold = gesture.dy > Window.height / 4 ? 0 : 1;
                 if (gesture.vy <= threshold)
-                    Animated.spring(this.state.pan, { toValue: 0 }).start();
+                    Animated.spring(this.state.pan, {toValue: 0, useNativeDriver: false}).start();
                 else
                     this.close();
             }
         });
 
-        Animated.spring(this.state.pan, { toValue: 0, bounciness: 0 }).start();
+        Animated.spring(this.state.pan, {toValue: 0, bounciness: 0, useNativeDriver: false}).start();
     }
 
     componentDidMount() {
@@ -81,7 +92,7 @@ class SlidingUpPanel extends React.Component<ISlidingUpPanelProps, ISlidingUpPan
         })
 
         ModalStackState.setMainViewStyle({
-            transform: [{ scale: mainViewScale }, { translateY: translateY }],
+            transform: [{scale: mainViewScale}, {translateY: translateY}],
             borderRadius: borderRadius,
             backgroundColor: background
         }, {
@@ -137,21 +148,22 @@ class SlidingUpPanel extends React.Component<ISlidingUpPanelProps, ISlidingUpPan
             <View style={styles.mainContainer}>
 
                 <TouchableWithoutFeedback style={styles.backdropTouchable} onPress={this.close}>
-                    <Animated.View style={[styles.backdrop, { opacity: opacity }]} />
+                    <Animated.View style={[styles.backdrop, {opacity: opacity}]}/>
                 </TouchableWithoutFeedback>
 
-                <View style={[styles.container, { top: this.props.offsetTop }]}>
-                    <Animated.View style={[{ top: top, backgroundColor: this.props.colorScheme.background }, styles.draggablePanel]} >
+                <View style={[styles.container, {top: this.props.offsetTop}]}>
+                    <Animated.View
+                        style={[{top: top, backgroundColor: this.props.colorScheme.background}, styles.draggablePanel]}>
                         <View style={styles.handleContainer} {...this.panResponder.panHandlers}>
-                            <View style={{ ...styles.handleAura, backgroundColor: this.props.colorScheme.background }}>
-                                <View style={styles.handle} />
+                            <View style={{...styles.handleAura, backgroundColor: this.props.colorScheme.background}}>
+                                <View style={styles.handle}/>
                             </View>
                         </View>
-                        <View style={{ height: Window.height - offsetTop - 7 }} {...scrollViewResponders}>
+                        <View style={{height: Window.height - offsetTop - 7}} {...scrollViewResponders}>
                             <ScrollView
                                 showsVerticalScrollIndicator={false}
-                                style={{ paddingHorizontal: 20, paddingVertical: 40 }}
-                                onScroll={event => this.setState({ scroll: event.nativeEvent.contentOffset.y })}
+                                style={{paddingHorizontal: 20, paddingVertical: 40}}
+                                onScroll={event => this.setState({scroll: event.nativeEvent.contentOffset.y})}
                                 scrollEventThrottle={16}
                             >
                                 <View onStartShouldSetResponder={() => true}>
@@ -168,7 +180,12 @@ class SlidingUpPanel extends React.Component<ISlidingUpPanelProps, ISlidingUpPan
 
     close = () => {
         Animated
-            .spring(this.state.pan, { toValue: Window.height, restSpeedThreshold: 100, restDisplacementThreshold: 40 })
+            .spring(this.state.pan, {
+                toValue: Window.height,
+                restSpeedThreshold: 100,
+                restDisplacementThreshold: 40,
+                useNativeDriver: false
+            })
             .start(this.props.onClose);
     }
 }

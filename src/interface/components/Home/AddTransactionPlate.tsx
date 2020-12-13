@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Animated, ScrollView } from 'react-native';
-import { KeyBoard } from './keyboard/Keyboard';
-import { AddSpendingButton } from './keyboard/AddSpendingButton';
-import { formatMoney } from '../../NumberFormat';
-import { ColorScheme } from '../../color/ColorScheme';
-import { Locale } from '../../locale/Locale';
-import { Currency } from '../../../domain/repositories/UserPreferencesRepository';
-import { CategoryScrollingPicker } from './CategoryScrollingPicker';
-import { Category } from '../../../domain/entities/Category';
+import React, {useState} from 'react';
+import {View, Text, StyleSheet, Animated, ScrollView} from 'react-native';
+import {KeyBoard} from './keyboard/Keyboard';
+import {AddSpendingButton} from './keyboard/AddSpendingButton';
+import {formatMoney} from '../../NumberFormat';
+import {ColorScheme} from '../../color/ColorScheme';
+import {Locale} from '../../locale/Locale';
+import {Currency} from '../../../domain/repositories/UserPreferencesRepository';
+import {CategoryScrollingPicker} from './CategoryScrollingPicker';
+import {Category} from '../../../domain/entities/Category';
 
 interface IAddTransactionPlateProps {
     scheme: ColorScheme
@@ -20,7 +20,7 @@ interface IAddTransactionPlateProps {
 }
 
 export function AddTransactionPlate(props: IAddTransactionPlateProps) {
-    const { scheme, locale, currency, allCategories, onAdd, onExpandAnimationStart, onShrinkAnimationStart } = props;
+    const {scheme, locale, currency, allCategories, onAdd, onExpandAnimationStart, onShrinkAnimationStart} = props;
     const styles = getStyles(scheme);
 
     const [integer, setInteger] = useState(0);
@@ -52,12 +52,12 @@ export function AddTransactionPlate(props: IAddTransactionPlateProps) {
                 <Text style={styles.transaction}>
                     {getFormattedInput()}
                 </Text>
-                <AddSpendingButton onPress={onAddPressed} disabled={disabled} scheme={scheme} locale={locale} />
+                <AddSpendingButton onPress={onAddPressed} disabled={disabled} scheme={scheme} locale={locale}/>
             </View>
         </View>
 
-        <Animated.View style={{ position: 'relative', height: height, opacity: opacity }}>
-            <View style={{ position: 'absolute', top: 0 }}>
+        <Animated.View style={{position: 'relative', height: height, opacity: opacity}}>
+            <View style={{position: 'absolute', top: 0}}>
                 <CategoryScrollingPicker
                     allCategories={allCategories}
                     scheme={scheme}
@@ -69,7 +69,7 @@ export function AddTransactionPlate(props: IAddTransactionPlateProps) {
             </View>
         </Animated.View>
 
-        <KeyBoard onKeyPressed={handleKeyPressed} onRemoveKeyPressed={clearInput} scheme={scheme} locale={locale} />
+        <KeyBoard onKeyPressed={handleKeyPressed} onRemoveKeyPressed={clearInput} scheme={scheme} locale={locale}/>
     </View>
 
     function getFormattedInput() {
@@ -94,19 +94,19 @@ export function AddTransactionPlate(props: IAddTransactionPlateProps) {
 
             if (disabled && (updatedInteger !== 0 || updatedFractions.length === 2)) {
                 onExpandAnimationStart();
-                Animated.spring(anim, { toValue: 1, bounciness: 1 }).start();
+                Animated.spring(anim, {toValue: 1, bounciness: 1, useNativeDriver: false}).start();
             }
 
             setInteger(updatedInteger);
             setFractions(updatedFractions);
         }
-    };
+    }
 
     function clearInput() {
         onShrinkAnimationStart();
         Animated
-            .timing(anim, { toValue: 0, duration: 300 })
-            .start(() => scrollRef?.scrollTo({ x: 0, animated: false }));
+            .timing(anim, {toValue: 0, duration: 300, useNativeDriver: false})
+            .start(() => scrollRef?.scrollTo({x: 0, animated: false}));
 
         setIsFractionInputMode(false);
         setInteger(0);

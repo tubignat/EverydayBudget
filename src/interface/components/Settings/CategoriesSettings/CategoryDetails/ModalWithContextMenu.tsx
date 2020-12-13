@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { View, Animated, TouchableWithoutFeedback, Keyboard, PanResponder, Dimensions } from 'react-native';
-import { ContextMenuButton } from './ContextMenuButton';
-import { ColorScheme } from '../../../../color/ColorScheme';
+import React, {useEffect, useState} from 'react';
+import {View, Animated, TouchableWithoutFeedback, Keyboard, PanResponder, Dimensions} from 'react-native';
+import {ContextMenuButton} from './ContextMenuButton';
+import {ColorScheme} from '../../../../color/ColorScheme';
 
 interface IContextMenuButton {
     text: string
@@ -33,13 +33,13 @@ export function ModalWithContextMenu(props: IModalWithContextMenuProps) {
     return <Animated.View style={styles.backdrop}>
 
         <TouchableWithoutFeedback style={styles.backdropTouchable} onPress={handleBackdropPress}>
-            <View style={styles.backdropTouchableInner} />
+            <View style={styles.backdropTouchableInner}/>
         </TouchableWithoutFeedback>
 
         <Animated.View style={styles.container}>
             <View style={styles.content} {...panResponder.panHandlers}>
                 <View style={styles.handleContainer}>
-                    <View style={styles.handle} />
+                    <View style={styles.handle}/>
                 </View>
                 {props.children}
             </View>
@@ -58,12 +58,12 @@ export function ModalWithContextMenu(props: IModalWithContextMenuProps) {
     </Animated.View>
 
     function open() {
-        Animated.spring(translateY, { toValue: 0, bounciness: 2 }).start();
+        Animated.spring(translateY, {toValue: 0, bounciness: 2, useNativeDriver: false}).start();
     }
 
     function close(duration: number) {
         setIsBeingClosed(true);
-        Animated.timing(translateY, { toValue: offset, duration: duration }).start(props.onClose);
+        Animated.timing(translateY, {toValue: offset, duration: duration, useNativeDriver: false}).start(props.onClose);
     }
 
     function handleButtonPress(onPress: () => void) {
@@ -84,12 +84,12 @@ export function ModalWithContextMenu(props: IModalWithContextMenuProps) {
             onPanResponderGrant: Keyboard.dismiss,
             onPanResponderMove: Animated.event([null, {
                 dy: translateY
-            }]),
+            }], {useNativeDriver: false}),
             onPanResponderRelease: (_, gesture) => {
                 const threshold = gesture.dy > window.height / 4 ? 0 : 1;
                 const duration = (1 - gesture.dy / offset) * 250;
                 gesture.vy <= threshold
-                    ? Animated.spring(translateY, { toValue: 0 }).start()
+                    ? Animated.spring(translateY, {toValue: 0, useNativeDriver: false}).start()
                     : close(duration > 100 ? duration : 100);
             }
         });
@@ -100,7 +100,7 @@ function getStyles(scheme: ColorScheme, translateY: Animated.Value): any {
 
     const limitedTranslateY = translateY.interpolate({
         inputRange: [-200, -150, -100, -50, 0, offset],
-        outputRange: [-52.5, -50, -45, - 25, 0, offset]
+        outputRange: [-52.5, -50, -45, -25, 0, offset]
     })
 
     return {
@@ -130,7 +130,7 @@ function getStyles(scheme: ColorScheme, translateY: Animated.Value): any {
             marginHorizontal: 16,
             marginVertical: 16,
             transform: [
-                { translateY: limitedTranslateY }
+                {translateY: limitedTranslateY}
             ],
         },
         content: {

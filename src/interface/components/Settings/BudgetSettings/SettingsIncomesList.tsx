@@ -115,9 +115,9 @@ export class IncomesList extends Component<IIncomesListProps, IIncomesListState>
             this.state.fadeAnim.setValue(1);
             Animated
                 .parallel([
-                    Animated.timing(this.state.moveAnim, { toValue: 0, duration: 150 }),
-                    Animated.timing(this.state.fontSizeAnim, { toValue: 1, duration: 150 }),
-                    Animated.timing(this.state.fadeAnim, { toValue: 0, duration: 75 })
+                    Animated.timing(this.state.moveAnim, { toValue: 0, duration: 150, useNativeDriver: false }),
+                    Animated.timing(this.state.fontSizeAnim, { toValue: 1, duration: 150, useNativeDriver: false }),
+                    Animated.timing(this.state.fadeAnim, { toValue: 0, duration: 75, useNativeDriver: false })
                 ])
                 .start();
 
@@ -134,11 +134,11 @@ export class IncomesList extends Component<IIncomesListProps, IIncomesListState>
                     const toValue = this.context.language === 'ru' ? px - px2 - 4 : px - px2;
                     Animated
                         .parallel([
-                            Animated.timing(this.state.moveAnim, { toValue: toValue, duration: 150 }),
-                            Animated.timing(this.state.fontSizeAnim, { toValue: 0.85, duration: 150 }),
+                            Animated.timing(this.state.moveAnim, { toValue: toValue, duration: 150, useNativeDriver: false }),
+                            Animated.timing(this.state.fontSizeAnim, { toValue: 0.85, duration: 150, useNativeDriver: false }),
                         ])
                         .start();
-                    Animated.timing(this.state.fadeAnim, { toValue: 1, duration: 600 }).start();
+                    Animated.timing(this.state.fadeAnim, { toValue: 1, duration: 600, useNativeDriver: false }).start();
                 })
             })
         }
@@ -172,8 +172,8 @@ class IncomeView extends Component<IIncomeViewProps, IIncomeViewState> {
             expandAnim: new Animated.Value(0)
         };
 
-        Animated.timing(this.state.fadeAnim, { toValue: 1, duration: 150 }).start();
-        Animated.timing(this.state.expandAnim, { toValue: 52, duration: 150 }).start();
+        Animated.timing(this.state.fadeAnim, { toValue: 1, duration: 150, useNativeDriver: false }).start();
+        Animated.timing(this.state.expandAnim, { toValue: 52, duration: 150, useNativeDriver: false }).start();
     }
 
     render() {
@@ -220,8 +220,8 @@ class IncomeView extends Component<IIncomeViewProps, IIncomeViewState> {
     onRemove = () => {
         this.props.onRemoveAnimationStart();
         Animated.parallel([
-            Animated.timing(this.state.expandAnim, { toValue: 0, duration: 200 }),
-            Animated.timing(this.state.fadeAnim, { toValue: 0, duration: 150 }),
+            Animated.timing(this.state.expandAnim, { toValue: 0, duration: 200, useNativeDriver: false }),
+            Animated.timing(this.state.fadeAnim, { toValue: 0, duration: 150, useNativeDriver: false }),
         ])
             .start(this.props.onRemoveButtonPressed)
     }

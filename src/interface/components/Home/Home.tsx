@@ -75,11 +75,11 @@ export const Home = observer(() => {
     }
 
     function onExpandAnimationStart() {
-        Animated.spring(anim, { toValue: 0, bounciness: 1 }).start();
+        Animated.spring(anim, { toValue: 0, bounciness: 1, useNativeDriver: false }).start();
     }
 
     function onShrinkAnimationStart() {
-        Animated.timing(anim, { toValue: 1, duration: 300 }).start();
+        Animated.timing(anim, { toValue: 1, duration: 300, useNativeDriver: false }).start();
     }
 })
 

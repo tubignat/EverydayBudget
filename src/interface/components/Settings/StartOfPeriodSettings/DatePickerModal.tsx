@@ -1,9 +1,9 @@
-import React, { useState, useContext } from 'react';
-import { PickerModal } from '../../common/PickerModal';
-import { Animated, Dimensions, Text } from 'react-native';
-import { ColorScheme } from '../../../color/ColorScheme';
-import { ApplicationContext } from '../../../ApplicationContext';
-import { DatePicker } from './DatePicker';
+import React, {useState, useContext} from 'react';
+import {PickerModal} from '../../common/PickerModal';
+import {Animated, Dimensions, Text} from 'react-native';
+import {ColorScheme} from '../../../color/ColorScheme';
+import {ApplicationContext} from '../../../ApplicationContext';
+import {DatePicker} from './DatePicker';
 
 interface IDatePickerModalProps {
     expansionPoint: { x: number, y: number }
@@ -29,8 +29,8 @@ export function DatePickerModal(props: IDatePickerModalProps) {
         expansionPoint={props.expansionPoint}
         renderContent={renderContent}
         onClose={props.onClose}
-        onOpenAnimationStart={() => Animated.spring(anim, { toValue: 1 }).start()}
-        onCloseAnimationStart={() => Animated.timing(anim, { toValue: 0, duration: 300 }).start()}
+        onOpenAnimationStart={() => Animated.spring(anim, {toValue: 1, useNativeDriver: false}).start()}
+        onCloseAnimationStart={() => Animated.timing(anim, {toValue: 0, duration: 300, useNativeDriver: false}).start()}
     />
 
     function renderContent(close: () => void) {
@@ -78,7 +78,7 @@ const getStyles = (scheme: ColorScheme, anim: Animated.Value) => {
         container: {
             width: '100%',
             padding: isSmallScreen ? 24 : 32,
-            transform: [{ scale: scale }],
+            transform: [{scale: scale}],
             opacity: opacity
         },
         header: {

@@ -36,12 +36,12 @@ export function PickerModal(props: IPickerModalProps) {
 
     function open() {
         props.onOpenAnimationStart();
-        Animated.spring(scale, { toValue: 1 }).start();
+        Animated.spring(scale, { toValue: 1, useNativeDriver: false }).start();
     }
 
     function close() {
         props.onCloseAnimationStart();
-        Animated.timing(scale, { toValue: 0, duration: 250 }).start(props.onClose);
+        Animated.timing(scale, { toValue: 0, duration: 250, useNativeDriver: false }).start(props.onClose);
     }
 }
 

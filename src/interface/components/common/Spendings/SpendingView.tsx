@@ -1,15 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { Animated, View, Text, Dimensions, TextInput, TouchableWithoutFeedback, GestureResponderEvent } from 'react-native';
-import { IconButton } from '../IconButton';
-import { Spending } from '../../../../domain/entities/Spending';
-import { ColorScheme } from '../../../color/ColorScheme';
-import { Currency } from '../../../../domain/repositories/UserPreferencesRepository';
+import React, {useState, useEffect} from 'react';
+import {
+    Animated,
+    View,
+    Text,
+    Dimensions,
+    TextInput,
+    TouchableWithoutFeedback,
+    GestureResponderEvent
+} from 'react-native';
+import {IconButton} from '../IconButton';
+import {Spending} from '../../../../domain/entities/Spending';
+import {ColorScheme} from '../../../color/ColorScheme';
+import {Currency} from '../../../../domain/repositories/UserPreferencesRepository';
 import AmountInput from '../AmountInput';
-import { Locale } from '../../../locale/Locale';
-import { CategoryPickerModal } from './CategoryPickerModal';
-import { ModalStackState } from '../../../ModalStackState';
+import {Locale} from '../../../locale/Locale';
+import {CategoryPickerModal} from './CategoryPickerModal';
+import {ModalStackState} from '../../../ModalStackState';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 const isSmallScreen = width < 350;
 const isBigScreen = height > 800;
 
@@ -58,7 +66,7 @@ export function SpendingView(props: ISpendingView) {
             </View>
 
             <View style={styles.rightCell}>
-                <View style={{ width: 40 }}>
+                <View style={{width: 40}}>
                     <IconButton
                         size={40}
                         innerSize={20}
@@ -70,7 +78,7 @@ export function SpendingView(props: ISpendingView) {
                 </View>
                 <TouchableWithoutFeedback onPress={openCategoryPickerModal}>
                     <View style={styles.categoryContainer}>
-                        <View style={{ ...styles.categoryColor, backgroundColor: categoryColor }} />
+                        <View style={{...styles.categoryColor, backgroundColor: categoryColor}}/>
                         <Text style={styles.categoryText} numberOfLines={1}>
                             {categoryName}
                         </Text>
@@ -78,7 +86,7 @@ export function SpendingView(props: ISpendingView) {
                 </TouchableWithoutFeedback>
             </View>
         </Animated.View>
-    </Animated.View >
+    </Animated.View>
 
     function getTimeString() {
         if (props.spending.hour === undefined
@@ -97,13 +105,19 @@ export function SpendingView(props: ISpendingView) {
 
     function onRemovePressedWrapper() {
         props.onRemoveAnimationStart && props.onRemoveAnimationStart();
-        Animated.timing(scale, { toValue: 0, duration: 200 }).start(props.onRemovePressed);
+        Animated.timing(scale, {toValue: 0, duration: 200, useNativeDriver: false}).start(props.onRemovePressed);
     }
 
     function open() {
         Animated
-            .spring(scale, { toValue: 1, restDisplacementThreshold: .01, restSpeedThreshold: .01 })
-            .start(() => { }
+            .spring(scale, {
+                toValue: 1,
+                restDisplacementThreshold: .01,
+                restSpeedThreshold: .01,
+                useNativeDriver: false
+            })
+            .start(() => {
+                }
                 // props.shouldFocusAddedSpending && amountInputRef?.focus()
             );
     }
@@ -115,7 +129,7 @@ export function SpendingView(props: ISpendingView) {
             <CategoryPickerModal
                 key='categoryPickerModal'
                 onClose={onClose}
-                expansionPoint={{ x: x, y: y }}
+                expansionPoint={{x: x, y: y}}
                 spending={props.spending}
             />
         );
@@ -151,7 +165,7 @@ const getStyles = (scheme: ColorScheme, scale: Animated.Value): any => {
             flexDirection: 'row',
             justifyContent: 'space-between',
             transform: [
-                { scale: scale }
+                {scale: scale}
             ]
         },
         leftCell: {

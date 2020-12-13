@@ -55,12 +55,12 @@ function Color(props: IColorProps) {
     const [scale] = useState(props.isChosen ? new Animated.Value(1) : new Animated.Value(0));
 
     if (previousIsChosen && !props.isChosen) {
-        Animated.timing(scale, { toValue: 0, duration: 100 }).start();
+        Animated.timing(scale, { toValue: 0, duration: 100, useNativeDriver: false }).start();
         setPreviousIsChosen(false);
     }
 
     if (!previousIsChosen && props.isChosen) {
-        Animated.timing(scale, { toValue: 1, duration: 100 }).start();
+        Animated.timing(scale, { toValue: 1, duration: 100, useNativeDriver: false }).start();
         setPreviousIsChosen(true);
     }
 

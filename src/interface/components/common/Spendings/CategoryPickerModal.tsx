@@ -1,10 +1,10 @@
-import React, { useContext, useState } from 'react';
-import { View, Dimensions, Animated, StyleSheet, ScrollView, Text } from 'react-native';
-import { PickerModal } from '../PickerModal';
-import { ApplicationContext } from '../../../ApplicationContext';
-import { Spending } from '../../../../domain/entities/Spending';
-import { CategoriesList } from '../CategoriesList';
-import { ColorScheme } from '../../../color/ColorScheme';
+import React, {useContext, useState} from 'react';
+import {View, Dimensions, Animated, StyleSheet, ScrollView, Text} from 'react-native';
+import {PickerModal} from '../PickerModal';
+import {ApplicationContext} from '../../../ApplicationContext';
+import {Spending} from '../../../../domain/entities/Spending';
+import {CategoriesList} from '../CategoriesList';
+import {ColorScheme} from '../../../color/ColorScheme';
 
 const window = Dimensions.get('window');
 const isSmallScreen = window.width < 350;
@@ -31,8 +31,8 @@ export function CategoryPickerModal(props: ICategoryPickerModalProps) {
         expansionPoint={props.expansionPoint}
         renderContent={renderContent}
         onClose={props.onClose}
-        onOpenAnimationStart={() => Animated.spring(anim, { toValue: 1 }).start()}
-        onCloseAnimationStart={() => Animated.timing(anim, { toValue: 0, duration: 300 }).start()}
+        onOpenAnimationStart={() => Animated.spring(anim, {toValue: 1, useNativeDriver: false}).start()}
+        onCloseAnimationStart={() => Animated.timing(anim, {toValue: 0, duration: 300, useNativeDriver: false}).start()}
     />
 
     function renderContent(close: () => void) {
@@ -50,15 +50,15 @@ export function CategoryPickerModal(props: ICategoryPickerModalProps) {
         })
 
         const animatedStyle = {
-            transform: [{ scale: scale }],
+            transform: [{scale: scale}],
             opacity: opacity,
-            position: 'relative',
+            position: 'relative' as 'relative',
             top: 0
         }
 
         return <Animated.View style={animatedStyle}>
             <ScrollView style={styles.modalContent}>
-                <View style={{ paddingBottom: 24 }}>
+                <View style={{paddingBottom: 24}}>
                     <Text style={styles.header}>{application.locale.category}</Text>
                     <CategoriesList
                         categories={[null, ...application.categories]}

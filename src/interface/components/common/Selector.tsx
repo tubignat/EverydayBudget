@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
-import { View, StyleSheet, Text, Animated, StyleProp, TextStyle, ViewStyle } from 'react-native';
-import { ButtonWrapper } from './ButtonWrapper';
-import { ColorScheme } from '../../color/ColorScheme';
+import React, {useEffect} from 'react';
+import {View, StyleSheet, Text, Animated, StyleProp, TextStyle, ViewStyle} from 'react-native';
+import {ButtonWrapper} from './ButtonWrapper';
+import {ColorScheme} from '../../color/ColorScheme';
 
 type SelectorButton = {
     text: string
@@ -10,7 +10,7 @@ type SelectorButton = {
     width: number
 }
 
-export function Selector({ buttons, scheme }: { buttons: SelectorButton[], scheme: ColorScheme }) {
+export function Selector({buttons, scheme}: { buttons: SelectorButton[], scheme: ColorScheme }) {
 
     const [animatedButtons] = React.useState(buttons.map(button => {
         return {
@@ -24,7 +24,7 @@ export function Selector({ buttons, scheme }: { buttons: SelectorButton[], schem
 
         updatedValues.forEach(value => {
             const toValue = value.selected ? value.width : value.width + 10;
-            Animated.timing(value.animated, { toValue: toValue, duration: 200 }).start();
+            Animated.timing(value.animated, {toValue: toValue, duration: 200, useNativeDriver: false}).start();
 
             value.selected = !value.selected;
         })
@@ -77,7 +77,7 @@ interface ISelectorButtonProps {
     scheme: ColorScheme
 }
 
-function SelectorButton({ text, onPress, disabled, containerStyle, textStyle, scheme }: ISelectorButtonProps) {
+function SelectorButton({text, onPress, disabled, containerStyle, textStyle, scheme}: ISelectorButtonProps) {
     return <ButtonWrapper
         renderPressed={() => render(true)}
         renderNormal={() => render(false)}
