@@ -78,7 +78,10 @@ export const enLocale: Locale = {
     healthCategory: 'Health',
     otherCategory: 'Other',
 
-    websiteURL: 'https://everydaybudget.app/en'
+    websiteURL: 'https://everydaybudget.app/en',
+    canSpendToday: 'You can spend today',
+    leftInMonth: 'Month budget',
+    savedThisMonth: 'Saved this month',
 }
 
 const getDateSuffix = (date: number) => {

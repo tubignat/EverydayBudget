@@ -108,8 +108,23 @@ export class ApplicationState {
         return lightColorScheme;
     }
 
+    @computed public get monthBudget() {
+        return this.budgetPerDay * this.daysInMonth
+    }
+
+    @computed public get leftInMonth() {
+        return this.monthBudget - this.spendings
+            .filter(s => s.day >= this.startOfPeriod)
+            .reduce((sum, spending) => sum + spending.amount, 0);
+    }
+
     @computed public get todaysDelta() {
-        return this.budgetPerDay - this.todaysSpendings.map(s => s.amount).reduce((sum, spending) => sum + spending, 0);
+        return this.budgetPerDay - this.todaysSpendings.reduce((sum, spending) => sum + spending.amount, 0);
+    }
+
+    @computed public get savedThisMonth() {
+        const fromPreviousDays = this.todaysLimit - this.todaysDelta
+        return this.todaysDelta < 0 ? fromPreviousDays - Math.abs(this.todaysDelta) : fromPreviousDays
     }
 
     @computed public get sortedCategories() {

@@ -73,7 +73,10 @@ export const ruLocale: Locale = {
     healthCategory: 'Здоровье',
     otherCategory: 'Другое',
 
-    websiteURL: 'https://everydaybudget.app/ru'
+    websiteURL: 'https://everydaybudget.app/ru',
+    canSpendToday: 'Сегодня можно потратить',
+    leftInMonth: 'Осталось на месяц',
+    savedThisMonth: 'Сэкономлено',
 }
 
 const monthNames: { [month: number]: string } = {

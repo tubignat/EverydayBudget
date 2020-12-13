@@ -66,4 +66,7 @@ export type Locale = {
     otherCategory: string
 
     websiteURL: string
+    canSpendToday: string
+    leftInMonth: string
+    savedThisMonth: string
 }

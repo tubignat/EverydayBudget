@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { View, Text, Dimensions, StyleSheet, Animated } from 'react-native';
-import { Page } from '../common/Page'
-import { observer } from 'mobx-react';
-import { ApplicationContext } from '../../ApplicationContext';
-import { formatMoney } from '../../NumberFormat';
-import { ColorScheme } from '../../color/ColorScheme';
-import { AddTransactionPlate } from './AddTransactionPlate';
-import { Category } from '../../../domain/entities/Category';
+import React, {useState} from 'react';
+import {View, Text, Dimensions, StyleSheet, Animated} from 'react-native';
+import {Page} from '../common/Page'
+import {observer} from 'mobx-react';
+import {ApplicationContext} from '../../ApplicationContext';
+import {formatMoney} from '../../NumberFormat';
+import {ColorScheme} from '../../color/ColorScheme';
+import {AddTransactionPlate} from './AddTransactionPlate';
+import {Category} from '../../../domain/entities/Category';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 const isSmallScreen = width < 350;
 const isBigScreen = height > 800;
 
@@ -21,13 +21,18 @@ export const Home = observer(() => {
     const [anim] = useState(new Animated.Value(1));
 
     const styles = getStyles(application.colorScheme, anim);
-    const budgetColor = application.todaysLimit < 0
+
+    const canSpendTodayColor = Math.round(application.todaysDelta) < 0
         ? application.colorScheme.danger
         : application.colorScheme.primaryText;
 
-    const deltaColor = application.todaysDelta < 0
+    const savedThisMonthColor = Math.round(application.savedThisMonth) < 0
         ? application.colorScheme.danger
-        : application.colorScheme.success
+        : application.colorScheme.primaryText;
+
+    const leftInMonthColor = Math.round(application.leftInMonth) < 0
+        ? application.colorScheme.danger
+        : application.colorScheme.primaryText;
 
     return <Page scheme={application.colorScheme}>
         {
@@ -39,16 +44,40 @@ export const Home = observer(() => {
         }
         <View style={styles.keyboardGroupContainer}>
 
+            <View style={{flexDirection: 'row', marginHorizontal: 36, marginBottom: 36}}>
+                <View style={{marginRight: 48}}>
+                    <Text style={styles.budgetText}>
+                        {application.locale.leftInMonth}
+                    </Text>
+                    <View style={styles.budgetAmounts}>
+                        <Animated.Text style={{ ...styles.statText, color: leftInMonthColor }}>
+                            {formatMoney(application.leftInMonth)}&nbsp;
+                        </Animated.Text>
+                        <Animated.Text style={{...styles.budgetPerDay}}>
+                            / {formatMoney(application.monthBudget)} {application.currency}
+                        </Animated.Text>
+                    </View>
+                </View>
+                <View>
+                    <Text style={styles.budgetText}>
+                        {application.locale.savedThisMonth}
+                    </Text>
+                    <Animated.Text style={{...styles.statText, color: savedThisMonthColor}}>
+                        {formatMoney(application.savedThisMonth)} {application.currency}
+                    </Animated.Text>
+                </View>
+            </View>
+
             <Animated.View style={styles.budgetContainer}>
                 <Text style={styles.budgetText}>
-                    {application.locale.todaysLimit}
+                    {application.locale.canSpendToday}
                 </Text>
                 <View style={styles.budgetAmounts}>
-                    <Animated.Text style={{ ...styles.budget, color: budgetColor }}>
-                        {formatMoney(application.todaysLimit)} {application.currency}
+                    <Animated.Text style={{...styles.budget, color: canSpendTodayColor}}>
+                        {formatMoney(application.todaysDelta)}&nbsp;
                     </Animated.Text>
-                    <Animated.Text style={{ ...styles.deltaAmount, color: deltaColor }}>
-                        {application.todaysDelta > 0 ? '+' : ''}{formatMoney(application.todaysDelta)} {application.currency}
+                    <Animated.Text style={{...styles.budgetPerDay}}>
+                        / {formatMoney(application.budgetPerDay)} {application.currency}
                     </Animated.Text>
                 </View>
             </Animated.View>
@@ -75,11 +104,11 @@ export const Home = observer(() => {
     }
 
     function onExpandAnimationStart() {
-        Animated.spring(anim, { toValue: 0, bounciness: 1, useNativeDriver: false }).start();
+        Animated.spring(anim, {toValue: 0, bounciness: 1, useNativeDriver: false}).start();
     }
 
     function onShrinkAnimationStart() {
-        Animated.timing(anim, { toValue: 1, duration: 300, useNativeDriver: false }).start();
+        Animated.timing(anim, {toValue: 1, duration: 300, useNativeDriver: false}).start();
     }
 })
 
@@ -105,13 +134,21 @@ const getStyles = (scheme: ColorScheme, anim: Animated.Value): any => {
         budget: {
             fontSize: anim.interpolate({
                 inputRange: [0, 1],
-                outputRange: [18, 40]
+                outputRange: [14, 40]
             }),
+            height: anim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [17, 40]
+            }),
+            fontWeight: '500'
+        },
+        budgetPerDay: {
+            fontSize: 14,
+            color: scheme.secondaryText
         },
         budgetAmounts: {
             flexDirection: 'row',
             alignItems: 'flex-end',
-            justifyContent: 'space-between'
         },
         deltaAmount: {
             fontSize: 18,
@@ -135,5 +172,11 @@ const getStyles = (scheme: ColorScheme, anim: Animated.Value): any => {
             position: 'absolute',
             bottom: 0,
         },
+        statText: {
+            fontSize: 18,
+            height: 21,
+            fontWeight: '500',
+            color: scheme.primaryText
+        }
     }
 }

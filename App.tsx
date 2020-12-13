@@ -108,6 +108,14 @@ export default class App extends Component<{}, {
         await setUpMonthsRepository.init();
         await userPreferencesRepository.init();
         await firstTimeInitRepository.init();
+        //
+        // new TestDataProvider(
+        //     incomesRepository,
+        //     expensesRepository,
+        //     spendingsRepository,
+        //     categoriesRepository,
+        //     colorsRepository
+        // ).fillTestDataRussian(2020, 11, 10)
 
         this.applicationState.init();
 
