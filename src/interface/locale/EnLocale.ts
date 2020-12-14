@@ -12,9 +12,11 @@ export const enLocale: Locale = {
     newIncome: 'New income',
     noIncomesYet: 'No incomes yet. ',
     recurringExpenses: 'Recurring expenses',
+    expenses: 'Expenses',
     newExpense: 'New expense',
     noExpensesYet: 'No expenses yet. ',
     budgetPerDay: 'Budget per day',
+    budgetForMonth: 'Budget for month',
     startOfPeriod: 'Start this month',
     description: 'Description...',
     language: 'Language',
@@ -82,6 +84,10 @@ export const enLocale: Locale = {
     canSpendToday: 'You can spend today',
     leftInMonth: 'Month budget',
     savedThisMonth: 'Saved this month',
+
+    financesHeader: 'Finances',
+    configureFinances: 'Configure',
+    financesDescriptor: 'Settings'
 }
 
 const getDateSuffix = (date: number) => {

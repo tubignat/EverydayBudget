@@ -28,7 +28,7 @@ export const BudgetSettings = observer(() => {
         : application.expenses;
 
     const showSortExpensesButton = canBeSorted(application.expenses.map(e => e.amount));
-    return <View>
+    return <View style={styles.container}>
         <View style={styles.listSubheaderContainer}>
             <Text style={styles.subheader}>
                 {application.locale.incomes}
@@ -72,11 +72,6 @@ export const BudgetSettings = observer(() => {
             onDescriptionChanged={(id: ExpenseId, description: string) => application.editExpense(id, null, description)}
             onAdd={() => application.addExpense(0, application.locale.newExpense)}
         />
-
-        <View style={styles.inlineSettingContainer}>
-            <Text style={styles.subheader}>{application.locale.budgetPerDay}</Text>
-            <Text style={styles.budgetPerDayAmount}>{formatMoney(application.budgetPerDay)} {application.currency}</Text>
-        </View>
     </View>
 
     function canBeSorted(amounts: number[]) {
@@ -92,20 +87,12 @@ export const BudgetSettings = observer(() => {
 });
 
 const getStyles = (scheme: ColorScheme) => StyleSheet.create({
+    container: {
+        paddingHorizontal: 16
+    },
     subheader: {
         color: scheme.secondaryText,
         fontSize: 20,
-    },
-    inlineSettingContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 40,
-        height: 32,
-    },
-    budgetPerDayAmount: {
-        fontSize: 22,
-        color: scheme.primaryText
     },
     listSubheaderContainer: {
         flexDirection: 'row',

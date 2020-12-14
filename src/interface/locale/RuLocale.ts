@@ -12,9 +12,11 @@ export const ruLocale: Locale = {
     newIncome: 'Новый доход',
     noIncomesYet: 'Пока доходов нет. ',
     recurringExpenses: 'Регулярные расходы',
+    expenses: 'Расходы',
     newExpense: 'Новый расход',
     noExpensesYet: 'Пока расходов нет. ',
     budgetPerDay: 'Бюджет на день',
+    budgetForMonth: 'Бюджет на месяц',
     startOfPeriod: 'Начать этот месяц',
     description: 'Описание...',
     language: 'Язык',
@@ -77,6 +79,10 @@ export const ruLocale: Locale = {
     canSpendToday: 'Сегодня можно потратить',
     leftInMonth: 'Осталось на месяц',
     savedThisMonth: 'Сэкономлено',
+
+    financesHeader: 'Финансы',
+    configureFinances: 'Настроить',
+    financesDescriptor: 'Настройки'
 }
 
 const monthNames: { [month: number]: string } = {

@@ -9,6 +9,7 @@ import { BudgetSettings } from './BudgetSettings/BudgetSettings';
 import { UserPreferencesSettings } from './UserPreferencesSettings/UserPreferencesSettings';
 import { FooterLinks } from './FooterLinks/FooterLinks';
 import { CategoriesSettings } from './CategoriesSettings/CategoriesSettings';
+import {BudgetSettingsSummary} from "./BudgetSettings/BudgetSettingsSummary";
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = width < 350;
@@ -28,7 +29,7 @@ const Settings = observer(() => {
                 <View style={{ paddingBottom: 130 }}>
                     <Text style={styles.header}>{application.locale.settingsPageTitle}</Text>
                     <View style={styles.pageContent}>
-                        <BudgetSettings />
+                        <BudgetSettingsSummary />
                         <StartOfPeriodSettings />
                         <CategoriesSettings />
                         <UserPreferencesSettings />

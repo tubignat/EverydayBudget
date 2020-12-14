@@ -10,6 +10,7 @@ export type Locale = {
     newIncome: string
     noIncomesYet: string
     recurringExpenses: string
+    expenses: string
     newExpense: string
     noExpensesYet: string
     add: string
@@ -18,6 +19,7 @@ export type Locale = {
     remove: string
     save: string
     budgetPerDay: string
+    budgetForMonth: string
     startOfPeriod: string
     description: string
     language: string
@@ -69,4 +71,8 @@ export type Locale = {
     canSpendToday: string
     leftInMonth: string
     savedThisMonth: string
+
+    financesHeader: string
+    configureFinances: string
+    financesDescriptor: string
 }

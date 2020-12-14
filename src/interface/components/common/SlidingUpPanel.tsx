@@ -82,8 +82,8 @@ class SlidingUpPanel extends React.Component<ISlidingUpPanelProps, ISlidingUpPan
         });
 
         const background = mainViewScale.interpolate({
-            inputRange: [0.925, 1],
-            outputRange: [this.props.colorScheme.lightBackground, this.props.colorScheme.background]
+            inputRange: [0.925, 0.950, 1],
+            outputRange: [this.props.colorScheme.lightBackground, this.props.colorScheme.background, this.props.colorScheme.background]
         });
 
         const contentOpacity = mainViewScale.interpolate({

@@ -108,6 +108,14 @@ export class ApplicationState {
         return lightColorScheme;
     }
 
+    @computed public get incomesSum() {
+        return this.incomes.reduce((sum, income) => sum + income.amount, 0)
+    }
+
+    @computed public get expensesSum() {
+        return this.expenses.reduce((sum, expense) => sum + expense.amount, 0)
+    }
+
     @computed public get monthBudget() {
         return this.budgetPerDay * this.daysInMonth
     }
