@@ -14,8 +14,13 @@
     "@ant-design/icons-react-native": "2.0.0",
     "@ant-design/react-native": "^3.3.0",
     "@react-native-community/async-storage": "~1.12.0",
+    "@react-native-community/masked-view": "^0.1.10",
+    "@react-navigation/bottom-tabs": "^5.11.2",
+    "@react-navigation/native": "^5.8.10",
+    "@react-navigation/stack": "^5.12.8",
     "eslint": "^5.16.0",
     "expo": "^40.0.0",
+    "expo-linear-gradient": "~8.4.0",
     "expo-localization": "~9.1.0",
     "mobx": "^5.10.1",
     "mobx-react": "^6.0.3",
@@ -23,10 +28,12 @@
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.0.tar.gz",
     "react-native-appearance": "~0.3.3",
+    "react-native-gesture-handler": "^1.9.0",
     "react-native-keyboard-aware-scrollview": "^2.0.0",
+    "react-native-reanimated": "^1.13.2",
+    "react-native-screens": "^2.16.1",
     "react-native-swiper": "^1.5.14",
-    "react-native-web": "~0.13.12",
-    "expo-linear-gradient": "~8.4.0"
+    "react-native-web": "~0.13.12"
   },
   "devDependencies": {
     "@types/jest": "^25.2.1",

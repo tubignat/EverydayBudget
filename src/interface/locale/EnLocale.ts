@@ -34,11 +34,10 @@ export const enLocale: Locale = {
     removeCategoryQuestion: 'Remove this category?',
     removeCategoryDialogMessage: 'Expenses with this category label will be labeled as "No category"',
 
-    todaysExpenses: 'Today',
+    todayPageTitle: 'Today',
     noExpensesToday: 'No spending today',
     totalExpensesToday: 'total',
 
-    statisticsPageTitle: 'Statistics',
     dateColumn: 'Date',
     saldoColumn: 'Balance',
     budget: 'Budget',
@@ -87,7 +86,9 @@ export const enLocale: Locale = {
 
     financesHeader: 'Finances',
     configureFinances: 'Configure',
-    financesDescriptor: 'Settings'
+    financesDescriptor: 'Settings',
+
+    spendingsPageTitle: 'Expenses',
 }
 
 const getDateSuffix = (date: number) => {

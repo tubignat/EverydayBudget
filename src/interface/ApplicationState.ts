@@ -92,20 +92,13 @@ export class ApplicationState {
         return this.language === 'ru' ? ruLocale : enLocale;
     }
 
+    @computed public get isDarkTheme() {
+        return this.colorSchemePreference === 'dark' || (this.colorSchemePreference === 'auto' && Appearance.getColorScheme() === 'dark' )
+    }
+
+
     @computed public get colorScheme() {
-        if (this.colorSchemePreference === 'light') {
-            return lightColorScheme;
-        }
-
-        if (this.colorSchemePreference === 'dark') {
-            return darkColorScheme;
-        }
-
-        if (Appearance.getColorScheme() === 'dark') {
-            return darkColorScheme
-        }
-
-        return lightColorScheme;
+        return this.isDarkTheme ? darkColorScheme : lightColorScheme
     }
 
     @computed public get incomesSum() {

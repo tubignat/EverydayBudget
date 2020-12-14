@@ -37,11 +37,10 @@ export type Locale = {
     removeCategoryQuestion: string
     removeCategoryDialogMessage: string
 
-    todaysExpenses: string
+    todayPageTitle: string
     noExpensesToday: string
     totalExpensesToday: string
 
-    statisticsPageTitle: string
     dateColumn: string
     saldoColumn: string
     budget: string
@@ -75,4 +74,6 @@ export type Locale = {
     financesHeader: string
     configureFinances: string
     financesDescriptor: string
+
+    spendingsPageTitle: string
 }

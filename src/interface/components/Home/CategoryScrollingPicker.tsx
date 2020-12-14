@@ -94,12 +94,6 @@ const getPickerStyles = (scheme: ColorScheme) => StyleSheet.create({
         width: 24,
         height: '100%',
     },
-    pointsContainer: {
-        flexDirection: 'row',
-        backgroundColor: scheme.keyboardPlateBackground,
-        height: '100%',
-        alignItems: 'center'
-    },
     moreCategoriesButtonPoint: {
         height: 6,
         width: 6,

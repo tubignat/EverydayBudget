@@ -8,6 +8,7 @@ import {Locale} from '../../locale/Locale';
 import {Currency} from '../../../domain/repositories/UserPreferencesRepository';
 import {CategoryScrollingPicker} from './CategoryScrollingPicker';
 import {Category} from '../../../domain/entities/Category';
+import { useNavigation } from '@react-navigation/native';
 
 interface IAddTransactionPlateProps {
     scheme: ColorScheme
@@ -43,13 +44,15 @@ export function AddTransactionPlate(props: IAddTransactionPlateProps) {
         outputRange: [0, 0, 1]
     })
 
+    const navigation = useNavigation()
+
     return <View style={styles.container}>
         <View style={styles.inputContainer}>
             <Text style={styles.addTransactionText}>
                 {locale.addExpense}
             </Text>
             <View style={styles.addTransactionInput}>
-                <Text style={styles.transaction}>
+                <Text style={styles.transaction} onPress={() => navigation.navigate('Modal')}>
                     {getFormattedInput()}
                 </Text>
                 <AddSpendingButton onPress={onAddPressed} disabled={disabled} scheme={scheme} locale={locale}/>
@@ -112,7 +115,7 @@ export function AddTransactionPlate(props: IAddTransactionPlateProps) {
         setInteger(0);
         setFractions([]);
         setCategory(props.allCategories[0]);
-    };
+    }
 
     function onAddPressed() {
         const fractionNumber = Number(fractions.join(''));
@@ -125,8 +128,8 @@ export function AddTransactionPlate(props: IAddTransactionPlateProps) {
 
 const getStyles = (scheme: ColorScheme) => StyleSheet.create({
     container: {
-        backgroundColor: scheme.keyboardPlateBackground,
-        marginBottom: 48,
+        backgroundColor: scheme.plateBackground,
+        marginBottom: 12,
         marginHorizontal: 16,
         padding: 12,
         borderRadius: 16

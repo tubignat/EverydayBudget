@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Animated, TouchableWithoutFeedback, Keyboard, PanResponder, Dimensions} from 'react-native';
+import {View, Animated, TouchableWithoutFeedback, Keyboard, PanResponder, Dimensions, SafeAreaView} from 'react-native';
 import {ContextMenuButton} from './ContextMenuButton';
 import {ColorScheme} from '../../../../color/ColorScheme';
 
@@ -36,25 +36,27 @@ export function ModalWithContextMenu(props: IModalWithContextMenuProps) {
             <View style={styles.backdropTouchableInner}/>
         </TouchableWithoutFeedback>
 
-        <Animated.View style={styles.container}>
-            <View style={styles.content} {...panResponder.panHandlers}>
-                <View style={styles.handleContainer}>
-                    <View style={styles.handle}/>
+        <SafeAreaView>
+            <Animated.View style={styles.container}>
+                <View style={styles.content} {...panResponder.panHandlers}>
+                    <View style={styles.handleContainer}>
+                        <View style={styles.handle}/>
+                    </View>
+                    {props.children}
                 </View>
-                {props.children}
-            </View>
-            {
-                props.buttons.map(button =>
-                    <ContextMenuButton
-                        key={button.text}
-                        text={button.text}
-                        color={button.color}
-                        onPress={() => handleButtonPress(button.onPress)}
-                        scheme={props.scheme}
-                    />
-                )
-            }
-        </Animated.View>
+                {
+                    props.buttons.map(button =>
+                        <ContextMenuButton
+                            key={button.text}
+                            text={button.text}
+                            color={button.color}
+                            onPress={() => handleButtonPress(button.onPress)}
+                            scheme={props.scheme}
+                        />
+                    )
+                }
+            </Animated.View>
+        </SafeAreaView>
     </Animated.View>
 
     function open() {
@@ -128,7 +130,7 @@ function getStyles(scheme: ColorScheme, translateY: Animated.Value): any {
         },
         container: {
             marginHorizontal: 16,
-            marginVertical: 16,
+            marginVertical: 8,
             transform: [
                 {translateY: limitedTranslateY}
             ],

@@ -32,7 +32,7 @@ export function ColorPicker(props: IColorPickerProps) {
 const getColorPickerStyles = (scheme: ColorScheme) => StyleSheet.create({
     plate: {
         borderRadius: 16,
-        backgroundColor: scheme.plateBackground,
+        backgroundColor: scheme.categoryItemBackground,
         marginTop: 8,
     },
     colorsTable: {

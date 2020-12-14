@@ -14,5 +14,5 @@ export type ColorScheme = {
     buttonBackground: string;
     buttonBorder: string;
     buttonBackgroundPressed: string;
-    keyboardPlateBackground: string;
+    categoryItemBackground: string;
 }

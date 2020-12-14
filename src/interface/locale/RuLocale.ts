@@ -34,11 +34,10 @@ export const ruLocale: Locale = {
     removeCategoryQuestion: 'Удалить категорию?',
     removeCategoryDialogMessage: 'Все траты по этой категории будут помечены как "Без категории"',
 
-    todaysExpenses: 'Сегодня',
+    todayPageTitle: 'Сегодня',
     noExpensesToday: 'За сегодня трат пока нет',
     totalExpensesToday: 'потрачено',
 
-    statisticsPageTitle: 'Статистика',
     dateColumn: 'День',
     saldoColumn: 'Остаток',
     budget: 'Бюджет',
@@ -82,7 +81,8 @@ export const ruLocale: Locale = {
 
     financesHeader: 'Финансы',
     configureFinances: 'Настроить',
-    financesDescriptor: 'Настройки'
+    financesDescriptor: 'Настройки',
+    spendingsPageTitle: 'Траты',
 }
 
 const monthNames: { [month: number]: string } = {

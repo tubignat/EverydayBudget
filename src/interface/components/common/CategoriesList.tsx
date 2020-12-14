@@ -66,7 +66,7 @@ const getItemStyles = (scheme: ColorScheme, color: string) => StyleSheet.create(
     item: {
         padding: 16,
         borderRadius: 16,
-        backgroundColor: scheme.plateBackground,
+        backgroundColor: scheme.categoryItemBackground,
         justifyContent: 'flex-start',
         alignItems: 'center',
         flexDirection: 'row',
