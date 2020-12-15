@@ -7,6 +7,7 @@ import {formatMoney} from '../../NumberFormat';
 import {ColorScheme} from '../../color/ColorScheme';
 import {AddTransactionPlate} from './AddTransactionPlate';
 import {Category} from '../../../domain/entities/Category';
+import {DeviceState} from "../../DeviceState";
 
 const {width, height} = Dimensions.get('window');
 const isSmallScreen = width < 350;
@@ -36,7 +37,7 @@ export const Home = observer(() => {
 
     return <Page scheme={application.colorScheme}>
         {
-            !isSmallScreen && <View style={styles.headerContainer}>
+            DeviceState.screenSize === 'L' && <View style={styles.headerContainer}>
                 <Text style={styles.header}>
                     {application.locale.homePageTitle}
                 </Text>

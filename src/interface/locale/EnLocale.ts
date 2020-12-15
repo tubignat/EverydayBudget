@@ -17,7 +17,7 @@ export const enLocale: Locale = {
     noExpensesYet: 'No expenses yet. ',
     budgetPerDay: 'Budget per day',
     budgetForMonth: 'Budget for month',
-    startOfPeriod: 'Start this month',
+    startOfPeriod: 'Start month',
     description: 'Description...',
     language: 'Language',
     currency: 'Currency',

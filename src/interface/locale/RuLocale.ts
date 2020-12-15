@@ -17,7 +17,7 @@ export const ruLocale: Locale = {
     noExpensesYet: 'Пока расходов нет. ',
     budgetPerDay: 'Бюджет на день',
     budgetForMonth: 'Бюджет на месяц',
-    startOfPeriod: 'Начать этот месяц',
+    startOfPeriod: 'Начать месяц',
     description: 'Описание...',
     language: 'Язык',
     currency: 'Валюта',

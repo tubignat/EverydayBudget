@@ -4,11 +4,11 @@ import {StyleSheet, View, Text} from "react-native";
 import {ApplicationContext} from "../../../ApplicationContext";
 import {observer} from "mobx-react";
 import {TextButton} from "../../common/TextButton";
-import {ApplicationState} from "../../../ApplicationState";
 import {formatMoney} from "../../../NumberFormat";
-import {CategoriesSettingsPanel} from "../CategoriesSettings/CategoriesSettingsPanel";
 import {ModalStackState} from "../../../ModalStackState";
 import {FinancesSettingsPanel} from "./FinancesSettingsPanel";
+import {Currency} from "../../../../domain/repositories/UserPreferencesRepository";
+import {DeviceState} from "../../../DeviceState";
 
 export const BudgetSettingsSummary = observer(() => {
     const application = useContext(ApplicationContext);
@@ -28,13 +28,15 @@ export const BudgetSettingsSummary = observer(() => {
             <SummaryCell
                 label={application.locale.incomes}
                 amount={application.incomesSum}
-                application={application}
+                colorScheme={application.colorScheme}
+                currency={application.currency}
             />
             <View style={{width: 16}}/>
             <SummaryCell
                 label={application.locale.expenses}
                 amount={application.expensesSum}
-                application={application}
+                colorScheme={application.colorScheme}
+                currency={application.currency}
             />
         </View>
 
@@ -42,13 +44,15 @@ export const BudgetSettingsSummary = observer(() => {
             <SummaryCell
                 label={application.locale.budgetForMonth}
                 amount={application.monthBudget}
-                application={application}
+                colorScheme={application.colorScheme}
+                currency={application.currency}
             />
             <View style={{width: 16}}/>
             <SummaryCell
                 label={application.locale.budgetPerDay}
                 amount={application.budgetPerDay}
-                application={application}
+                colorScheme={application.colorScheme}
+                currency={application.currency}
             />
         </View>
 
@@ -63,12 +67,12 @@ export const BudgetSettingsSummary = observer(() => {
     </View>
 })
 
-function SummaryCell(props: { label: string, amount: number, application: ApplicationState }) {
-    const styles = getStyles(props.application.colorScheme)
+function SummaryCell(props: { label: string, amount: number, colorScheme: ColorScheme, currency: Currency }) {
+    const styles = getStyles(props.colorScheme)
 
     return <View style={styles.summaryCellContainer}>
         <Text style={styles.summaryCellLabel}>{props.label}</Text>
-        <Text style={styles.summaryCellAmount}>{formatMoney(props.amount)} {props.application.currency}</Text>
+        <Text style={styles.summaryCellAmount}>{formatMoney(props.amount)} {props.currency}</Text>
     </View>
 }
 
@@ -78,7 +82,7 @@ const getStyles = (scheme: ColorScheme) => StyleSheet.create({
         backgroundColor: scheme.plateBackground,
         paddingTop: 32,
         paddingHorizontal: 24,
-        marginHorizontal: -24,
+        marginHorizontal: DeviceState.screenSize === 'L' ? -24 : 0,
         marginBottom: 72
     },
     summaryHeader: {
