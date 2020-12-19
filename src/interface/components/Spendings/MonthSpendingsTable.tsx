@@ -1,32 +1,23 @@
-import React, { Component, useState, useContext, useEffect } from 'react';
-import {
-    View,
-    Text,
-    StyleSheet,
-    TouchableWithoutFeedback,
-} from 'react-native';
-
-import { ApplicationContext } from '../../ApplicationContext';
-import { formatMoney } from '../../NumberFormat';
-import { ColorScheme } from '../../color/ColorScheme';
-import { ApplicationState } from '../../ApplicationState';
-import { DaysSpendingsPanel } from './DaySpendingsPanel';
-import { ModalStackState } from '../../ModalStackState';
-import { observer } from 'mobx-react';
+import React, {Component, useContext} from 'react';
+import {View, Text, StyleSheet, TouchableWithoutFeedback,} from 'react-native';
+import {ApplicationContext} from '../../Contexts';
+import {formatMoney} from '../../NumbersFormats';
+import {ColorScheme} from '../../color/ColorScheme';
+import {ApplicationState} from '../../ApplicationState';
+import {DaysSpendingsPanel} from './DaySpendingsPanel';
+import {ModalStackState} from '../../ModalStackState';
+import {observer} from 'mobx-react';
+import {useContextUnsafe} from "../../Hooks";
 
 export const MonthSpendingsTable = observer(() => {
+    const application = useContextUnsafe(ApplicationContext);
 
-    const application = useContext(ApplicationContext);
-    if (!application) {
-        return null;
-    }
+    const {daysInMonth, startOfPeriod, month, year, saldos, day} = application;
 
-    const { daysInMonth, startOfPeriod, month, year, saldos, day } = application;
-
-    const days = Array.from({ length: daysInMonth - startOfPeriod + 1 }, (_, k) => k + 1 + startOfPeriod - 1);
+    const days = Array.from({length: daysInMonth - startOfPeriod + 1}, (_, k) => k + 1 + startOfPeriod - 1);
 
     return <View>
-        <TableHeader />
+        <TableHeader/>
         {
             days.map(d => <TableRow
                 key={d}
@@ -45,21 +36,18 @@ export const MonthSpendingsTable = observer(() => {
     }
 
     function renderPanel(onClose: () => void, openedDay: number) {
-        return <DaysSpendingsPanel key='daySpendingsPanel' onClose={onClose} openedDay={openedDay} />
+        return <DaysSpendingsPanel key='daySpendingsPanel' onClose={onClose} openedDay={openedDay}/>
     }
 });
 
 export function TableHeader() {
-    const application = React.useContext(ApplicationContext);
-    if (!application) {
-        return null;
-    }
+    const application = useContextUnsafe(ApplicationContext);
 
     const styles = getStyles(application.colorScheme);
 
     return <View style={styles.tableHeaderContainer}>
-        <Text style={[styles.tableHeaderCell, { width: 65 }]}>{application.locale.dateColumn}</Text>
-        <Text style={[styles.tableHeaderCell, { textAlign: 'right' }]}>{application.locale.saldoColumn}</Text>
+        <Text style={[styles.tableHeaderCell, {width: 65}]}>{application.locale.dateColumn}</Text>
+        <Text style={[styles.tableHeaderCell, {textAlign: 'right'}]}>{application.locale.saldoColumn}</Text>
     </View>
 }
 
@@ -90,8 +78,8 @@ export class TableRow extends Component<ITableRowProps, ITableRowState> {
     }
 
     render() {
-        const { day, month, year, saldo, isToday, onClick } = this.props;
-        const { locale, currency, colorScheme } = this.context;
+        const {day, month, year, saldo, isToday, onClick} = this.props;
+        const {locale, currency, colorScheme} = this.context;
 
         const styles = getStyles(colorScheme);
 
@@ -100,21 +88,21 @@ export class TableRow extends Component<ITableRowProps, ITableRowState> {
 
 
         return <TouchableWithoutFeedback style={styles.calendarRow}
-            onPress={onClick}
-            onPressIn={() => this.setState({ isPressed: true })}
-            onPressOut={() => this.setState({ isPressed: false })}
+                                         onPress={onClick}
+                                         onPressIn={() => this.setState({isPressed: true})}
+                                         onPressOut={() => this.setState({isPressed: false})}
         >
             <View
                 style={[styles.calendarRow,
-                { transform: this.state.isPressed ? [{ scaleY: 0.95 }, { scaleX: 0.95 }] : [] },
-                { marginBottom: this.isSunday(dayOfWeek) ? 15 : 0 }
+                    {transform: this.state.isPressed ? [{scaleY: 0.95}, {scaleX: 0.95}] : []},
+                    {marginBottom: this.isSunday(dayOfWeek) ? 15 : 0}
                 ]}
             >
                 <Text style={[styles.tableRowCell, style]}>
-                    {day},  {locale.getDayOfWeekAbbr(dayOfWeek)}
+                    {day}, {locale.getDayOfWeekAbbr(dayOfWeek)}
                 </Text>
                 <Text
-                    style={[styles.daysBudget, styles.tableRowCell, { color: saldo > 0 ? colorScheme.primaryText : colorScheme.danger }]}
+                    style={[styles.daysBudget, styles.tableRowCell, {color: saldo > 0 ? colorScheme.primaryText : colorScheme.danger}]}
                 >
                     {formatMoney(saldo)} {currency}
                 </Text>

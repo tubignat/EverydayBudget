@@ -1,33 +1,30 @@
-import React, { useContext } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { observer } from 'mobx-react';
-import { IncomesList } from './SettingsIncomesList';
-import { IncomeId } from '../../../../domain/repositories/IncomesRepository';
-import { ExpenseId } from '../../../../domain/repositories/ExpensesRepository';
-import { ApplicationContext } from '../../../ApplicationContext';
-import { SortButton } from './SortButton';
-import { formatMoney } from '../../../NumberFormat';
-import { ColorScheme } from '../../../color/ColorScheme';
+import React, {useContext} from 'react';
+import {View, Text, StyleSheet} from 'react-native';
+import {observer} from 'mobx-react';
+import {IncomesList} from './SettingsIncomesList';
+import {IncomeId} from '../../../../domain/repositories/IncomesRepository';
+import {ExpenseId} from '../../../../domain/repositories/ExpensesRepository';
+import {ApplicationContext} from '../../../Contexts';
+import {SortButton} from './SortButton';
+import {ColorScheme} from '../../../color/ColorScheme';
+import {useContextUnsafe} from "../../../Hooks";
 
 export const BudgetSettings = observer(() => {
-    const application = useContext(ApplicationContext);
-    if (!application) {
-        return null;
-    }
+    const application = useContextUnsafe(ApplicationContext);
 
     const styles = getStyles(application.colorScheme);
 
     const incomes = application.sortIncomes === 'desc'
-        ? application.incomes.slice().sort((a, b) => b.amount - a.amount)
-        : application.incomes;
+        ? application.monthIncomes.slice().sort((a, b) => b.amount - a.amount)
+        : application.monthIncomes;
 
-    const showSortIncomesButton = canBeSorted(application.incomes.map(e => e.amount));
+    const showSortIncomesButton = canBeSorted(application.monthIncomes.map(e => e.amount));
 
     const expenses = application.sortExpenses === 'desc'
-        ? application.expenses.slice().sort((a, b) => b.amount - a.amount)
-        : application.expenses;
+        ? application.monthExpenses.slice().sort((a, b) => b.amount - a.amount)
+        : application.monthExpenses;
 
-    const showSortExpensesButton = canBeSorted(application.expenses.map(e => e.amount));
+    const showSortExpensesButton = canBeSorted(application.monthExpenses.map(e => e.amount));
     return <View style={styles.container}>
         <View style={styles.listSubheaderContainer}>
             <Text style={styles.subheader}>

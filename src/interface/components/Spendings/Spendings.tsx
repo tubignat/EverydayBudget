@@ -3,15 +3,13 @@ import {Page} from "../common/Page";
 import Swiper from "react-native-swiper";
 import {Keyboard} from "react-native";
 import React, {useContext} from "react";
-import {ApplicationContext} from "../../ApplicationContext";
+import {ApplicationContext} from "../../Contexts";
 import TodaySpendings from "./TodaySpendings";
 import {MonthSpendings} from "./MonthSpendings";
+import {useContextUnsafe} from "../../Hooks";
 
 export const Spendings = observer(() => {
-    const application = useContext(ApplicationContext);
-    if (!application) {
-        return null;
-    }
+    const application = useContextUnsafe(ApplicationContext);
 
     return <Page scheme={application.colorScheme}>
         <Swiper

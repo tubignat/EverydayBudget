@@ -1,23 +1,18 @@
-import React, {useState} from 'react';
-import {View, Text, Dimensions, StyleSheet, Animated} from 'react-native';
+import React, {useContext, useState} from 'react';
+import {View, Text, Animated} from 'react-native';
 import {Page} from '../common/Page'
 import {observer} from 'mobx-react';
-import {ApplicationContext} from '../../ApplicationContext';
-import {formatMoney} from '../../NumberFormat';
+import {ApplicationContext} from '../../Contexts';
+import {formatMoney} from '../../NumbersFormats';
 import {ColorScheme} from '../../color/ColorScheme';
 import {AddTransactionPlate} from './AddTransactionPlate';
 import {Category} from '../../../domain/entities/Category';
 import {DeviceState} from "../../DeviceState";
-
-const {width, height} = Dimensions.get('window');
-const isSmallScreen = width < 350;
-const isBigScreen = height > 800;
+import {PageHeader} from "../common/PageHeader";
+import {useContextUnsafe} from "../../Hooks";
 
 export const Home = observer(() => {
-    const application = React.useContext(ApplicationContext);
-    if (!application) {
-        return null;
-    }
+    const application = useContextUnsafe(ApplicationContext);
 
     const [anim] = useState(new Animated.Value(1));
 
@@ -37,11 +32,7 @@ export const Home = observer(() => {
 
     return <Page scheme={application.colorScheme}>
         {
-            DeviceState.screenSize === 'L' && <View style={styles.headerContainer}>
-                <Text style={styles.header}>
-                    {application.locale.homePageTitle}
-                </Text>
-            </View>
+            DeviceState.screenSize === 'L' && <PageHeader header={application.locale.homePageTitle} scheme={application.colorScheme}/>
         }
         <View style={styles.keyboardGroupContainer}>
 
@@ -51,7 +42,7 @@ export const Home = observer(() => {
                         {application.locale.leftInMonth}
                     </Text>
                     <View style={styles.budgetAmounts}>
-                        <Animated.Text style={{ ...styles.statText, color: leftInMonthColor }}>
+                        <Animated.Text style={{...styles.statText, color: leftInMonthColor}}>
                             {formatMoney(application.leftInMonth)}&nbsp;
                         </Animated.Text>
                         <Animated.Text style={{...styles.budgetPerDay}}>
@@ -96,10 +87,6 @@ export const Home = observer(() => {
     </Page>
 
     function addSpending(amount: number, category: Category | null) {
-        if (!application) {
-            throw new Error('Application was not set');
-        }
-
         const date = new Date();
         application.addSpending(application.day, amount, date.getHours(), date.getMinutes(), category);
     }
@@ -118,12 +105,6 @@ const getStyles = (scheme: ColorScheme, anim: Animated.Value): any => {
         budgetText: {
             color: scheme.secondaryText,
             marginBottom: 10,
-        },
-        header: {
-            fontSize: 36,
-            fontWeight: 'bold',
-            marginBottom: 40,
-            color: scheme.primaryText
         },
         budgetContainer: {
             marginHorizontal: 36,
@@ -162,12 +143,6 @@ const getStyles = (scheme: ColorScheme, anim: Animated.Value): any => {
                     })
                 }
             ]
-        },
-        headerContainer: {
-            paddingLeft: 24,
-            paddingRight: isSmallScreen ? 12 : 24,
-            paddingVertical: isBigScreen ? 72 : 48,
-            height: '100%',
         },
         keyboardGroupContainer: {
             position: 'absolute',

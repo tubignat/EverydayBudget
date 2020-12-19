@@ -2,16 +2,14 @@ import { observer } from "mobx-react";
 import React, { useContext } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { TextButton } from '../../common/TextButton';
-import { ApplicationContext } from '../../../ApplicationContext';
+import { ApplicationContext } from '../../../Contexts';
 import { ColorScheme } from '../../../color/ColorScheme';
 import { ModalStackState } from "../../../ModalStackState";
 import { CategoriesSettingsPanel } from "./CategoriesSettingsPanel";
+import {useContextUnsafe} from "../../../Hooks";
 
 export const CategoriesSettings = observer(() => {
-    const application = useContext(ApplicationContext);
-    if (!application) {
-        return null;
-    }
+    const application = useContextUnsafe(ApplicationContext);
 
     const renderModal = (onClose: () => void) => <CategoriesSettingsPanel key='categoriesPanel' onClose={onClose} />
 

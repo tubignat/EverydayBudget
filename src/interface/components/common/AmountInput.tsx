@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { TextInput, StyleSheet, TouchableWithoutFeedback, View, Text } from 'react-native';
-import { formatMoney } from '../../NumberFormat';
+import { formatMoney } from '../../NumbersFormats';
 import { Currency } from '../../../domain/repositories/UserPreferencesRepository';
 
 interface IAmountInputProps {

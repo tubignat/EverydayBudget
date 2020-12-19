@@ -2,24 +2,21 @@ import React, { useContext } from 'react';
 import { ScrollView, View, Text, StyleSheet, KeyboardAvoidingView, Dimensions } from 'react-native';
 import { Page } from '../common/Page'
 import { observer } from 'mobx-react';
-import { ApplicationContext } from '../../ApplicationContext';
+import { ApplicationContext } from '../../Contexts';
 import { ColorScheme } from '../../color/ColorScheme';
 import { StartOfPeriodSettings } from './StartOfPeriodSettings/StartOfPeriodSettings';
-import { BudgetSettings } from './BudgetSettings/BudgetSettings';
 import { UserPreferencesSettings } from './UserPreferencesSettings/UserPreferencesSettings';
 import { FooterLinks } from './FooterLinks/FooterLinks';
 import { CategoriesSettings } from './CategoriesSettings/CategoriesSettings';
 import {BudgetSettingsSummary} from "./BudgetSettings/BudgetSettingsSummary";
+import {useContextUnsafe} from "../../Hooks";
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = width < 350;
 const isBigScreen = height > 800;
 
 const Settings = observer(() => {
-    const application = useContext(ApplicationContext);
-    if (!application) {
-        return null;
-    }
+    const application = useContextUnsafe(ApplicationContext);
 
     const styles = getStyles(application.colorScheme);
 

@@ -16,6 +16,7 @@ import AmountInput from '../AmountInput';
 import {Locale} from '../../../locale/Locale';
 import {CategoryPickerModal} from './CategoryPickerModal';
 import {ModalStackState} from '../../../ModalStackState';
+import {getTimeString} from "../../../NumbersFormats";
 
 const {width, height} = Dimensions.get('window');
 const isSmallScreen = width < 350;
@@ -62,7 +63,13 @@ export function SpendingView(props: ISpendingView) {
                         setRef={ref => setAmountInputRef(ref)}
                     />
                 </View>
-                <Text style={styles.time}>{getTimeString()}</Text>
+                <Text style={styles.time}>
+                    {
+                        props.spending.hour && props.spending.minute
+                            ? getTimeString(props.spending.hour, props.spending.minute)
+                            : ''
+                    }
+                </Text>
             </View>
 
             <View style={styles.rightCell}>
@@ -87,21 +94,6 @@ export function SpendingView(props: ISpendingView) {
             </View>
         </Animated.View>
     </Animated.View>
-
-    function getTimeString() {
-        if (props.spending.hour === undefined
-            || props.spending.hour === null
-            || props.spending.minute === undefined
-            || props.spending.minute === null
-        ) {
-            return ''
-        }
-
-        const hourString = props.spending.hour.toString().padStart(2, '0')
-        const minuteString = props.spending.minute.toString().padStart(2, '0')
-
-        return `${hourString}:${minuteString}`;
-    }
 
     function onRemovePressedWrapper() {
         props.onRemoveAnimationStart && props.onRemoveAnimationStart();

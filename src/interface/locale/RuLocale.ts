@@ -61,6 +61,8 @@ export const ruLocale: Locale = {
 
     getMonthName: (month: number) => monthNames[month],
 
+    getMonthNameAbbr: month => monthNamesAbbr[month],
+
     getStartOfPeriodDateText: (day: number, month: number) => `${day} ${ruMonths[month]}`,
 
     lunchCategory: 'Обед',
@@ -83,11 +85,32 @@ export const ruLocale: Locale = {
     configureFinances: 'Настроить',
     financesDescriptor: 'Настройки',
     spendingsPageTitle: 'Траты',
+    statisticsPageTitle: 'Статистика',
+    month: 'Месяц',
+    allTime: 'Всё время',
+
+    atTime: 'в',
+
+    biggest: 'Наибольшая',
+    smallest: 'Наименьшая',
+    average: 'Средняя',
+
+    distributionByCategories: 'По категориям',
+    distributionByDaysOfWeek: 'По дням недели',
+    daysWithPositiveLimit: 'Дней с положительным балансом',
+
+    noData: 'Нет данных',
+    showNoCategory: 'Показывать "Без категории"'
 }
 
 const monthNames: { [month: number]: string } = {
     0: 'Январь', 1: 'Февраль', 2: 'Март', 3: 'Апрель', 4: 'Май', 5: 'Июнь',
     6: 'Июль', 7: 'Август', 8: 'Сентябрь', 9: 'Октябрь', 10: 'Ноябрь', 11: 'Декабрь',
+}
+
+const monthNamesAbbr: { [month: number]: string } = {
+    0: 'янв', 1: 'фев', 2: 'мар', 3: 'апр', 4: 'май', 5: 'июн',
+    6: 'июл', 7: 'авг', 8: 'сен', 9: 'окт', 10: 'ноя', 11: 'дек',
 }
 
 const ruMonths: { [month: number]: string } = {

@@ -53,6 +53,7 @@ export type Locale = {
     getDayOfWeek: (dayOfWeek: number) => string
     getDayOfWeekAbbr: (dayOfWeek: number) => string
     getMonthName: (month: number) => string
+    getMonthNameAbbr: (month: number) => string
     getStartOfPeriodDateText: (day: number, month: number) => string
 
     lunchCategory: string
@@ -76,4 +77,20 @@ export type Locale = {
     financesDescriptor: string
 
     spendingsPageTitle: string
+    statisticsPageTitle: string
+
+    month: string
+    allTime: string
+    atTime: string
+
+    biggest: string
+    smallest: string
+    average: string
+
+    distributionByCategories: string
+    distributionByDaysOfWeek: string
+    daysWithPositiveLimit: string
+
+    noData: string
+    showNoCategory: string
 }

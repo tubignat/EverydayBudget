@@ -1,20 +1,18 @@
 import {ColorScheme} from "../../../color/ColorScheme";
 import React, {useContext} from "react";
 import {StyleSheet, View, Text} from "react-native";
-import {ApplicationContext} from "../../../ApplicationContext";
+import {ApplicationContext} from "../../../Contexts";
 import {observer} from "mobx-react";
 import {TextButton} from "../../common/TextButton";
-import {formatMoney} from "../../../NumberFormat";
+import {formatMoney} from "../../../NumbersFormats";
 import {ModalStackState} from "../../../ModalStackState";
 import {FinancesSettingsPanel} from "./FinancesSettingsPanel";
 import {Currency} from "../../../../domain/repositories/UserPreferencesRepository";
 import {DeviceState} from "../../../DeviceState";
+import {useContextUnsafe} from "../../../Hooks";
 
 export const BudgetSettingsSummary = observer(() => {
-    const application = useContext(ApplicationContext);
-    if (!application) {
-        return null;
-    }
+    const application = useContextUnsafe(ApplicationContext);
 
     const renderModal = (onClose: () => void) => <FinancesSettingsPanel key='categoriesPanel' onClose={onClose}/>
 

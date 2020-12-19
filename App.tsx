@@ -11,19 +11,25 @@ import {SetUpMonthsRepository} from './src/domain/repositories/SetUpMonthsReposi
 import {EnsureMonthIsSetUpService} from './src/domain/services/EnsureMonthIsSetUpService';
 import {DefaultCategoriesService} from './src/domain/services/DefaultCategoriesService';
 import {UserPreferencesRepository} from './src/domain/repositories/UserPreferencesRepository';
-import {ApplicationContext} from './src/interface/ApplicationContext';
-import {AppState, AppStateStatus, Image, Animated, View, StyleSheet} from 'react-native';
+import {ApplicationContext, DevSettingsContext} from './src/interface/Contexts';
+import {Animated, AppState, AppStateStatus, Image, StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
 import * as Font from 'expo-font';
 import {ModalStack} from './src/interface/components/common/ModalStack';
 import {CategoryColorsRepository} from './src/domain/repositories/CategoryColorsRepository';
 import {CategoriesRepository} from './src/domain/repositories/CategoriesRepository';
 import {FirstTimeInitRepository} from './src/domain/repositories/FirstTimeInitRepository';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createStackNavigator} from '@react-navigation/stack';
 import {DarkTheme, DefaultTheme, NavigationContainer} from "@react-navigation/native";
 import {IconFill} from "@ant-design/icons-react-native";
 import {Spendings} from "./src/interface/components/Spendings/Spendings";
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {Statistics} from "./src/interface/components/Statistics/Statistics";
+import {Locale} from "./src/interface/locale/Locale";
+import {ColorScheme} from "./src/interface/color/ColorScheme";
+import {FillGlyphMapType} from "@ant-design/icons-react-native/lib/fill";
+import {DevSettingsRepository, FeatureFlag} from "./src/domain/repositories/DevSettingsRepository";
+import {DevSettingsState} from "./src/interface/DevSettingsState";
+import {TestDataProvider} from "./src/testData/TestDataProvider";
 
 const Tab = createBottomTabNavigator()
 
@@ -35,7 +41,8 @@ export default class App extends Component<{}, {
     protectScreenDisplay: boolean
 }> {
 
-    private applicationState: ApplicationState | undefined;
+    private application: ApplicationState | undefined;
+    private devSettings: DevSettingsState | undefined;
 
     constructor(props: {}) {
         super(props);
@@ -58,7 +65,7 @@ export default class App extends Component<{}, {
 
     private handleAppStateChange = (nextAppState: AppStateStatus) => {
         if (nextAppState === 'active') {
-            this.applicationState?.init();
+            this.application?.init();
             Animated
                 .timing(this.state.protectScreenOpacity, {toValue: 0, duration: 200, useNativeDriver: false})
                 .start(() => this.setState({protectScreenDisplay: false}));
@@ -88,12 +95,13 @@ export default class App extends Component<{}, {
         const setUpMonthsRepository = new SetUpMonthsRepository();
         const userPreferencesRepository = new UserPreferencesRepository();
         const firstTimeInitRepository = new FirstTimeInitRepository();
+        const devSettingsRepository = new DevSettingsRepository();
 
         const ensureMonthIsSetUpService = new EnsureMonthIsSetUpService(incomesRepository, expensesRepository, setUpMonthsRepository);
         const budgetService = new BudgetService(incomesRepository, expensesRepository, spendingsRepository);
         const defaultCategoriesService = new DefaultCategoriesService(firstTimeInitRepository, categoriesRepository, colorsRepository);
 
-        this.applicationState = new ApplicationState(
+        this.application = new ApplicationState(
             incomesRepository,
             expensesRepository,
             spendingsRepository,
@@ -106,6 +114,8 @@ export default class App extends Component<{}, {
             defaultCategoriesService
         );
 
+        this.devSettings = new DevSettingsState(devSettingsRepository)
+
         await categoriesRepository.init();
         await spendingsRepository.init();
         await incomesRepository.init();
@@ -113,78 +123,103 @@ export default class App extends Component<{}, {
         await setUpMonthsRepository.init();
         await userPreferencesRepository.init();
         await firstTimeInitRepository.init();
-        //
+        await devSettingsRepository.init();
+
         // new TestDataProvider(
         //     incomesRepository,
         //     expensesRepository,
         //     spendingsRepository,
         //     categoriesRepository,
         //     colorsRepository
-        // ).fillTestDataRussian(2020, 11, 10)
+        // ).fillTestDataRussian(2020, 10, 10)
 
-        this.applicationState.init();
+        this.application.init();
+        this.devSettings.init();
 
         this.setState({isInitialized: true});
     }
 
     render() {
-        if (!this.applicationState) {
+        if (!this.application || !this.devSettings || !this.state.isInitialized) {
             return null;
         }
 
-        return (
-            this.state.isInitialized &&
-            <SafeAreaProvider>
-                <ApplicationContext.Provider value={this.applicationState}>
-                    <ModalStack colorScheme={this.applicationState.colorScheme}>
-                        <NavigationContainer theme={this.applicationState.isDarkTheme ? DarkTheme : DefaultTheme}>
-                            <Tab.Navigator sceneContainerStyle={{backgroundColor: 'rgba(0, 0, 0, 0)'}}>
-                                <Tab.Screen
-                                    name='Home'
-                                    component={Home}
-                                    options={{
-                                        tabBarLabel: this.applicationState?.locale.homePageTitle,
-                                        tabBarIcon: (props) => <IconFill name='home' color={this.iconColor(props.focused)} size={24}/>
-                                    }}
-                                />
-                                <Tab.Screen
-                                    name='Expenses'
-                                    component={Spendings}
-                                    options={{
-                                        tabBarLabel: this.applicationState?.locale.spendingsPageTitle,
-                                        tabBarIcon: (props) => <IconFill name='profile' color={this.iconColor(props.focused)} size={24}/>
-                                    }}
-                                />
-                                <Tab.Screen
-                                    name='Settings'
-                                    component={Settings}
-                                    options={{
-                                        tabBarLabel: this.applicationState?.locale.settingsPageTitle,
-                                        tabBarIcon: (props) => <IconFill name='setting' color={this.iconColor(props.focused)} size={24}/>
-                                    }}
-                                />
-                            </Tab.Navigator>
-                        </NavigationContainer>
-                    </ModalStack>
+        const appScreens: AppScreen[] = [
+            {name: 'Home', component: Home, icon: 'home', label: this.application.locale.homePageTitle},
+            {name: 'Spendings', component: Spendings, icon: 'profile', label: this.application.locale.spendingsPageTitle},
+            {
+                name: 'Statistics',
+                component: Statistics,
+                icon: 'pie-chart',
+                label: this.application.locale.statisticsPageTitle,
+                hidden: !this.devSettings.isFlagEnabled(FeatureFlag.Statistics)
+            },
+            {name: 'Settings', component: Settings, icon: 'setting', label: this.application.locale.settingsPageTitle},
+        ]
 
-                    <View style={{
-                        ...styles.background,
-                        backgroundColor: this.applicationState.colorScheme.background
-                    }}/>
-                    <Animated.View style={{
-                        ...styles.protectingImage,
-                        backgroundColor: this.applicationState.colorScheme.background,
-                        opacity: this.state.protectScreenOpacity,
-                        display: this.state.protectScreenDisplay ? 'flex' : 'none'
-                    }}>
-                        <Image source={require('./assets/protection_screen_icon.png')} style={{width: 120, height: 120}}/>
-                    </Animated.View>
+        return (
+            <SafeAreaProvider>
+                <ApplicationContext.Provider value={this.application}>
+                    <DevSettingsContext.Provider value={this.devSettings}>
+                        <ModalStack colorScheme={this.application.colorScheme}>
+                            <AppNavigation
+                                isDarkTheme={this.application.isDarkTheme}
+                                locale={this.application.locale}
+                                scheme={this.application.colorScheme}
+                                screens={appScreens}
+                            />
+                        </ModalStack>
+
+                        <View style={{
+                            ...styles.background,
+                            backgroundColor: this.application.colorScheme.background
+                        }}/>
+                        <Animated.View style={{
+                            ...styles.protectingImage,
+                            backgroundColor: this.application.colorScheme.background,
+                            opacity: this.state.protectScreenOpacity,
+                            display: this.state.protectScreenDisplay ? 'flex' : 'none'
+                        }}>
+                            <Image source={require('./assets/protection_screen_icon.png')} style={{width: 120, height: 120}}/>
+                        </Animated.View>
+                    </DevSettingsContext.Provider>
                 </ApplicationContext.Provider>
             </SafeAreaProvider>
         );
     }
+}
 
-    iconColor = (focused: boolean) => focused ? this.applicationState?.colorScheme.primary : this.applicationState?.colorScheme.alternativeSecondaryText
+interface AppScreen {
+    name: string
+    label: string
+    component: React.ComponentType<any>
+    icon: FillGlyphMapType
+    hidden?: boolean
+}
+
+function AppNavigation(props: {
+    isDarkTheme: boolean,
+    locale: Locale,
+    scheme: ColorScheme,
+    screens: AppScreen[]
+}) {
+    return <NavigationContainer theme={props.isDarkTheme ? DarkTheme : DefaultTheme}>
+        <Tab.Navigator sceneContainerStyle={{backgroundColor: 'rgba(0, 0, 0, 0)'}}>
+            {
+                props.screens.filter(s => !s.hidden).map(s => {
+                    const options = {
+                        tabBarLabel: s.label,
+                        tabBarIcon: ({focused}: { focused: boolean }) => {
+                            const color = focused ? props.scheme.primary : props.scheme.alternativeSecondaryText
+                            return <IconFill name={s.icon} color={color} size={24}/>
+                        },
+                    }
+
+                    return <Tab.Screen key={s.name} name={s.name} component={s.component} options={options}/>
+                })
+            }
+        </Tab.Navigator>
+    </NavigationContainer>
 }
 
 const styles = StyleSheet.create({

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     ScrollView,
     View,
@@ -9,13 +9,14 @@ import {
 } from 'react-native';
 
 import SlidingUpPanel from '../common/SlidingUpPanel';
-import { TextButton } from '../common/TextButton';
-import { ApplicationContext } from '../../ApplicationContext';
-import { ColorScheme } from '../../color/ColorScheme';
-import { observer } from 'mobx-react';
-import { SpendingsList } from '../common/Spendings/SpendingsList';
+import {TextButton} from '../common/TextButton';
+import {ApplicationContext} from '../../Contexts';
+import {ColorScheme} from '../../color/ColorScheme';
+import {observer} from 'mobx-react';
+import {SpendingsList} from '../common/Spendings/SpendingsList';
+import {useContextUnsafe} from "../../Hooks";
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 const isSmallScreen = width < 350;
 const isBigScreen = height > 800;
 
@@ -25,18 +26,15 @@ interface IDaysSpendingsPanel {
 }
 
 export const DaysSpendingsPanel = observer((props: IDaysSpendingsPanel) => {
-    const application = React.useContext(ApplicationContext);
-    if (!application) {
-        return null;
-    }
+    const application = useContextUnsafe(ApplicationContext);
 
     const [isFirstRender, setIsFirstRender] = useState(true);
     useEffect(() => setIsFirstRender(false), []);
 
-    const { onClose: closePanel, openedDay } = props;
-    const { locale, currency, colorScheme } = application;
+    const {onClose: closePanel, openedDay} = props;
+    const {locale, currency, colorScheme} = application;
     const dayOfWeek = new Date(application.year, application.month, openedDay).getDay();
-    const spendings = application.spendings.filter(s => s.day === openedDay);
+    const spendings = application.monthSpendings.filter(s => s.day === openedDay);
     const remove = application.removeSpending;
     const edit = application.editSpending;
     const add = () => application.addSpending(openedDay, 0, null, null, null);
@@ -46,7 +44,7 @@ export const DaysSpendingsPanel = observer((props: IDaysSpendingsPanel) => {
     const [isTransitionInProcess, setIsTransitionInProcess] = useState(false);
     const [addButtonRef, setAddButtonRef] = useState<View | null>(null);
     const [addFirstSpendingButtonRef, setAddFirstSpendingButtonRef] = useState<View | null>(null);
-    const [anim] = useState({ x: new Animated.Value(0), y: new Animated.Value(0), scale: new Animated.Value(1) });
+    const [anim] = useState({x: new Animated.Value(0), y: new Animated.Value(0), scale: new Animated.Value(1)});
     const [emptyListTextAnim] = useState(new Animated.Value(0));
 
     const styles = getStyles(colorScheme);
@@ -61,7 +59,7 @@ export const DaysSpendingsPanel = observer((props: IDaysSpendingsPanel) => {
     })
 
     return <SlidingUpPanel onClose={closePanel} offsetTop={isBigScreen ? 75 : 50} colorScheme={application.colorScheme}>
-        <View style={{ position: 'relative' }}>
+        <View style={{position: 'relative'}}>
             <View style={{
                 ...styles.emptyListTextContainer,
                 opacity: isEmptyListTextVisible ? 1 : 0,
@@ -69,12 +67,12 @@ export const DaysSpendingsPanel = observer((props: IDaysSpendingsPanel) => {
             }}>
                 <Animated.Text style={{
                     ...styles.emptyListText,
-                    transform: [{ translateX: translateX }],
+                    transform: [{translateX: translateX}],
                     opacity: opacity
                 }}>
                     {locale.noSpendingForThisDay}
                 </Animated.Text>
-                <Animated.View style={{ transform: [{ translateX: anim.x }, { translateY: anim.y }, { scale: anim.scale }] }}>
+                <Animated.View style={{transform: [{translateX: anim.x}, {translateY: anim.y}, {scale: anim.scale}]}}>
                     <TextButton
                         forwardedTextRef={ref => setAddFirstSpendingButtonRef(ref)}
                         text={locale.add}
@@ -86,7 +84,7 @@ export const DaysSpendingsPanel = observer((props: IDaysSpendingsPanel) => {
                     />
                 </Animated.View>
             </View>
-            <View style={{ width: '100%', paddingBottom: 200 }}>
+            <View style={{width: '100%', paddingBottom: 200}}>
                 <View style={styles.daySpendingHeader}>
                     <Text style={styles.daySpendingDateText}>{locale.getDateText(openedDay, application.month)}</Text>
                     <Text style={styles.dayOfWeekText}>{locale.getDayOfWeek(dayOfWeek)}</Text>
@@ -106,7 +104,7 @@ export const DaysSpendingsPanel = observer((props: IDaysSpendingsPanel) => {
                     />
                 }
 
-                <View style={{ ...styles.addButtonContainer, opacity: isAddButtonVisible ? 1 : 0 }}>
+                <View style={{...styles.addButtonContainer, opacity: isAddButtonVisible ? 1 : 0}}>
                     <TextButton
                         forwardedTextRef={ref => setAddButtonRef(ref)}
                         text={locale.add}
@@ -136,10 +134,10 @@ export const DaysSpendingsPanel = observer((props: IDaysSpendingsPanel) => {
 
                 Animated
                     .parallel([
-                        Animated.spring(anim.x, { toValue: translateX, restSpeedThreshold: 10, restDisplacementThreshold: 1 }),
-                        Animated.spring(anim.y, { toValue: translateY, restSpeedThreshold: 10, restDisplacementThreshold: 1 }),
-                        Animated.spring(anim.scale, { toValue: scale, restSpeedThreshold: 10, restDisplacementThreshold: 1 }),
-                        Animated.spring(emptyListTextAnim, { toValue: 1, bounciness: 0 })
+                        Animated.spring(anim.x, {toValue: translateX, restSpeedThreshold: 10, restDisplacementThreshold: 1, useNativeDriver: false}),
+                        Animated.spring(anim.y, {toValue: translateY, restSpeedThreshold: 10, restDisplacementThreshold: 1, useNativeDriver: false}),
+                        Animated.spring(anim.scale, {toValue: scale, restSpeedThreshold: 10, restDisplacementThreshold: 1, useNativeDriver: false}),
+                        Animated.spring(emptyListTextAnim, {toValue: 1, bounciness: 0, useNativeDriver: false})
                     ])
                     .start(() => {
                         setIsAddButtonVisible(true);
@@ -181,10 +179,10 @@ export const DaysSpendingsPanel = observer((props: IDaysSpendingsPanel) => {
 
                 Animated
                     .parallel([
-                        Animated.spring(anim.x, { toValue: 0, bounciness: 0 }),
-                        Animated.spring(anim.y, { toValue: 0, bounciness: 0 }),
-                        Animated.spring(anim.scale, { toValue: 1, bounciness: 0 }),
-                        Animated.spring(emptyListTextAnim, { toValue: 0, bounciness: 0 })
+                        Animated.spring(anim.x, {toValue: 0, bounciness: 0, useNativeDriver: false}),
+                        Animated.spring(anim.y, {toValue: 0, bounciness: 0, useNativeDriver: false}),
+                        Animated.spring(anim.scale, {toValue: 1, bounciness: 0, useNativeDriver: false}),
+                        Animated.spring(emptyListTextAnim, {toValue: 0, bounciness: 0, useNativeDriver: false})
                     ])
                     .start(() => setIsTransitionInProcess(false));
             })

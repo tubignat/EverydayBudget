@@ -1,21 +1,19 @@
 import React, { useContext } from 'react';
 import { View, StyleSheet, Text, Dimensions } from 'react-native';
 import { ColorScheme } from '../../../color/ColorScheme';
-import { ApplicationContext } from '../../../ApplicationContext';
+import { ApplicationContext } from '../../../Contexts';
 import { TextButton } from '../../common/TextButton';
 import { DatePickerModal } from './DatePickerModal';
 import { ModalStackState } from '../../../ModalStackState';
 import { observer } from 'mobx-react';
+import {useContextUnsafe} from "../../../Hooks";
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = width < 350;
 const isBigScreen = height > 800;
 
 export const StartOfPeriodSettings = observer(() => {
-    const application = useContext(ApplicationContext);
-    if (!application) {
-        return null;
-    }
+    const application = useContextUnsafe(ApplicationContext);
 
     const styles = getStyles(application.colorScheme);
 

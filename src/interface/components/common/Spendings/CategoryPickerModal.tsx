@@ -1,10 +1,11 @@
 import React, {useContext, useState} from 'react';
 import {View, Dimensions, Animated, StyleSheet, ScrollView, Text} from 'react-native';
 import {PickerModal} from '../PickerModal';
-import {ApplicationContext} from '../../../ApplicationContext';
+import {ApplicationContext} from '../../../Contexts';
 import {Spending} from '../../../../domain/entities/Spending';
 import {CategoriesList} from '../CategoriesList';
 import {ColorScheme} from '../../../color/ColorScheme';
+import {useContextUnsafe} from "../../../Hooks";
 
 const window = Dimensions.get('window');
 const isSmallScreen = window.width < 350;
@@ -17,10 +18,7 @@ interface ICategoryPickerModalProps {
 }
 
 export function CategoryPickerModal(props: ICategoryPickerModalProps) {
-    const application = useContext(ApplicationContext);
-    if (!application) {
-        return null;
-    }
+    const application = useContextUnsafe(ApplicationContext);
 
     const [anim] = useState(new Animated.Value(0));
     const styles = getStyles(application.colorScheme);
@@ -36,9 +34,6 @@ export function CategoryPickerModal(props: ICategoryPickerModalProps) {
     />
 
     function renderContent(close: () => void) {
-        if (!application) {
-            throw new Error('Application was not set');
-        }
         const scale = anim.interpolate({
             inputRange: [0, 1],
             outputRange: [2.25, 1]

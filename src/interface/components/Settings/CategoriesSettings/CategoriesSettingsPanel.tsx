@@ -2,7 +2,7 @@ import { observer } from "mobx-react";
 import React, { useContext } from 'react';
 import { View, StyleSheet, Text, Dimensions } from 'react-native';
 import { TextButton } from '../../common/TextButton';
-import { ApplicationContext } from '../../../ApplicationContext';
+import { ApplicationContext } from '../../../Contexts';
 import { ColorScheme } from '../../../color/ColorScheme';
 import { ModalStackState } from "../../../ModalStackState";
 import SlidingUpPanel from "../../common/SlidingUpPanel";
@@ -10,16 +10,14 @@ import { AddCategoryModal } from "./CategoryDetails/AddCategoryModal";
 import { CategoriesList } from "../../common/CategoriesList";
 import { Category } from "../../../../domain/entities/Category";
 import { EditCategoryModal } from "./CategoryDetails/EditCategoryModal";
+import {useContextUnsafe} from "../../../Hooks";
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = width < 350;
 const isBigScreen = height > 800;
 
 export const CategoriesSettingsPanel = observer(({ onClose }: { onClose: () => void }) => {
-    const application = useContext(ApplicationContext);
-    if (!application) {
-        return null;
-    }
+    const application = useContextUnsafe(ApplicationContext);
 
     const openAddCategoryModal = () => ModalStackState.open(onClose => <AddCategoryModal key='addCategoryModal' onClose={onClose} />)
     const openEditCategoryModal = (category: Category | null) => {

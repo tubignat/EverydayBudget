@@ -3,7 +3,7 @@ import { IconButton } from '../../common/IconButton';
 import { View, TextInput, Animated, StyleSheet } from 'react-native';
 import AmountInput from '../../common/AmountInput';
 import { TextButton } from '../../common/TextButton';
-import { ApplicationContext } from '../../../ApplicationContext';
+import { ApplicationContext } from '../../../Contexts';
 import { ApplicationState } from '../../../ApplicationState';
 import { ColorScheme } from '../../../color/ColorScheme';
 import { Expense, ExpenseId } from '../../../../domain/repositories/ExpensesRepository';

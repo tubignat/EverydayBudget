@@ -1,19 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { View, Animated, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { ContextMenuButton } from './ContextMenuButton';
-import { EditCategoryForm } from './EditCategoryForm';
-import { ApplicationContext } from '../../../../ApplicationContext';
-import { ModalWithContextMenu } from './ModalWithContextMenu';
+import React, {useContext, useState} from 'react';
+import {EditCategoryForm} from './EditCategoryForm';
+import {ApplicationContext} from '../../../../Contexts';
+import {ModalWithContextMenu} from './ModalWithContextMenu';
+import {useContextUnsafe} from "../../../../Hooks";
 
 interface IAddCategoryModalProps {
     onClose: () => void
 }
 
 export function AddCategoryModal(props: IAddCategoryModalProps) {
-    const application = useContext(ApplicationContext);
-    if (!application) {
-        return null;
-    }
+    const application = useContextUnsafe(ApplicationContext);
 
     const [name, setName] = useState(application.locale.newCategoryName);
     const [color, setColor] = useState(application.categoryColors[0]);

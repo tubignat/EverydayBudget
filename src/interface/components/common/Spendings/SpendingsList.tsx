@@ -30,7 +30,6 @@ export const SpendingsList = observer((props: ISpendingsListProps) => {
                     spending={s}
                     onRemovePressed={() => props.remove(s.id)}
                     onAmountEdit={amount => props.edit(s.id, amount, s.category)}
-                    shouldPlayEnterAnimation={props.shouldPlayEnterAnimation}
                     {...props}
                 />
             )

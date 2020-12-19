@@ -2,8 +2,9 @@ import React, {useState, useContext} from 'react';
 import {PickerModal} from '../../common/PickerModal';
 import {Animated, Dimensions, Text} from 'react-native';
 import {ColorScheme} from '../../../color/ColorScheme';
-import {ApplicationContext} from '../../../ApplicationContext';
+import {ApplicationContext} from '../../../Contexts';
 import {DatePicker} from './DatePicker';
+import {useContextUnsafe} from "../../../Hooks";
 
 interface IDatePickerModalProps {
     expansionPoint: { x: number, y: number }
@@ -15,10 +16,7 @@ const isSmallScreen = window.width < 350;
 const isBigScreen = window.height > 800;
 
 export function DatePickerModal(props: IDatePickerModalProps) {
-    const application = useContext(ApplicationContext);
-    if (!application) {
-        return null;
-    }
+    const application = useContextUnsafe(ApplicationContext);
 
     const [anim] = useState(new Animated.Value(0));
     const styles = getStyles(application.colorScheme, anim);
@@ -34,10 +32,6 @@ export function DatePickerModal(props: IDatePickerModalProps) {
     />
 
     function renderContent(close: () => void) {
-        if (!application) {
-            throw new Error('Application was not set')
-        }
-
         const onPress = (day: number) => {
             application.changeStartOfPeriod(day);
             close();

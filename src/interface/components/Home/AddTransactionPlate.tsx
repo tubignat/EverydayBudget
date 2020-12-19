@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, Animated, ScrollView} from 'react-native';
 import {KeyBoard} from './keyboard/Keyboard';
 import {AddSpendingButton} from './keyboard/AddSpendingButton';
-import {formatMoney} from '../../NumberFormat';
+import {formatMoney} from '../../NumbersFormats';
 import {ColorScheme} from '../../color/ColorScheme';
 import {Locale} from '../../locale/Locale';
 import {Currency} from '../../../domain/repositories/UserPreferencesRepository';

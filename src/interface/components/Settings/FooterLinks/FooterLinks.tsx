@@ -1,13 +1,11 @@
 import React, { useContext } from 'react';
 import { View, Text, Linking, StyleSheet } from 'react-native';
-import { ApplicationContext } from "../../../ApplicationContext";
+import { ApplicationContext } from "../../../Contexts";
 import { ColorScheme } from '../../../color/ColorScheme';
+import {useContextUnsafe} from "../../../Hooks";
 
 export function FooterLinks() {
-    const application = useContext(ApplicationContext);
-    if (!application) {
-        return null;
-    }
+    const application = useContextUnsafe(ApplicationContext);
 
     const styles = getStyles(application.colorScheme);
 

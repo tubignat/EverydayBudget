@@ -1,4 +1,4 @@
-import { Locale } from "./Locale";
+import {Locale} from "./Locale";
 
 export const enLocale: Locale = {
     homePageTitle: 'Home',
@@ -63,6 +63,8 @@ export const enLocale: Locale = {
 
     getMonthName: (month: number) => months[month],
 
+    getMonthNameAbbr: month => monthsAbbr[month],
+
     getStartOfPeriodDateText: (day: number, month: number) => {
         const suffix = getDateSuffix(day);
         return `on ${months[month].toLowerCase()} ${day}${suffix}`
@@ -89,6 +91,21 @@ export const enLocale: Locale = {
     financesDescriptor: 'Settings',
 
     spendingsPageTitle: 'Expenses',
+    statisticsPageTitle: 'Statistics',
+    month: 'Month',
+    allTime: 'All time',
+    atTime: 'at',
+
+    biggest: 'Biggest',
+    smallest: 'Smallest',
+    average: 'Average',
+    daysWithPositiveLimit: 'Days with positive balance',
+
+
+    distributionByCategories: 'By category',
+    distributionByDaysOfWeek: 'By days of week',
+    noData: 'No data',
+    showNoCategory: 'Show \'No category\''
 }
 
 const getDateSuffix = (date: number) => {
@@ -109,6 +126,10 @@ const months: { [month: number]: string } = {
     6: 'July', 7: 'August', 8: 'September', 9: 'October', 10: 'November', 11: 'December',
 }
 
+const monthsAbbr: { [month: number]: string } = {
+    0: 'Jan', 1: 'Feb', 2: 'Mar', 3: 'Apr', 4: 'May', 5: 'Jun',
+    6: 'Jul', 7: 'Aug', 8: 'Sep', 9: 'Oct', 10: 'Nov', 11: 'Dec',
+}
 const daysOfWeek: { [dayOfWeek: number]: string } = {
     0: 'Sunday', 1: 'Monday', 2: 'Tuesday', 3: 'Wednesday', 4: 'Thursday', 5: 'Friday', 6: 'Saturday'
 }

@@ -10,19 +10,17 @@ import {
 
 import {Page} from '../common/Page'
 import {observer} from 'mobx-react';
-import {ApplicationContext} from '../../ApplicationContext';
+import {ApplicationContext} from '../../Contexts';
 import {ColorScheme} from '../../color/ColorScheme';
 import {MonthSpendingsTable} from './MonthSpendingsTable';
+import {useContextUnsafe} from "../../Hooks";
 
 const {width, height} = Dimensions.get('window');
 const isSmallScreen = width < 350;
 const isBigScreen = height > 800;
 
 export const MonthSpendings = observer(() => {
-    const application = useContext(ApplicationContext);
-    if (!application) {
-        return null;
-    }
+    const application = useContextUnsafe(ApplicationContext);
 
     const styles = getStyles(application.colorScheme);
 

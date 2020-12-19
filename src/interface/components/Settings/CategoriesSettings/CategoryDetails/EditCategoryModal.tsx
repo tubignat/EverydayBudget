@@ -1,9 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext} from 'react';
 import { EditCategoryForm } from './EditCategoryForm';
-import { ApplicationContext } from '../../../../ApplicationContext';
+import { ApplicationContext } from '../../../../Contexts';
 import { ModalWithContextMenu } from './ModalWithContextMenu';
 import { observer } from 'mobx-react';
 import { Alert } from 'react-native';
+import {useContextUnsafe} from "../../../../Hooks";
 
 interface IEditCategoryModalProps {
     onClose: () => void
@@ -11,10 +12,7 @@ interface IEditCategoryModalProps {
 }
 
 export const EditCategoryModal = observer((props: IEditCategoryModalProps) => {
-    const application = useContext(ApplicationContext);
-    if (!application) {
-        return null;
-    }
+    const application = useContextUnsafe(ApplicationContext);
 
     const category = application.categories.find(c => c.id === props.categoryId);
     if (!category) {

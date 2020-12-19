@@ -1,22 +1,18 @@
 import {observer} from "mobx-react";
-import React, {useContext} from 'react';
+import React from 'react';
 import {View, StyleSheet, Text, Dimensions} from 'react-native';
-import {TextButton} from '../../common/TextButton';
-import {ApplicationContext} from '../../../ApplicationContext';
+import {ApplicationContext} from '../../../Contexts';
 import {ColorScheme} from '../../../color/ColorScheme';
-import {ModalStackState} from "../../../ModalStackState";
 import SlidingUpPanel from "../../common/SlidingUpPanel";
 import {BudgetSettings} from "./BudgetSettings";
+import {useContextUnsafe} from "../../../Hooks";
 
 const {width, height} = Dimensions.get('window');
 const isSmallScreen = width < 350;
 const isBigScreen = height > 800;
 
 export const FinancesSettingsPanel = observer(({onClose}: { onClose: () => void }) => {
-    const application = useContext(ApplicationContext);
-    if (!application) {
-        return null;
-    }
+    const application = useContextUnsafe(ApplicationContext);
 
     const styles = getStyles(application.colorScheme);
     const offset = isBigScreen ? 75 : 50;
