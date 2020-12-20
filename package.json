@@ -37,7 +37,8 @@
     "react-native-svg": "^12.1.0",
     "react-native-swiper": "^1.5.14",
     "react-native-vector-icons": "^7.1.0",
-    "react-native-web": "~0.13.12"
+    "react-native-web": "~0.13.12",
+    "expo-store-review": "~2.3.0"
   },
   "devDependencies": {
     "@types/jest": "^25.2.1",

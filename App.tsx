@@ -12,7 +12,7 @@ import {EnsureMonthIsSetUpService} from './src/domain/services/EnsureMonthIsSetU
 import {DefaultCategoriesService} from './src/domain/services/DefaultCategoriesService';
 import {UserPreferencesRepository} from './src/domain/repositories/UserPreferencesRepository';
 import {ApplicationContext, DevSettingsContext} from './src/interface/Contexts';
-import {Animated, AppState, AppStateStatus, Image, StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
+import {Animated, AppState, AppStateStatus, Image, StyleSheet, View} from 'react-native';
 import * as Font from 'expo-font';
 import {ModalStack} from './src/interface/components/common/ModalStack';
 import {CategoryColorsRepository} from './src/domain/repositories/CategoryColorsRepository';
@@ -30,6 +30,8 @@ import {FillGlyphMapType} from "@ant-design/icons-react-native/lib/fill";
 import {DevSettingsRepository, FeatureFlag} from "./src/domain/repositories/DevSettingsRepository";
 import {DevSettingsState} from "./src/interface/DevSettingsState";
 import {TestDataProvider} from "./src/testData/TestDataProvider";
+import {Repository} from "./src/domain/repositories/IRepository";
+import {UserInfo} from "./src/domain/entities/UserInfo";
 
 const Tab = createBottomTabNavigator()
 
@@ -96,10 +98,17 @@ export default class App extends Component<{}, {
         const userPreferencesRepository = new UserPreferencesRepository();
         const firstTimeInitRepository = new FirstTimeInitRepository();
         const devSettingsRepository = new DevSettingsRepository();
+        const userInfoRepository = new Repository<UserInfo>('userInfo_storage', (dto) => {
+            return {
+                created: dto?.created ? new Date(dto.created) : new Date(),
+                seenEvents: dto?.seenEvents ?? []
+            }
+        })
 
         const ensureMonthIsSetUpService = new EnsureMonthIsSetUpService(incomesRepository, expensesRepository, setUpMonthsRepository);
         const budgetService = new BudgetService(incomesRepository, expensesRepository, spendingsRepository);
         const defaultCategoriesService = new DefaultCategoriesService(firstTimeInitRepository, categoriesRepository, colorsRepository);
+
 
         const testDataProvider = new TestDataProvider(
             incomesRepository,
@@ -117,6 +126,7 @@ export default class App extends Component<{}, {
             userPreferencesRepository,
             categoriesRepository,
             colorsRepository,
+            userInfoRepository,
             ensureMonthIsSetUpService,
             budgetService,
             defaultCategoriesService
@@ -132,6 +142,7 @@ export default class App extends Component<{}, {
         await userPreferencesRepository.init();
         await firstTimeInitRepository.init();
         await devSettingsRepository.init();
+        await userInfoRepository.init();
 
         this.application.init();
         this.devSettings.init();

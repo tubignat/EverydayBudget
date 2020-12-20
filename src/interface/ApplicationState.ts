@@ -18,44 +18,24 @@ import {Category} from "../domain/entities/Category";
 import {CategoryColor} from "../domain/entities/CategoryColor";
 import {ICategoriesRepository} from "../domain/repositories/CategoriesRepository";
 import {ICategoryColorsRepository} from "../domain/repositories/CategoryColorsRepository";
-import {DistributionByDaysOfWeek} from "./StatisticsState";
+import {IRepository} from "../domain/repositories/IRepository";
+import {UserEvent, UserInfo} from "../domain/entities/UserInfo";
+import * as StoreReview from 'expo-store-review';
 
 export class ApplicationState {
-    private expensesRepository: IExpensesRepository;
-    private spendingRepository: ISpendingsRepository;
-    private incomesRepository: IIncomesRepository;
-    private setUpMonthRepository: ISetUpMonthsRepository;
-    private userPreferencesRepository: IUserPreferencesRepository;
-    private categoriesRepository: ICategoriesRepository;
-    private categoryColorsRepository: ICategoryColorsRepository;
-
-    private ensureMonthIsSetUpService: EnsureMonthIsSetUpService;
-    private budgetService: BudgetService;
-    private defaultCategoriesService: DefaultCategoriesService;
-
     constructor(
-        incomesRepository: IIncomesRepository,
-        expensesRepository: IExpensesRepository,
-        spendingRepository: ISpendingsRepository,
-        setUpMonthRepository: ISetUpMonthsRepository,
-        userPreferencesRepository: IUserPreferencesRepository,
-        categoriesRepository: ICategoriesRepository,
-        categoryColorsRepository: ICategoryColorsRepository,
-        ensureMonthIsSetUpService: EnsureMonthIsSetUpService,
-        budgetService: BudgetService,
-        defaultCategoriesService: DefaultCategoriesService
-    ) {
-        this.incomesRepository = incomesRepository;
-        this.expensesRepository = expensesRepository;
-        this.spendingRepository = spendingRepository;
-        this.setUpMonthRepository = setUpMonthRepository;
-        this.userPreferencesRepository = userPreferencesRepository;
-        this.ensureMonthIsSetUpService = ensureMonthIsSetUpService;
-        this.budgetService = budgetService;
-        this.categoriesRepository = categoriesRepository;
-        this.categoryColorsRepository = categoryColorsRepository;
-        this.defaultCategoriesService = defaultCategoriesService;
-    }
+        private incomesRepository: IIncomesRepository,
+        private expensesRepository: IExpensesRepository,
+        private spendingRepository: ISpendingsRepository,
+        private setUpMonthRepository: ISetUpMonthsRepository,
+        private userPreferencesRepository: IUserPreferencesRepository,
+        private categoriesRepository: ICategoriesRepository,
+        private categoryColorsRepository: ICategoryColorsRepository,
+        private userInfoRepository: IRepository<UserInfo>,
+        private ensureMonthIsSetUpService: EnsureMonthIsSetUpService,
+        private budgetService: BudgetService,
+        private defaultCategoriesService: DefaultCategoriesService
+    ) { }
 
     @observable public language: Language = 'en';
     @observable public currency: Currency = '$';
@@ -75,6 +55,9 @@ export class ApplicationState {
     @observable public saldos: number[] = [];
     @observable public categories: Category[] = [];
     @observable public categoryColors: CategoryColor[] = [];
+
+    @observable public userCreated: Date = new Date();
+    @observable public seenEvents: UserEvent[] = [];
 
     @observable public year: number = 0;
     @observable public month: number = 0;
@@ -301,11 +284,25 @@ export class ApplicationState {
 
         this.categories = this.categoriesRepository.get();
         this.categoryColors = this.categoryColorsRepository.get();
+
+        const userInfo = this.userInfoRepository.get()
+
+        this.userCreated = userInfo.created
+        this.seenEvents = userInfo.seenEvents
     }
 
     public addSpending = (day: number, amount: number, hour: number | null, minute: number | null, category: Category | null) => {
         this.spendingRepository.add(this.year, this.month, day, null, amount, hour, minute, category);
         this.init();
+
+        if (new Date().getTime() - this.userCreated.getTime() > 7 * 24 * 60 * 60 * 1000 // 7 days
+            && this.allSpendings.length > 5
+            && !this.seenEvents.includes(UserEvent.RateAppModal)) {
+
+            StoreReview.requestReview().then(() => {
+                this.userInfoRepository.set({created: this.userCreated, seenEvents: this.seenEvents.concat(UserEvent.RateAppModal)})
+            })
+        }
     }
 
     public editSpending = (id: SpendingId, amount: number, category: Category | null) => {

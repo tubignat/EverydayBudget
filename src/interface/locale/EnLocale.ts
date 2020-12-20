@@ -135,5 +135,5 @@ const daysOfWeek: { [dayOfWeek: number]: string } = {
 }
 
 const daysOfWeekAbbr: { [dayOfWeek: number]: string } = {
-    0: 'su', 1: 'mo', 2: 'tu', 3: 'we', 4: 'th', 5: 'fr', 6: 'sa'
+    0: 'Su', 1: 'Mo', 2: 'Tu', 3: 'We', 4: 'Th', 5: 'Fr', 6: 'Sa'
 }

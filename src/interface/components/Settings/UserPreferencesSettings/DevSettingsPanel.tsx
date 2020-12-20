@@ -1,6 +1,6 @@
 import {observer} from "mobx-react";
-import React, {useMemo} from 'react';
-import {Alert, StyleSheet, Text, View} from 'react-native';
+import React, {useState} from 'react';
+import {Alert, AsyncStorage, StyleSheet, Text, View} from 'react-native';
 import {ApplicationContext, DevSettingsContext} from '../../../Contexts';
 import {ColorScheme} from '../../../color/ColorScheme';
 import SlidingUpPanel from "../../common/SlidingUpPanel";
@@ -53,6 +53,8 @@ const TestDataSettings = observer(() => {
     const app = useContextUnsafe(ApplicationContext)
     const devSettings = useContextUnsafe(DevSettingsContext)
 
+    const [isClearingData, setIsClearingData] = useState(false)
+
     const styles = getStyles(app.colorScheme);
     return <View>
         <Text style={styles.subheader}>Fill test data</Text>
@@ -63,7 +65,7 @@ const TestDataSettings = observer(() => {
                 fontSize={16}
                 scheme={app.colorScheme}
                 text='Fill test data Russian / RUB'
-                onPress={() => showAlert(() => {
+                onPress={() => showAlert('Fill in test data?', () => {
                     devSettings.testDataProvider.fillTestDataRussian(app.year, app.month, app.day)
                     app.init()
                 })}
@@ -74,20 +76,31 @@ const TestDataSettings = observer(() => {
                 fontSize={16}
                 scheme={app.colorScheme}
                 text='Fill test data English / USD'
-                onPress={() => showAlert(() => {
+                onPress={() => showAlert('Fill in test data?', () => {
                     devSettings.testDataProvider.fillTestDataEnglish(app.year, app.month, app.day)
                     app.init()
+                })}
+            />
+            <TextButton
+                height={48}
+                disabled={false}
+                fontSize={16}
+                scheme={app.colorScheme}
+                text={isClearingData ? 'Wait...' : 'Clear all data' }
+                onPress={() => showAlert('Clear all storages?', () => {
+                    setIsClearingData(true)
+                    AsyncStorage.clear().then(() => {
+                        setIsClearingData(false)
+                    })
                 })}
             />
         </View>
     </View>
 
-    function showAlert(onPress: () => void) {
-        Alert.alert(
-            'Fill in test data?',
-            'It will erase all the data you have in your app right now',
+    function showAlert(title: string, onPress: () => void) {
+        Alert.alert(title, 'It will erase all the data you have in your app right now',
             [
-                {text: 'Fill', onPress: onPress, style: 'default'},
+                {text: 'Ok', onPress: onPress, style: 'default'},
                 {text: 'Cancel', onPress: () => { }, style: 'cancel'},
             ]
         )
