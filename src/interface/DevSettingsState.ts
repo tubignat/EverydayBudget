@@ -1,8 +1,9 @@
 import {FeatureFlag, IDevSettingsRepository} from "../domain/repositories/DevSettingsRepository";
 import {computed, observable} from "mobx";
+import {TestDataProvider} from "../testData/TestDataProvider";
 
 export class DevSettingsState {
-    constructor(private devSettingsRepository: IDevSettingsRepository) { }
+    constructor(private devSettingsRepository: IDevSettingsRepository, public testDataProvider: TestDataProvider) { }
 
     public init = () => {
         const settings = this.devSettingsRepository.get()

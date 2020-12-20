@@ -101,6 +101,14 @@ export default class App extends Component<{}, {
         const budgetService = new BudgetService(incomesRepository, expensesRepository, spendingsRepository);
         const defaultCategoriesService = new DefaultCategoriesService(firstTimeInitRepository, categoriesRepository, colorsRepository);
 
+        const testDataProvider = new TestDataProvider(
+            incomesRepository,
+            expensesRepository,
+            spendingsRepository,
+            categoriesRepository,
+            colorsRepository
+        )
+
         this.application = new ApplicationState(
             incomesRepository,
             expensesRepository,
@@ -114,7 +122,7 @@ export default class App extends Component<{}, {
             defaultCategoriesService
         );
 
-        this.devSettings = new DevSettingsState(devSettingsRepository)
+        this.devSettings = new DevSettingsState(devSettingsRepository, testDataProvider)
 
         await categoriesRepository.init();
         await spendingsRepository.init();
@@ -124,14 +132,6 @@ export default class App extends Component<{}, {
         await userPreferencesRepository.init();
         await firstTimeInitRepository.init();
         await devSettingsRepository.init();
-
-        // new TestDataProvider(
-        //     incomesRepository,
-        //     expensesRepository,
-        //     spendingsRepository,
-        //     categoriesRepository,
-        //     colorsRepository
-        // ).fillTestDataRussian(2020, 10, 10)
 
         this.application.init();
         this.devSettings.init();

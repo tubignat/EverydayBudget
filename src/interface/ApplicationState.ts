@@ -181,7 +181,7 @@ export class ApplicationState {
     }
 
     private calcDistributionByDaysOfWeek(spendings: Spending[]) {
-        return spendings
+        const distributionStartingFromSunday = spendings
             .map(spending => {
                 return {
                     amount: spending.amount,
@@ -192,6 +192,8 @@ export class ApplicationState {
                 byDayOfWeek[current.dayOfWeek] += current.amount
                 return byDayOfWeek
             }, [0, 0, 0, 0, 0, 0, 0])
+
+        return distributionStartingFromSunday.slice(1).concat(distributionStartingFromSunday[0])
     }
 
     private calcDistributionByCategory(spendings: Spending[]) {
@@ -214,14 +216,14 @@ export class ApplicationState {
     public get daysWithPositiveLimitToDaysWithNegativeLimitRatioForMonth() {
         let daysWithPositiveBudget = 0
 
-        for (let i = 1; i <= this.daysInMonth; i++) {
+        for (let i = 1; i <= this.day; i++) {
             const spendingsAmount = this.monthSpendings.filter(s => s.day === i).reduce((sum, s) => sum + s.amount, 0)
             if (spendingsAmount <= this.budgetPerDay) {
                 daysWithPositiveBudget++
             }
         }
 
-        return daysWithPositiveBudget / this.daysInMonth
+        return daysWithPositiveBudget / this.day
     }
 
     @computed
