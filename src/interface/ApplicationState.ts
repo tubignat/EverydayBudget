@@ -129,17 +129,17 @@ export class ApplicationState {
 
     @computed
     public get sortedCategories() {
-        const recentSpendings = this.spendingRepository.getAll().slice(0, 50);
+        const recentSpendings = this.allSpendings.slice(-50);
         return [null, ...this.categories]
             .map(category => {
                 return {
                     category: category,
-                    occurences: category !== null
+                    occurrences: category !== null
                         ? recentSpendings.filter(s => s.category?.id === category.id).length
                         : recentSpendings.filter(s => s.category === null).length
                 }
             })
-            .sort((a, b) => b.occurences - a.occurences)
+            .sort((a, b) => b.occurrences - a.occurrences)
             .map(c => c.category);
     }
 

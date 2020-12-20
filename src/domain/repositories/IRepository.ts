@@ -6,15 +6,9 @@ export interface IRepository<T> {
 }
 
 export class Repository<T> implements IRepository<T> {
+    constructor(private storageKey: string, private initializeFromDTO: (data: any) => T, private toDTO: (data: T) => any = (data) => data) { }
 
     private data?: T
-
-    constructor(
-        private storageKey: string,
-        private initializeFromDTO: (data: any) => T,
-        private toDTO: (data: T) => any = (data) => data,
-    ) {
-    }
 
     init = () => AsyncStorage
         .getItem(this.storageKey)
