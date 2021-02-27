@@ -19,11 +19,13 @@ export class DevSettingsState {
 
     public allFeatureFlags = (): { name: string, value: FeatureFlag }[] => {
         return Object.keys(FeatureFlag)
-            .filter(key => typeof FeatureFlag[key as any] === "number")
+            // @ts-ignore
+            .filter(key => typeof FeatureFlag[key] === "string")
             .map(key => {
                 return {
                     name: key,
-                    value: FeatureFlag[key as any] as unknown as FeatureFlag
+                    // @ts-ignore
+                    value: FeatureFlag[key] as unknown as FeatureFlag
                 }
             })
     }

@@ -163,7 +163,6 @@ export default class App extends Component<{}, {
                 component: Statistics,
                 icon: 'pie-chart',
                 label: this.application.locale.statisticsPageTitle,
-                hidden: !this.devSettings.isFlagEnabled(FeatureFlag.Statistics)
             },
             {name: 'Settings', component: Settings, icon: 'setting', label: this.application.locale.settingsPageTitle},
         ]

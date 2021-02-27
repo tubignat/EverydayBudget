@@ -10,6 +10,8 @@ import {DistributionByDaysOfWeek} from "./DistributionByDaysOfWeek";
 import {Gap} from "../common/Gap";
 import {DaysWithPositiveLimitToDaysWithNegativeLimitRatio} from "./DaysWithPositiveLimitToDaysWithNegativeLimitRatio";
 import {SpendingsStat} from "./SpendingsStat";
+import {colorNames} from "react-native-svg/lib/typescript/lib/extract/extractColor";
+import {SegmentedControl} from "@ant-design/react-native";
 
 export const Statistics = observer(() => {
     const application = useContextUnsafe(ApplicationContext);
@@ -21,7 +23,8 @@ export const Statistics = observer(() => {
         <ScrollView>
             <PageHeader header={application.locale.statisticsPageTitle} scheme={application.colorScheme}/>
             <View style={{paddingHorizontal: 16}}>
-                <SegmentedControlIOS
+                <SegmentedControl
+                    tintColor={application.colorScheme.primary}
                     values={segments}
                     selectedIndex={segments.findIndex(value => value === selectedSegment)}
                     onValueChange={setSelectedSegment}
@@ -38,29 +41,6 @@ export const Statistics = observer(() => {
                     selectedSegment === segments[0] && <DaysWithPositiveLimitToDaysWithNegativeLimitRatio/>
                 }
             </View>
-            {/*<View style={{*/}
-            {/*    marginBottom: 50,*/}
-            {/*    backgroundColor: '',*/}
-            {/*    borderRadius: 16,*/}
-            {/*}}>*/}
-            {/*    <LineChart*/}
-            {/*        data={data2}*/}
-            {/*        width={Dimensions.get("window").width - 40}*/}
-            {/*        height={256}*/}
-            {/*        xLabelsOffset={-10}*/}
-            {/*        verticalLabelRotation={30}*/}
-            {/*        chartConfig={commonChartConfig}*/}
-            {/*        formatYLabel={(value) => {*/}
-            {/*            const amount = Number(value);*/}
-            {/*            return amount < 1000*/}
-            {/*                ? value*/}
-            {/*                : amount < 1000000 ? `${(amount / 1000)}K` : `${amount / 1000000}M`*/}
-            {/*        }}*/}
-            {/*        style={{borderRadius: 16}}*/}
-            {/*        fromZero={true}*/}
-            {/*        bezier*/}
-            {/*    />*/}
-            {/*</View>*/}
         </ScrollView>
     </Page>
 })

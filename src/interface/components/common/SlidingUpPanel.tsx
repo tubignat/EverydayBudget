@@ -9,10 +9,11 @@ import {
     StyleSheet,
     PanResponderInstance,
     ScrollView,
-    GestureResponderEvent
+    GestureResponderEvent, KeyboardAvoidingView
 } from 'react-native';
 import {ModalStackState} from '../../ModalStackState';
 import {ColorScheme} from '../../color/ColorScheme';
+import {DeviceState} from "../../DeviceState";
 
 const Window = Dimensions.get('window');
 
@@ -160,16 +161,18 @@ class SlidingUpPanel extends React.Component<ISlidingUpPanelProps, ISlidingUpPan
                             </View>
                         </View>
                         <View style={{height: Window.height - offsetTop - 7}} {...scrollViewResponders}>
-                            <ScrollView
-                                showsVerticalScrollIndicator={false}
-                                style={{paddingHorizontal: 20, paddingVertical: 40}}
-                                onScroll={event => this.setState({scroll: event.nativeEvent.contentOffset.y})}
-                                scrollEventThrottle={16}
-                            >
-                                <View onStartShouldSetResponder={() => true}>
-                                    {this.props.children}
-                                </View>
-                            </ScrollView>
+                            <KeyboardAvoidingView behavior='padding' keyboardVerticalOffset={DeviceState.keyboardVerticalOffset}>
+                                <ScrollView
+                                    showsVerticalScrollIndicator={false}
+                                    style={{paddingHorizontal: 20, paddingVertical: 40}}
+                                    onScroll={event => this.setState({scroll: event.nativeEvent.contentOffset.y})}
+                                    scrollEventThrottle={16}
+                                >
+                                    <View onStartShouldSetResponder={() => true}>
+                                        {this.props.children}
+                                    </View>
+                                </ScrollView>
+                            </KeyboardAvoidingView>
                         </View>
                     </Animated.View>
                 </View>

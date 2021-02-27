@@ -60,7 +60,7 @@ export function ModalWithContextMenu(props: IModalWithContextMenuProps) {
     </Animated.View>
 
     function open() {
-        Animated.spring(translateY, {toValue: 0, bounciness: 2, useNativeDriver: false}).start();
+        Animated.spring(translateY, {toValue: 0, bounciness: 1, speed: 25, useNativeDriver: false}).start();
     }
 
     function close(duration: number) {

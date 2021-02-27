@@ -18,15 +18,14 @@ export const FinancesSettingsPanel = observer(({onClose}: { onClose: () => void 
     const offset = isBigScreen ? 75 : 50;
 
     return <SlidingUpPanel colorScheme={application.colorScheme} offsetTop={offset} onClose={onClose}>
-        <View style={{paddingBottom: 70, marginHorizontal: isSmallScreen ? -8 : 0}}>
+            <View style={{paddingBottom: 70, marginHorizontal: isSmallScreen ? -8 : 0}}>
 
-            <View style={styles.headerContainer}>
-                <Text style={styles.header}>{application.locale.financesHeader}</Text>
-                <Text style={styles.additionalText}>{application.locale.financesDescriptor}</Text>
+                <View style={styles.headerContainer}>
+                    <Text style={styles.header}>{application.locale.financesHeader}</Text>
+                    <Text style={styles.additionalText}>{application.locale.financesDescriptor}</Text>
+                </View>
+                <BudgetSettings/>
             </View>
-
-            <BudgetSettings />
-        </View>
     </SlidingUpPanel>
 });
 

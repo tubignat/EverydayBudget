@@ -16,5 +16,5 @@ export const darkColorScheme: ColorScheme = {
     buttonBackground: 'rgb(72, 72, 74)',
     buttonBackgroundPressed: 'rgb(50, 50, 54)',
     buttonBorder: 'rgb(44, 44, 46)',
-    categoryItemBackground: 'rgb(72, 72, 74)'
+    categoryItemBackground: 'rgb(72, 72, 74)',
 }

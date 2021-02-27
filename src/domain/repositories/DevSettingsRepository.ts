@@ -1,6 +1,8 @@
 import {AsyncStorage} from 'react-native';
 
-export enum FeatureFlag { Statistics, TestFlag }
+export enum FeatureFlag {
+    TestFlag = "TEST_FLAG"
+}
 
 export type DevSettings = {
     devMenuVisible: boolean

@@ -30,7 +30,7 @@ export const DevSettingsPanel = observer(({onClose}: { onClose: () => void }) =>
                 {
                     devSettings.allFeatureFlags().map(flag =>
                         <View key={flag.name} style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-                            <Text style={{fontSize: 20, paddingVertical: 12}}>{flag.name}</Text>
+                            <Text style={styles.flagLabel}>{flag.name}</Text>
                             <Switch
                                 checked={devSettings.isFlagEnabled(flag.value)}
                                 onChange={() => {
@@ -86,7 +86,7 @@ const TestDataSettings = observer(() => {
                 disabled={false}
                 fontSize={16}
                 scheme={app.colorScheme}
-                text={isClearingData ? 'Wait...' : 'Clear all data' }
+                text={isClearingData ? 'Wait...' : 'Clear all data'}
                 onPress={() => showAlert('Clear all storages?', () => {
                     setIsClearingData(true)
                     AsyncStorage.clear().then(() => {
@@ -128,6 +128,12 @@ const getStyles = (scheme: ColorScheme) => StyleSheet.create({
     subheader: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 24
+        marginBottom: 24,
+        color: scheme.primaryText
+    },
+    flagLabel: {
+        fontSize: 20,
+        paddingVertical: 12,
+        color: scheme.primaryText
     }
 })

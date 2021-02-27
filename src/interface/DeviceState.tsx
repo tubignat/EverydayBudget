@@ -8,6 +8,8 @@ export class DeviceStateImpl {
     public screenSize: ScreenSize = this.width < 350
         ? 'S'
         : this.height > 800 ? 'L' : 'M'
+
+    public keyboardVerticalOffset: number = this.screenSize === 'L' ? 64 : 40
 }
 
 export type ScreenSize = 'S' | 'M' | 'L' // S ~ iPhone SE 1st generation, M ~ iPhone 7/8, L ~ iPhone 12 Mini and bigger
