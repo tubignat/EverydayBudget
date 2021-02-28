@@ -35,6 +35,10 @@ export class TestDataProvider {
         this.categoriesRepository.add('Lunch', colors[0]);
         this.categoriesRepository.add('Groceries', colors[1]);
         this.categoriesRepository.add('Household', colors[2]);
+        this.categoriesRepository.add('Dining out', colors[3]);
+        this.categoriesRepository.add('Transportation', colors[4]);
+        this.categoriesRepository.add('Sport', colors[5]);
+        this.categoriesRepository.add('Subscriptions', colors[6]);
 
         const categories = this.categoriesRepository.get();
 
@@ -47,7 +51,8 @@ export class TestDataProvider {
 
         for (let i = 1; i < daysInMonth - 1; i++) {
             const expense = Math.random() * 80;
-            this.spendingRepository.add(year, month, i, null, expense, 14, 20, null);
+            const category = Math.round(Math.random() * 6)
+            this.spendingRepository.add(year, month, i, null, expense, 14, 20, categories[category]);
         }
     }
 
@@ -72,6 +77,10 @@ export class TestDataProvider {
         this.categoriesRepository.add('Обед', colors[0]);
         this.categoriesRepository.add('Продукты', colors[1]);
         this.categoriesRepository.add('Дом, ремонт', colors[2]);
+        this.categoriesRepository.add('Рестораны', colors[3]);
+        this.categoriesRepository.add('Транспорт', colors[4]);
+        this.categoriesRepository.add('Спорт', colors[5]);
+        this.categoriesRepository.add('Подписки', colors[6]);
 
         const categories = this.categoriesRepository.get();
 
@@ -84,7 +93,8 @@ export class TestDataProvider {
 
         for (let i = 1; i < daysInMonth - 1; i++) {
             const expense = Math.random() * 700;
-            this.spendingRepository.add(year, month, i, null, expense, 14, 20, null);
+            const category = Math.round(Math.random() * 6)
+            this.spendingRepository.add(year, month, i, null, expense, 14, 20, categories[category]);
         }
     }
 }
