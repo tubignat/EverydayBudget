@@ -1,6 +1,6 @@
 import {observer} from "mobx-react";
 import React, {useState} from 'react';
-import {Alert, AsyncStorage, StyleSheet, Text, View} from 'react-native';
+import {Alert, AsyncStorage, NativeModules, StyleSheet, Text, View} from 'react-native';
 import {ApplicationContext, DevSettingsContext} from '../../../Contexts';
 import {ColorScheme} from '../../../color/ColorScheme';
 import SlidingUpPanel from "../../common/SlidingUpPanel";
@@ -9,6 +9,8 @@ import {DeviceState} from "../../../DeviceState";
 import {Switch} from "@ant-design/react-native";
 import {TextButton} from "../../common/TextButton";
 import {Gap} from "../../common/Gap";
+import "../../common/YandexAdBanner"
+import YandexAd from "../../common/YandexAdBanner";
 
 export const DevSettingsPanel = observer(({onClose}: { onClose: () => void }) => {
     const application = useContextUnsafe(ApplicationContext)

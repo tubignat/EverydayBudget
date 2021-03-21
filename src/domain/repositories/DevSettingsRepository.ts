@@ -1,7 +1,8 @@
 import {AsyncStorage} from 'react-native';
 
 export enum FeatureFlag {
-    TestFlag = "TEST_FLAG"
+    TestFlag = "TEST_FLAG",
+    NoAds = "NO_ADS"
 }
 
 export type DevSettings = {

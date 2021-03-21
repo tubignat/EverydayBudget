@@ -12,7 +12,7 @@ import {EnsureMonthIsSetUpService} from './src/domain/services/EnsureMonthIsSetU
 import {DefaultCategoriesService} from './src/domain/services/DefaultCategoriesService';
 import {UserPreferencesRepository} from './src/domain/repositories/UserPreferencesRepository';
 import {ApplicationContext, DevSettingsContext} from './src/interface/Contexts';
-import {Animated, AppState, AppStateStatus, Image, StyleSheet, View} from 'react-native';
+import {Animated, AppState, AppStateStatus, Image, NativeModules, StyleSheet, View} from 'react-native';
 import * as Font from 'expo-font';
 import {ModalStack} from './src/interface/components/common/ModalStack';
 import {CategoryColorsRepository} from './src/domain/repositories/CategoryColorsRepository';

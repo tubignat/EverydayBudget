@@ -23,6 +23,9 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "app.everydaybudget.everydaybudget"
+    },
+    "android": {
+      "package": "app.everydaybudget.everydaybudget"
     }
   }
 }
