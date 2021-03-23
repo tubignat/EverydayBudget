@@ -1,4 +1,4 @@
-import { AsyncStorage } from 'react-native';
+import {AsyncStorage} from 'react-native';
 
 export type FirstTimeInit = {
     areCategoriesSetUp: boolean
@@ -13,6 +13,7 @@ export class FirstTimeInitRepository implements IFirstTimeInitRepository {
     private firstTimeInit: FirstTimeInit = {
         areCategoriesSetUp: false
     };
+
     private storageKey = 'first_time_init_storage';
 
     init = () => AsyncStorage

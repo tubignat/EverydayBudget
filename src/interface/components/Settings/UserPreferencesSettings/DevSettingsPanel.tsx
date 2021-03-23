@@ -10,7 +10,6 @@ import {Switch} from "@ant-design/react-native";
 import {TextButton} from "../../common/TextButton";
 import {Gap} from "../../common/Gap";
 import "../../common/YandexAdBanner"
-import YandexAd from "../../common/YandexAdBanner";
 
 export const DevSettingsPanel = observer(({onClose}: { onClose: () => void }) => {
     const application = useContextUnsafe(ApplicationContext)

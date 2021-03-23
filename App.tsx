@@ -12,7 +12,7 @@ import {EnsureMonthIsSetUpService} from './src/domain/services/EnsureMonthIsSetU
 import {DefaultCategoriesService} from './src/domain/services/DefaultCategoriesService';
 import {UserPreferencesRepository} from './src/domain/repositories/UserPreferencesRepository';
 import {ApplicationContext, DevSettingsContext} from './src/interface/Contexts';
-import {Animated, AppState, AppStateStatus, Image, NativeModules, StyleSheet, View} from 'react-native';
+import {Alert, Animated, AppState, AppStateStatus, Image, NativeModules, StyleSheet, View} from 'react-native';
 import * as Font from 'expo-font';
 import {ModalStack} from './src/interface/components/common/ModalStack';
 import {CategoryColorsRepository} from './src/domain/repositories/CategoryColorsRepository';
@@ -32,6 +32,7 @@ import {DevSettingsState} from "./src/interface/DevSettingsState";
 import {TestDataProvider} from "./src/testData/TestDataProvider";
 import {Repository} from "./src/domain/repositories/IRepository";
 import {UserInfo} from "./src/domain/entities/UserInfo";
+import {FileSystem} from "react-native-unimodules";
 
 const Tab = createBottomTabNavigator()
 
@@ -83,11 +84,22 @@ export default class App extends Component<{}, {
         this.setState({appState: nextAppState});
     };
 
+    async migrateAsyncStorageIfNeeded() {
+        const directory = await FileSystem.readDirectoryAsync(`${FileSystem.documentDirectory}`)
+        if (directory.includes("RCTAsyncLocalStorage")) {
+            await FileSystem.moveAsync({
+                from: `${FileSystem.documentDirectory}/RCTAsyncLocalStorage`,
+                to: `${FileSystem.documentDirectory}/RCTAsyncLocalStorage_V1`,
+            })
+        }
+    }
+
     async init() {
+        await this.migrateAsyncStorageIfNeeded()
         await Font.loadAsync({
             'antoutline': require('./node_modules/@ant-design/icons-react-native/fonts/antoutline.ttf'),
             'antfill': require('./node_modules/@ant-design/icons-react-native/fonts/antfill.ttf'),
-        });
+        })
 
         const colorsRepository = new CategoryColorsRepository();
         const categoriesRepository = new CategoriesRepository(colorsRepository);
@@ -108,7 +120,6 @@ export default class App extends Component<{}, {
         const ensureMonthIsSetUpService = new EnsureMonthIsSetUpService(incomesRepository, expensesRepository, setUpMonthsRepository);
         const budgetService = new BudgetService(incomesRepository, expensesRepository, spendingsRepository);
         const defaultCategoriesService = new DefaultCategoriesService(firstTimeInitRepository, categoriesRepository, colorsRepository);
-
 
         const testDataProvider = new TestDataProvider(
             incomesRepository,
