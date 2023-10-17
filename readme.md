@@ -8,9 +8,3 @@
   <img src="https://user-images.githubusercontent.com/30076197/158422839-543f3c05-1b6e-4553-9fc0-3b65cece2cae.jpg" width="200px">
   <img src="https://user-images.githubusercontent.com/30076197/158422845-ac7dbbb8-4760-463c-ba0c-dce2aab52222.jpg" width="200px">
 </div>
-
-## Links
-
-https://everydaybudget.app
-
-[EverydayBudget on the AppStore](https://apps.apple.com/us/app/everyday-budget/id1503234447?ls=1)
